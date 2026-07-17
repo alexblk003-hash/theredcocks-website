@@ -1,3847 +1,3993 @@
-
-
-<!DOCTYPE html>
-
-<html lang="en" class="scroll-smooth">
-<head<meta name="theme-color" content="#050505">
-
-<style>
-*{
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    overflow-x:hidden;
-}
-</style>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>THE RED COCKS | Global Premium farming company</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#030303" />
+    <title>THE RED COCKS | Global Premium Meat &amp; Farming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
     <style>
+      /* ═══════════════════════════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════════════════════════ */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
 
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;700;900&display=swap');
+      :root {
+        --red: #c41e3a;
+        --red-l: #e8263f;
+        --gold: #c9a84c;
+        --gold-l: #e8c675;
+        --black: #030303;
+        --dark: #0a0a0a;
+        --dark2: #0f0f0f;
+        --dark3: #141414;
+        --border: rgba(201, 168, 76, 0.18);
+        --border-r: rgba(196, 30, 58, 0.25);
+        --text: #e8e0d4;
+        --muted: #7a7068;
+        --font-d: "Playfair Display", Georgia, serif;
+        --font-s: "Outfit", system-ui, sans-serif;
+      }
 
-        body { font-family: 'Outfit', sans-serif; background-color: #050505; color: white; }
+      body {
+        font-family: var(--font-s);
+        background: var(--black);
+        color: var(--text);
+        overflow-x: hidden;
+        cursor: none;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
 
+      /* ═══════════════════════════════════════════════════════════
+   NOISE TEXTURE OVERLAY
+═══════════════════════════════════════════════════════════ */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 9997;
+        pointer-events: none;
+        opacity: 0.028;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 128px 128px;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════════════════════════ */
+      /* ═══ HEN CURSOR ═══ */
+      #hen-cursor {
+        position: fixed;
+        font-size: 30px;
+        line-height: 1;
+        pointer-events: none;
+        z-index: 99999;
+        transform: translate(-50%, -80%);
+        transition: font-size 0.2s ease, filter 0.2s ease;
+        user-select: none;
+        filter: drop-shadow(0 3px 10px rgba(0,0,0,0.6));
+        will-change: left, top;
+      }
+      #hen-cursor.hover-state {
+        font-size: 40px;
+        animation: henWiggleCursor 0.35s ease infinite alternate;
+      }
+      @keyframes henWiggleCursor {
+        0%   { transform: translate(-50%,-80%) rotate(-14deg) scale(1.2); }
+        100% { transform: translate(-50%,-80%) rotate(14deg)  scale(1.25); }
+      }
+      @media (hover: none) {
+        body { cursor: auto !important; }
+        #hen-cursor { display: none !important; }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   PRELOADER
+═══════════════════════════════════════════════════════════ */
+      #preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 99996;
+        background: var(--black);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition:
+          opacity 0.7s ease,
+          visibility 0.7s ease;
+      }
+      #preloader.done {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .pre-logo {
+        font-family: var(--font-d);
+        font-size: 42px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 2px;
+        animation: preLogoIn 0.8s ease both;
+      }
+      .pre-logo em {
+        color: var(--red);
+        font-style: normal;
+      }
+      .pre-bar {
+        width: 180px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        margin-top: 28px;
+        border-radius: 1px;
+        overflow: hidden;
+      }
+      .pre-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--red), var(--gold));
+        width: 0%;
+        animation: preBar 1.4s ease forwards 0.2s;
+      }
+      @keyframes preBar {
+        to {
+          width: 100%;
+        }
+      }
+      @keyframes preLogoIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   VIEW TOGGLE
+═══════════════════════════════════════════════════════════ */
+      #view-toggle-bar {
+        position: fixed;
+        top: 14px;
+        right: 18px;
+        z-index: 9995;
+        display: flex;
+        gap: 2px;
+        background: rgba(10, 10, 10, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        padding: 5px;
+        backdrop-filter: blur(24px);
+      }
+      .view-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 16px;
+        border-radius: 100px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: none;
+        color: var(--muted);
+        background: transparent;
+        transition: all 0.3s;
+      }
+      .view-btn.active {
+        background: var(--red);
+        color: #fff;
+        box-shadow: 0 0 20px rgba(196, 30, 58, 0.5);
+      }
+      body.mobile-view #site-wrapper {
+        max-width: 390px;
+        margin: 0 auto;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.06),
+          0 0 80px rgba(196, 30, 58, 0.1);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════════════════════ */
+      .nav-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 500;
+      }
+      .premium-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px 56px;
+        background: rgba(3, 3, 3, 0);
+        border-bottom: 1px solid transparent;
+        transition:
+          background 0.4s,
+          border-color 0.4s,
+          padding 0.4s;
+      }
+      .premium-nav.scrolled {
+        background: rgba(3, 3, 3, 0.92);
+        border-color: var(--border);
+        padding: 16px 56px;
+        backdrop-filter: blur(28px);
+      }
+      .nav-logo {
+        font-family: var(--font-d);
+        font-size: 22px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 1px;
+      }
+      .nav-logo em {
+        color: var(--red);
+        font-style: normal;
+      }
+      .nav-menu {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+      }
+      .nav-menu a {
+        color: rgba(232, 224, 212, 0.6);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        position: relative;
+        padding-bottom: 4px;
+        transition: color 0.3s;
+      }
+      .nav-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--gold);
+        transition: width 0.35s;
+      }
+      .nav-menu a:hover {
+        color: var(--gold-l);
+      }
+      .nav-menu a:hover::after {
+        width: 100%;
+      }
+      .nav-cta {
+        padding: 10px 26px;
+        border: 1px solid var(--border-r);
+        border-radius: 100px;
+        color: #fff !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: 2px !important;
+        transition:
+          background 0.3s,
+          border-color 0.3s,
+          box-shadow 0.3s !important;
+      }
+      .nav-cta::after {
+        display: none !important;
+      }
+      .nav-cta:hover {
+        background: var(--red) !important;
+        border-color: var(--red) !important;
+        box-shadow: 0 0 24px rgba(196, 30, 58, 0.45) !important;
+      }
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .hamburger span {
+        display: block;
+        width: 26px;
+        height: 1.5px;
+        background: var(--text);
+        border-radius: 1px;
+        transition: 0.3s;
+      }
+      .nav-mobile-menu {
+        display: none;
+        flex-direction: column;
+        background: rgba(5, 5, 5, 0.98);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(28px);
+      }
+      .nav-mobile-menu a {
+        padding: 16px 32px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--muted);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        transition:
+          color 0.25s,
+          padding-left 0.25s;
+      }
+      .nav-mobile-menu a:hover {
+        color: var(--gold-l);
+        padding-left: 42px;
+      }
+      .nav-mobile-menu.open {
+        display: flex;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════════════════════ */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-l {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+      .reveal-l.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .reveal-r {
+        opacity: 0;
+        transform: translateX(40px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+      .reveal-r.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .delay-1 {
+        transition-delay: 0.1s;
+      }
+      .delay-2 {
+        transition-delay: 0.2s;
+      }
+      .delay-3 {
+        transition-delay: 0.3s;
+      }
+      .delay-4 {
+        transition-delay: 0.4s;
+      }
+      .delay-5 {
+        transition-delay: 0.5s;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════════ */
+      #home {
+        position: relative;
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        padding: 80px 56px 80px 56px;
+        overflow: hidden;
+        background: var(--black);
+      }
+      .hero-bg-glow-1 {
+        position: absolute;
+        top: -10%;
+        left: -5%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(196, 30, 58, 0.14) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+        animation: blobDrift1 14s ease-in-out infinite;
+      }
+      .hero-bg-glow-2 {
+        position: absolute;
+        bottom: -15%;
+        right: -5%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(201, 168, 76, 0.07) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+        animation: blobDrift2 18s ease-in-out infinite;
+      }
+      @keyframes blobDrift1 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(60px, 50px) scale(1.2);
+        }
+      }
+      @keyframes blobDrift2 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(-40px, -40px) scale(1.15);
+        }
+      }
+
+      .hero-left {
+        position: relative;
+        z-index: 2;
+      }
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 32px;
+        animation: fadeUp 0.8s ease 0.2s both;
+      }
+      .hero-eyebrow::before,
+      .hero-eyebrow::after {
+        content: "";
+        display: block;
+        width: 32px;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.5;
+      }
+
+      .hero-title {
+        font-family: var(--font-d);
+        font-size: clamp(52px, 6.5vw, 96px);
+        font-weight: 900;
+        line-height: 1.02;
+        color: #fff;
+        letter-spacing: -1px;
+        animation: fadeUp 0.9s ease 0.35s both;
+      }
+      .hero-title .red-word {
+        color: var(--red-l);
+      }
+      .hero-title .italic-word {
+        font-style: italic;
+        color: var(--gold-l);
+      }
+
+      .hero-subtitle {
+        margin-top: 28px;
+        max-width: 480px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.9;
+        font-weight: 400;
+        animation: fadeUp 1s ease 0.5s both;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 48px;
+        animation: fadeUp 1s ease 0.65s both;
+      }
+      .btn-red {
+        padding: 16px 38px;
+        border-radius: 4px;
+        background: var(--red);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: 1px solid var(--red);
+        transition:
+          background 0.3s,
+          box-shadow 0.3s,
+          transform 0.3s;
+      }
+      .btn-red:hover {
+        background: var(--red-l);
+        box-shadow: 0 12px 36px rgba(196, 30, 58, 0.45);
+        transform: translateY(-3px);
+      }
+      .btn-ghost {
+        padding: 16px 38px;
+        border-radius: 4px;
+        background: transparent;
+        color: var(--text);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: 1px solid rgba(232, 224, 212, 0.25);
+        transition:
+          border-color 0.3s,
+          color 0.3s,
+          transform 0.3s;
+      }
+      .btn-ghost:hover {
+        border-color: var(--gold);
+        color: var(--gold-l);
+        transform: translateY(-3px);
+      }
+
+      .hero-right {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      .hero-image-frame {
+        position: relative;
+        width: 460px;
+        max-width: 100%;
+        animation: fadeUp 1s ease 0.4s both;
+      }
+      .hero-image-frame img {
+        width: 100%;
+        height: 560px;
+        object-fit: cover;
+        border-radius: 6px;
+        filter: brightness(0.88) contrast(1.05);
+      }
+      .hero-image-frame::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: 7px;
+        background: linear-gradient(
+          135deg,
+          var(--gold) 0%,
+          transparent 40%,
+          transparent 60%,
+          var(--red) 100%
+        );
+        z-index: -1;
+        opacity: 0.6;
+      }
+      .hero-image-label {
+        position: absolute;
+        bottom: -20px;
+        left: -20px;
+        background: var(--dark2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 18px 24px;
+        backdrop-filter: blur(20px);
+      }
+      .hero-image-label h4 {
+        font-family: var(--font-d);
+        font-size: 28px;
+        font-weight: 900;
+        color: var(--gold);
+      }
+      .hero-image-label p {
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* Stats row */
+      .hero-stats {
+        position: absolute;
+        bottom: 48px;
+        left: 56px;
+        display: flex;
+        gap: 48px;
+        z-index: 3;
+        animation: fadeUp 1s ease 0.8s both;
+      }
+      .hstat {
+        border-left: 2px solid var(--border-r);
+        padding-left: 18px;
+      }
+      .hstat h3 {
+        font-family: var(--font-d);
+        font-size: 36px;
+        font-weight: 900;
+        color: #fff;
+        line-height: 1;
+      }
+      .hstat h3 sup {
+        font-size: 18px;
+        color: var(--red);
+      }
+      .hstat p {
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   SECTION CHROME
+═══════════════════════════════════════════════════════════ */
+      .sec-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 18px;
+      }
+      .sec-eyebrow span {
+        display: block;
+        width: 28px;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.5;
+      }
+      .sec-title {
+        font-family: var(--font-d);
+        font-size: clamp(32px, 5vw, 64px);
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -1px;
+        line-height: 1.08;
+      }
+      .sec-title em {
+        font-style: italic;
+        color: var(--red-l);
+      }
+      .sec-rule {
+        width: 56px;
+        height: 2px;
+        background: linear-gradient(90deg, var(--red), var(--gold));
+        border-radius: 2px;
+        margin-top: 24px;
+      }
+      .sec-rule.centered {
+        margin: 24px auto 0;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   MARQUEE BAND
+═══════════════════════════════════════════════════════════ */
+      .marquee-band {
+        padding: 22px 0;
+        background: var(--red);
+        overflow: hidden;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .marquee-track {
+        display: flex;
+        width: max-content;
+        animation: mLeft 18s linear infinite;
+      }
+      .marquee-track span {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.9);
+        padding-right: 60px;
+        white-space: nowrap;
+      }
+      @keyframes mLeft {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   DISH SLIDER
+═══════════════════════════════════════════════════════════ */
+      .dish-section {
+        padding: 120px 0;
+        background: var(--dark);
+        overflow: hidden;
+      }
+      .dish-section-head {
+        padding: 0 56px;
+        margin-bottom: 64px;
+      }
+      .slider-overflow {
+        overflow: hidden;
+      }
+      .dish-track {
+        display: flex;
+        gap: 24px;
+        width: max-content;
+        animation: mLeft 32s linear infinite;
+      }
+      .dish-track:hover {
+        animation-play-state: paused;
+      }
+      .dish-card {
+        width: 260px;
+        flex-shrink: 0;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: var(--dark2);
+        transition:
+          transform 0.4s,
+          box-shadow 0.4s;
+        position: relative;
+      }
+      .dish-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+      .dish-card-body {
+        padding: 18px 20px;
+      }
+      .dish-card-body h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .dish-card-body p {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .dish-card:hover {
+        transform: translateY(-12px);
+        box-shadow:
+          0 30px 60px rgba(0, 0, 0, 0.5),
+          0 0 0 1px var(--border-r);
+      }
+      .dish-card:hover img {
+        transform: scale(1.06);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════════════════════ */
+      #about {
+        padding: 140px 56px;
+        background: var(--black);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 100px;
+        align-items: center;
+        max-width: 1440px;
+        margin: 0 auto;
+      }
+      .about-photo-col {
+        position: relative;
+      }
+      .about-photo-frame {
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .about-photo-frame img {
+        width: 100%;
+        height: 560px;
+        object-fit: cover;
+        filter: brightness(0.9) saturate(0.9);
+        transition: transform 0.6s;
+      }
+      .about-photo-frame:hover img {
+        transform: scale(1.04);
+      }
+      .about-photo-frame::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          transparent 55%,
+          rgba(3, 3, 3, 0.85)
+        );
+        pointer-events: none;
+      }
+      .about-photo-caption {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        z-index: 2;
+      }
+      .about-photo-caption h4 {
+        font-family: var(--font-d);
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .about-photo-caption p {
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-top: 4px;
+      }
+
+      .about-accent-box {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 120px;
+        height: 120px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        pointer-events: none;
+      }
+      .about-accent-dot {
+        position: absolute;
+        bottom: -20px;
+        left: -20px;
+        width: 60px;
+        height: 60px;
+        background: var(--red);
+        border-radius: 50%;
+        opacity: 0.6;
+        filter: blur(20px);
+      }
+
+      .about-text-col {
+      }
+      .about-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 36px;
+      }
+      .pill {
+        padding: 9px 20px;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: 1px;
+        transition:
+          border-color 0.3s,
+          color 0.3s,
+          transform 0.3s;
+      }
+      .pill:hover {
+        border-color: var(--gold);
+        color: var(--gold-l);
+        transform: translateY(-4px);
+      }
+      .about-body {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.95;
+        margin-top: 28px;
+      }
+      .about-body strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .about-body .red {
+        color: var(--red-l);
+        font-weight: 600;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   PRODUCTS GRID
+═══════════════════════════════════════════════════════════ */
+      #products {
+        padding: 140px 56px;
+        background: var(--dark);
+      }
+      .products-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      .products-header {
+        margin-bottom: 72px;
+      }
+      .products-header .sub {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.8;
+        max-width: 480px;
+        margin-top: 16px;
+      }
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .product-card {
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: var(--dark2);
+        transition:
+          transform 0.45s,
+          border-color 0.45s,
+          box-shadow 0.45s;
+        position: relative;
+      }
+      .product-card:hover {
+        transform: translateY(-14px);
+        border-color: var(--border-r);
+        box-shadow:
+          0 40px 80px rgba(0, 0, 0, 0.4),
+          0 0 40px rgba(196, 30, 58, 0.15);
+      }
+      .product-img-wrap {
+        position: relative;
+        overflow: hidden;
+      }
+      .product-card img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        transition: transform 0.6s;
+      }
+      .product-card:hover img {
+        transform: scale(1.08);
+      }
+      .product-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(3, 3, 3, 0.7) 0%,
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .product-tag-wrap {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+      }
+      .product-tag {
+        display: inline-block;
+        padding: 5px 14px;
+        border-radius: 100px;
+        background: var(--red);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .product-body {
+        padding: 28px 28px 32px;
+      }
+      .product-name {
+        font-family: var(--font-d);
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .product-desc {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
+        margin-top: 10px;
+      }
+      .product-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .product-stars {
+        color: var(--gold);
+        font-size: 14px;
+        letter-spacing: 2px;
+      }
+      .product-link {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--red-l);
+        transition:
+          color 0.3s,
+          letter-spacing 0.3s;
+      }
+      .product-link:hover {
+        color: var(--gold-l);
+        letter-spacing: 3px;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   VISION
+═══════════════════════════════════════════════════════════ */
+      #vision {
+        padding: 160px 56px;
+        background: var(--black);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .vision-bg-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: var(--font-d);
+        font-size: clamp(100px, 18vw, 220px);
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.012);
+        white-space: nowrap;
+        letter-spacing: -4px;
+        pointer-events: none;
+        user-select: none;
+      }
+      .vision-inner {
+        max-width: 860px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+      .vision-quote {
+        font-family: var(--font-d);
+        font-size: clamp(22px, 3.5vw, 44px);
+        font-weight: 700;
+        font-style: italic;
+        color: var(--text);
+        line-height: 1.55;
+        margin-top: 48px;
+      }
+      .vision-quote::before {
+        content: "\201C";
+        color: var(--red);
+        font-size: 1.4em;
+        line-height: 0;
+        vertical-align: -0.3em;
+        margin-right: 4px;
+      }
+      .vision-quote::after {
+        content: "\201D";
+        color: var(--red);
+        font-size: 1.4em;
+        line-height: 0;
+        vertical-align: -0.3em;
+        margin-left: 4px;
+      }
+      .vision-attr {
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-top: 32px;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   GLOBAL NETWORK
+═══════════════════════════════════════════════════════════ */
+      .country-section {
+        padding: 120px 0;
+        background: var(--dark);
+        overflow: hidden;
+      }
+      .country-head {
+        padding: 0 56px 64px;
+        text-align: center;
+      }
+      .country-slider {
+        overflow: hidden;
+      }
+      .country-track {
+        display: flex;
+        gap: 20px;
+        width: max-content;
+        animation: mLeft 30s linear infinite;
+      }
+      .country-track:hover {
+        animation-play-state: paused;
+      }
+      .country-card {
+        min-width: 200px;
+        background: var(--dark2);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 6px;
+        padding: 24px 20px;
+        text-align: center;
+        transition:
+          transform 0.35s,
+          border-color 0.35s,
+          box-shadow 0.35s;
+      }
+      .country-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--border);
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+      }
+      .country-card img {
+        width: 80px;
+        height: 52px;
+        object-fit: cover;
+        border-radius: 3px;
+        margin: 0 auto 14px;
+      }
+      .country-card h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   REVIEWS
+═══════════════════════════════════════════════════════════ */
+      .review-section {
+        padding: 120px 0;
+        background: var(--black);
+        overflow: hidden;
+      }
+      .review-head {
+        padding: 0 56px 64px;
+        text-align: center;
+      }
+      .review-head .rating-sub {
+        color: var(--muted);
+        margin-top: 12px;
+        font-size: 14px;
+      }
+      .review-slider {
+        overflow: hidden;
+      }
+      .review-track {
+        display: flex;
+        gap: 24px;
+        width: max-content;
+        animation: mLeft 40s linear infinite;
+      }
+      .review-track:hover {
+        animation-play-state: paused;
+      }
+      .review-card {
+        width: 360px;
+        flex-shrink: 0;
+        background: var(--dark2);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+        padding: 32px;
+        transition:
+          transform 0.35s,
+          border-color 0.35s;
+        position: relative;
+      }
+      .review-card::before {
+        content: "\201C";
+        font-family: var(--font-d);
+        font-size: 72px;
+        line-height: 0;
+        color: var(--red);
+        opacity: 0.2;
+        position: absolute;
+        top: 32px;
+        right: 28px;
+      }
+      .review-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--border);
+      }
+      .review-profile {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+      }
+      .review-profile img {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+      }
+      .review-profile h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .review-profile .verified {
+        font-size: 11px;
+        color: #4ade80;
+        margin-top: 2px;
+        letter-spacing: 0.5px;
+      }
+      .review-stars {
+        color: var(--gold);
+        font-size: 13px;
+        letter-spacing: 2px;
+        margin-bottom: 14px;
+      }
+      .review-card p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.75;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   SOCIAL
+═══════════════════════════════════════════════════════════ */
+      .social-section {
+        padding: 120px 56px;
+        background: var(--dark);
+        text-align: center;
+      }
+      .social-section .sub {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.8;
+        max-width: 520px;
+        margin: 20px auto 52px;
+      }
+      .instagram-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 28px 36px;
+        background: linear-gradient(135deg, #c13584, #e1306c, #f56040);
+        border-radius: 6px;
+        color: #fff;
+        box-shadow: 0 20px 60px rgba(225, 48, 108, 0.35);
+        transition:
+          transform 0.35s,
+          box-shadow 0.35s;
+      }
+      .instagram-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 36px 80px rgba(225, 48, 108, 0.5);
+      }
+      .ig-icon {
+        font-size: 48px;
+        flex-shrink: 0;
+      }
+      .ig-text {
+        flex: 1;
+        text-align: left;
+        margin-left: 24px;
+      }
+      .ig-text h3 {
+        font-family: var(--font-d);
+        font-size: 26px;
+        font-weight: 700;
+      }
+      .ig-text p {
+        font-size: 13px;
+        opacity: 0.85;
+        margin-top: 4px;
+      }
+      .ig-arrow {
+        font-size: 24px;
+        transition: transform 0.3s;
+      }
+      .instagram-card:hover .ig-arrow {
+        transform: translateX(8px);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════════════════════ */
+      #contact {
+        padding: 140px 56px;
+        background: var(--black);
+      }
+      .contact-inner {
+        max-width: 580px;
+        margin: 0 auto;
+      }
+      .contact-card {
+        margin-top: 52px;
+        background: var(--dark2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 52px 48px;
+        box-shadow:
+          0 0 60px rgba(201, 168, 76, 0.06),
+          0 0 0 1px var(--border);
+      }
+      .contact-card-title {
+        font-family: var(--font-d);
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 6px;
+      }
+      .contact-card-sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 36px;
+      }
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: padding-left 0.3s;
+      }
+      .contact-item:hover {
+        padding-left: 8px;
+      }
+      .contact-item:last-of-type {
+        border-bottom: none;
+      }
+      .contact-icon {
+        width: 46px;
+        height: 46px;
+        background: rgba(196, 30, 58, 0.12);
+        border: 1px solid var(--border-r);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+        color: var(--red-l);
+      }
+      .contact-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .contact-value {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        margin-top: 3px;
+      }
+      .contact-cta {
+        display: block;
+        margin-top: 36px;
+        padding: 17px;
+        text-align: center;
+        border-radius: 4px;
+        background: var(--red);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        border: 1px solid var(--red);
+        transition:
+          background 0.3s,
+          box-shadow 0.3s,
+          transform 0.3s;
+      }
+      .contact-cta:hover {
+        background: var(--red-l);
+        box-shadow: 0 12px 36px rgba(196, 30, 58, 0.45);
+        transform: translateY(-2px);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CEO MESSAGE
+═══════════════════════════════════════════════════════════ */
+      .ceo-section {
+        padding: 140px 56px;
+        background: var(--dark);
+      }
+      .ceo-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 100px;
+        align-items: center;
+      }
+      .ceo-photo-wrap {
+        position: relative;
+      }
+      .ceo-photo-frame {
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        position: relative;
+      }
+      .ceo-photo-frame img {
+        width: 100%;
+        height: 560px;
+        object-fit: cover;
+        filter: brightness(0.9) saturate(0.85);
+        transition: transform 0.6s;
+      }
+      .ceo-photo-frame:hover img {
+        transform: scale(1.04);
+      }
+      .ceo-accent-line {
+        position: absolute;
+        top: 24px;
+        left: -24px;
+        width: 3px;
+        height: 80px;
+        background: linear-gradient(to bottom, var(--gold), transparent);
+      }
+
+      .ceo-text {
+      }
+      .ceo-heading {
+        font-family: var(--font-d);
+        font-size: clamp(38px, 5vw, 70px);
+        font-weight: 900;
+        line-height: 1.05;
+        letter-spacing: -1px;
+        margin: 18px 0 24px;
+      }
+      .ceo-heading .wt {
+        color: #fff;
+      }
+      .ceo-heading .rd {
+        color: var(--red-l);
+      }
+      .ceo-heading .gd {
+        color: var(--gold-l);
+        font-style: italic;
+      }
+      .ceo-rule {
+        width: 100px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--red),
+          var(--gold),
+          transparent
+        );
+        margin-bottom: 28px;
+      }
+      .ceo-body {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.95;
+      }
+      .ceo-body strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .ceo-sig {
+        margin-top: 40px;
+        padding-top: 28px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .ceo-sig h4 {
+        font-family: var(--font-d);
+        font-size: 30px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .ceo-sig p {
+        font-size: 11px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-top: 6px;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   PRODUCT SLIDER 2
+═══════════════════════════════════════════════════════════ */
+      .ps2-section {
+        padding: 120px 0;
+        background: var(--black);
+        overflow: hidden;
+      }
+      .ps2-head {
+        padding: 0 56px;
+        margin-bottom: 64px;
+        text-align: center;
+      }
+      .ps2-track {
+        display: flex;
+        gap: 24px;
+        width: max-content;
+        animation: mLeft 42s linear infinite;
+      }
+      .ps2-track:hover {
+        animation-play-state: paused;
+      }
+      .ps2-card {
+        width: 300px;
+        flex-shrink: 0;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: var(--dark2);
+        transition:
+          transform 0.4s,
+          border-color 0.4s;
+      }
+      .ps2-card:hover {
+        transform: translateY(-12px);
+        border-color: var(--border-r);
+      }
+      .ps2-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+      .ps2-card:hover img {
+        transform: scale(1.06);
+      }
+      .ps2-card h3 {
+        padding: 20px 22px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   FOOD ORBIT
+═══════════════════════════════════════════════════════════ */
+      .orbit-section {
+        background: var(--dark);
+        padding: 140px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+      .food-circle {
+        position: relative;
+        width: 500px;
+        height: 500px;
+      }
+      .food-item {
+        position: absolute;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: var(--dark2);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 32px;
+        font-weight: 700;
+        color: #fff;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        transition:
+          transform 0.35s,
+          box-shadow 0.35s,
+          border-color 0.35s;
+        cursor: default;
+      }
+      .food-item span {
+        font-size: 10px;
+        letter-spacing: 1px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      .food-item:hover {
+        transform: scale(1.18) !important;
+        border-color: var(--gold);
+        box-shadow: 0 0 50px rgba(201, 168, 76, 0.3);
+      }
+      .food-item:nth-child(1) {
+        top: 0;
+        left: 195px;
+        animation: fFloat 2.8s ease-in-out infinite 0s;
+      }
+      .food-item:nth-child(2) {
+        top: 95px;
+        right: 0;
+        animation: fFloat 2.8s ease-in-out infinite 0.3s;
+      }
+      .food-item:nth-child(3) {
+        bottom: 95px;
+        right: 0;
+        animation: fFloat 2.8s ease-in-out infinite 0.6s;
+      }
+      .food-item:nth-child(4) {
+        bottom: 0;
+        left: 195px;
+        animation: fFloat 2.8s ease-in-out infinite 0.9s;
+      }
+      .food-item:nth-child(5) {
+        bottom: 95px;
+        left: 0;
+        animation: fFloat 2.8s ease-in-out infinite 1.2s;
+      }
+      .food-item:nth-child(6) {
+        top: 95px;
+        left: 0;
+        animation: fFloat 2.8s ease-in-out infinite 1.5s;
+      }
+      @keyframes fFloat {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-16px) scale(1.04);
+        }
+      }
+      .food-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--red), #8b0000);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+        box-shadow: 0 0 80px rgba(196, 30, 58, 0.5);
+        animation: cPulse 3s ease-in-out infinite;
+      }
+      .food-center h2 {
+        font-family: var(--font-d);
+        font-size: 20px;
+        font-weight: 900;
+      }
+      .food-center p {
+        font-size: 11px;
+        line-height: 1.5;
+        margin: 8px 10px;
+        opacity: 0.8;
+      }
+      .food-center a {
+        padding: 7px 18px;
+        border-radius: 100px;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: background 0.3s;
+      }
+      .food-center a:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      @keyframes cPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 50px rgba(196, 30, 58, 0.45);
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          box-shadow: 0 0 90px rgba(196, 30, 58, 0.75);
+          transform: translate(-50%, -50%) scale(1.05);
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════ */
+      footer {
+        background: var(--black);
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .footer-top {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 64px;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 80px 56px 64px;
+      }
+      .footer-brand {
+      }
+      .footer-logo {
+        font-family: var(--font-d);
+        font-size: 26px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 1px;
+      }
+      .footer-logo em {
+        color: var(--red);
+        font-style: normal;
+      }
+      .footer-brand p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.8;
+        max-width: 280px;
+        margin-top: 16px;
+      }
+      .footer-social {
+        display: flex;
+        gap: 12px;
+        margin-top: 28px;
+      }
+      .footer-social a {
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-size: 15px;
+        transition:
+          border-color 0.3s,
+          color 0.3s,
+          background 0.3s;
+      }
+      .footer-social a:hover {
+        border-color: var(--red);
+        color: #fff;
+        background: var(--red);
+      }
+
+      .footer-col h5 {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 20px;
+      }
+      .footer-col ul {
+        list-style: none;
+      }
+      .footer-col ul li {
+        margin-bottom: 10px;
+      }
+      .footer-col ul li a {
+        font-size: 14px;
+        color: var(--muted);
+        transition:
+          color 0.3s,
+          padding-left 0.3s;
+      }
+      .footer-col ul li a:hover {
+        color: var(--text);
+        padding-left: 4px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 24px 56px;
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .footer-bottom p {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .footer-bottom .gold {
+        color: var(--gold);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   LIVE NOTIFICATION
+═══════════════════════════════════════════════════════════ */
+      #liveNotify {
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
+        width: 280px;
+        padding: 16px 18px;
+        border-radius: 6px;
+        background: rgba(12, 12, 12, 0.95);
+        border: 1px solid var(--border);
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(255, 255, 255, 0.04);
+        color: #fff;
+        z-index: 9990;
+        opacity: 0;
+        transform: translateY(100px);
+        transition:
+          opacity 0.6s,
+          transform 0.6s;
+        backdrop-filter: blur(24px);
+      }
+      #liveNotify.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .notify-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      .notify-head h4 {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin: 0;
+      }
+      .live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 10px #4ade80;
+        animation: dotBlink 1.2s infinite;
+        flex-shrink: 0;
+      }
+      @keyframes dotBlink {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(1.5);
+        }
+      }
+      #notifyText {
+        font-size: 13px;
+        color: #ccc;
+        line-height: 1.6;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   SHARED ANIMATIONS
+═══════════════════════════════════════════════════════════ */
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+   CEO PREMIUM PHOTO TILT
+═══════════════════════════════════════════════════════════ */
+.ceo-tilt-wrap {
+  position: relative;
+  perspective: 900px;
+  display: inline-block;
+  width: 100%;
+}
+.ceo-tilt-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.08s linear;
+  border-radius: 6px;
+  position: relative;
+}
+/* Rotating conic-gradient border */
+.ceo-tilt-inner::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 8px;
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    var(--red)    0%,
+    var(--gold)   22%,
+    transparent   36%,
+    var(--gold)   50%,
+    var(--red)    65%,
+    transparent   78%,
+    var(--red)    100%
+  );
+  z-index: -1;
+  animation: borderSpin 4s linear infinite;
+}
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes borderSpin {
+  to { --angle: 360deg; }
+}
+/* Shine sweep on hover */
+.ceo-photo-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255,255,255,0.18) 40%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.0s;
+  pointer-events: none;
+  z-index: 3;
+}
+.ceo-tilt-wrap:hover .ceo-photo-shine {
+  transform: translateX(120%);
+  transition: transform 0.6s ease;
+}
+/* Corner sparks */
+.ceo-spark {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 4;
+  animation: sparkAnim 2.4s ease-in-out infinite;
+}
+.ceo-spark:nth-child(1) { top: -4px; left: -4px;  background: var(--gold); animation-delay: 0s; }
+.ceo-spark:nth-child(2) { top: -4px; right: -4px; background: var(--red);  animation-delay: 0.6s; }
+.ceo-spark:nth-child(3) { bottom: -4px; left: -4px;  background: var(--red);  animation-delay: 1.2s; }
+.ceo-spark:nth-child(4) { bottom: -4px; right: -4px; background: var(--gold); animation-delay: 1.8s; }
+@keyframes sparkAnim {
+  0%,100% { transform: scale(1); box-shadow: 0 0 8px 2px currentColor; opacity: 0.7; }
+  50%      { transform: scale(2); box-shadow: 0 0 18px 4px currentColor; opacity: 1; }
+}
+/* Floating badge on hover */
+.ceo-premium-badge {
+  position: absolute;
+  top: 18px; right: -14px;
+  background: linear-gradient(135deg, var(--gold), #a07830);
+  color: #000;
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 100px;
+  box-shadow: 0 8px 24px rgba(201,168,76,0.5);
+  z-index: 5;
+  animation: badgeFloat 3s ease-in-out infinite;
+}
+@keyframes badgeFloat {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-8px) rotate(2deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INDIA NETWORK SECTION
+═══════════════════════════════════════════════════════════ */
+#india-network {
+  padding: 140px 20px;
+  background: var(--black);
+  overflow: hidden;
+  position: relative;
+}
+.in-head { text-align: center; margin-bottom: 80px; }
+.in-stage {
+  position: relative;
+  width: 720px;
+  height: 720px;
+  margin: 0 auto;
+}
+.in-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.in-svg line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 0.9s ease;
+}
+.in-svg line.drawn { stroke-dashoffset: 0; }
+
+.flag-node {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: transform 1.2s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s;
+  opacity: 0;
+}
+.flag-node.visible { opacity: 1; }
+.flag-node img {
+  width: 64px; height: 42px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.flag-node:hover img { transform: scale(1.15); box-shadow: 0 8px 32px rgba(201,168,76,0.4); }
+.flag-node span {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.india-node {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.india-node-ring {
+  position: relative;
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #FF9933, #fff, #138808);
+  box-shadow: 0 0 40px rgba(255,153,51,0.5), 0 0 80px rgba(19,136,8,0.3);
+  animation: indiaGlow 2.5s ease-in-out infinite;
+}
+@keyframes indiaGlow {
+  0%,100% { box-shadow: 0 0 30px rgba(255,153,51,0.4), 0 0 60px rgba(19,136,8,0.2); }
+  50%      { box-shadow: 0 0 60px rgba(255,153,51,0.8), 0 0 100px rgba(19,136,8,0.5); }
+}
+.india-node-ring::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  animation: indiaRing 3s linear infinite;
+}
+@keyframes indiaRing {
+  from { transform: rotate(0deg); box-shadow: 0 0 20px var(--gold); }
+  to   { transform: rotate(360deg); }
+}
+.india-node-ring img {
+  width: 90px; height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.9);
+}
+.india-node-label {
+  font-family: var(--font-d);
+  font-size: 13px; font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+/* Brand reveal at end */
+.in-brand-reveal {
+  text-align: center;
+  margin-top: 72px;
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.in-brand-reveal.show { opacity: 1; transform: translateY(0) scale(1); }
+.in-brand-title {
+  font-family: var(--font-d);
+  font-size: clamp(28px, 5vw, 56px);
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: brandShine 3s linear infinite;
+  letter-spacing: 2px;
+}
+@keyframes brandShine {
+  0%   { background-position: 0%; }
+  100% { background-position: 200%; }
+}
+.in-brand-sub {
+  font-size: 12px; letter-spacing: 6px; text-transform: uppercase;
+  color: var(--muted); margin-top: 12px;
+}
+.in-count-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 18px;
+  padding: 10px 28px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: rgba(201,168,76,0.06);
+  color: var(--gold);
+  font-size: 12px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* responsive stage */
+@media (max-width: 760px) {
+  .in-stage { width: 340px; height: 340px; }
+  .flag-node img { width: 38px; height: 26px; }
+  .flag-node span { font-size: 7px; }
+  .india-node-ring { width: 64px; height: 64px; }
+  .india-node-ring img { width: 52px; height: 34px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════ */
+      @media (max-width: 1100px) {
+        #home {
+          grid-template-columns: 1fr;
+          text-align: center;
+          padding: 120px 40px 160px;
+          gap: 60px;
+        }
+        .hero-right {
+          justify-content: center;
+        }
+        .hero-image-frame {
+          width: 100%;
+          max-width: 480px;
+        }
+        .hero-image-frame img {
+          height: 420px;
+        }
+        .hero-eyebrow {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .hero-actions {
+          justify-content: center;
+        }
+        .hero-stats {
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: 32px;
+          gap: 32px;
+        }
+        #about {
+          grid-template-columns: 1fr;
+          padding: 100px 40px;
+          gap: 60px;
+        }
+        .ceo-inner {
+          grid-template-columns: 1fr;
+          gap: 60px;
+        }
+        .ceo-photo-frame img {
+          height: 400px;
+        }
+      }
+      @media (max-width: 900px) {
+        .premium-nav {
+          padding: 18px 28px !important;
+        }
+        .nav-menu {
+          display: none !important;
+        }
+        .hamburger {
+          display: flex;
+        }
+        .products-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .dish-section-head,
+        .ps2-head,
+        .country-head,
+        .review-head,
+        .social-section,
+        #products,
+        #contact,
+        .ceo-section,
+        .ps2-section,
+        .orbit-section {
+          padding-left: 28px;
+          padding-right: 28px;
+        }
+        .footer-top {
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+          padding: 56px 28px 40px;
+        }
+        .footer-bottom {
+          padding: 20px 28px;
+        }
+      }
+      @media (max-width: 640px) {
+        #view-toggle-bar {
+          top: 8px;
+          right: 8px;
+        }
+        .view-btn {
+          padding: 6px 12px;
+          font-size: 10px;
+        }
+        .products-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-stats {
+          flex-wrap: wrap;
+          gap: 20px;
+          justify-content: center;
+        }
+        .instagram-card {
+          flex-direction: column;
+          text-align: center;
+          gap: 18px;
+        }
+        .ig-text {
+          margin-left: 0;
+          text-align: center;
+        }
+        .food-circle {
+          width: 320px;
+          height: 320px;
+        }
+        .food-item {
+          width: 82px;
+          height: 82px;
+          font-size: 24px;
+        }
+        .food-item:nth-child(1) {
+          left: 119px;
+        }
+        .food-item:nth-child(4) {
+          left: 119px;
+        }
+        .food-center {
+          width: 150px;
+          height: 150px;
+        }
+        .footer-top {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+        .contact-card {
+          padding: 36px 24px;
+        }
+      }
+      /* ── Very small phones (≤480px) ─────────────────────────── */
+      @media (max-width: 480px) {
+        #home { padding: 80px 16px 130px; gap: 36px; }
+        .hero-image-frame img { height: 280px; }
+        .hero-stats { left: 16px; bottom: 20px; gap: 14px; }
+        .hstat h3 { font-size: 24px; }
+        .premium-nav { padding: 12px 16px !important; }
+        .nav-logo { font-size: 16px; }
+        #about { padding: 72px 16px; }
+        .about-photo-frame img { height: 280px; }
+        .products-inner { padding: 72px 12px; }
+        .product-card img { height: 200px; }
+        .product-body { padding: 18px 16px 22px; }
+        #contact { padding: 72px 12px; }
+        .contact-card { padding: 24px 14px; }
+        .ps2-card { width: 230px; }
+        .ps2-card img { height: 160px; }
+        .orbit-section { padding: 72px 12px; }
+        .food-circle { width: 280px; height: 280px; }
+        .food-item { width: 70px; height: 70px; font-size: 20px; }
+        .food-item:nth-child(1),
+        .food-item:nth-child(4) { left: 105px; }
+        .food-center { width: 120px; height: 120px; }
+        .food-center h2 { font-size: 14px; }
+        .food-center p { font-size: 6px; letter-spacing: 0.5px; }
+        #india-network { padding: 72px 12px; }
+        .in-stage { width: 300px !important; height: 300px !important; }
+        .flag-node img { width: 28px !important; height: 18px !important; }
+        .flag-node span { display: none !important; }
+        .india-node-ring { width: 50px !important; height: 50px !important; }
+        .india-node-ring img { width: 38px !important; height: 24px !important; }
+        .ceo-section { padding: 72px 12px; }
+        .ceo-tilt-wrap { max-width: 280px; }
+        .footer-top { padding: 40px 14px 30px; }
+        .footer-bottom { padding: 14px; font-size: 11px; }
+        .dish-section-head,
+        .country-head,
+        .review-head,
+        .social-section,
+        .ps2-section { padding-left: 14px !important; padding-right: 14px !important; }
+        #fun-zone { bottom: 14px; right: 14px; }
+        #fz-hen-emoji, #fz-egg-emoji { font-size: 38px; }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         FUN ZONE — HEN & EGG WIDGET
+      ═══════════════════════════════════════════════════════════ */
+      #fun-zone {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9990;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+      .fz-state {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        position: relative;
+      }
+      .fz-state.active { display: flex; }
+      #fz-hen-emoji, #fz-egg-emoji {
+        font-size: 54px;
+        cursor: pointer;
+        user-select: none;
+        filter: drop-shadow(0 4px 14px rgba(0,0,0,0.75));
+        transition: transform 0.15s;
+        line-height: 1;
+        display: block;
+      }
+      #fz-hen-emoji:hover  { transform: scale(1.1);  }
+      #fz-egg-emoji:hover  { transform: scale(1.1);  }
+      #fz-hen-emoji:active,
+      #fz-egg-emoji:active { transform: scale(0.88); }
+      .fz-label {
+        font-size: 7px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gold);
+        opacity: 0.7;
+        margin-top: 2px;
+      }
+      /* Hen happy dance */
+      @keyframes henHappyDance {
+        0%   { transform: rotate(-22deg) scale(1.35); }
+        20%  { transform: rotate(22deg)  scale(1.45); }
+        40%  { transform: rotate(-16deg) scale(1.4);  }
+        60%  { transform: rotate(16deg)  scale(1.45); }
+        80%  { transform: rotate(-8deg)  scale(1.3);  }
+        100% { transform: rotate(0deg)   scale(1);    }
+      }
+      .hen-happy { animation: henHappyDance 0.75s ease forwards !important; }
+      /* Floating hearts */
+      .fz-heart {
+        position: fixed;
+        font-size: 20px;
+        pointer-events: none;
+        z-index: 9998;
+        animation: heartRise 1.3s ease forwards;
+      }
+      @keyframes heartRise {
+        0%   { opacity: 1; transform: translateY(0)    scale(1.1); }
+        100% { opacity: 0; transform: translateY(-100px) scale(0.4); }
+      }
+      /* Egg shaking */
+      @keyframes eggShake {
+        0%,100% { transform: rotate(0deg)   scale(1);    }
+        15%     { transform: rotate(-10deg) scale(1.08); }
+        35%     { transform: rotate(10deg)  scale(1.1);  }
+        55%     { transform: rotate(-8deg)  scale(1.08); }
+        75%     { transform: rotate(8deg)   scale(1.09); }
+      }
+      .egg-shaking { animation: eggShake 0.55s ease; }
+      /* Crack flash */
+      @keyframes crackFlash {
+        0%   { opacity: 1; transform: scale(1);    }
+        40%  { opacity: 1; transform: scale(1.2);  }
+        100% { opacity: 0; transform: scale(0.5);  }
+      }
+      .egg-cracking { animation: crackFlash 0.45s ease forwards; }
+      /* Chick pop */
+      #fz-chick {
+        font-size: 46px;
+        line-height: 1;
+        animation: chickPop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      }
+      @keyframes chickPop {
+        0%   { transform: scale(0) translateY(20px); opacity: 0; }
+        60%  { transform: scale(1.15) translateY(-4px); opacity: 1; }
+        100% { transform: scale(1) translateY(0);    opacity: 1; }
+      }
+      /* Mini chicks flying */
+      .fz-mini-chick {
+        position: fixed;
+        font-size: 22px;
+        pointer-events: none;
+        z-index: 9999;
+        animation: miniChickFly 1.5s cubic-bezier(0.23,1,0.32,1) forwards;
+      }
+      @keyframes miniChickFly {
+        0%   { opacity: 1; transform: translate(0,0) scale(1) rotate(0deg);            }
+        100% { opacity: 0; transform: var(--fly-to)  scale(0.3) rotate(var(--fly-rot));}
+      }
+      /* Mode dots */
+      #fz-dots {
+        display: flex;
+        gap: 6px;
+        margin-top: 6px;
+      }
+      .fz-dot {
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.18);
+        transition: background 0.45s;
+      }
+      .fz-dot.on { background: var(--gold); }
+      /* Mode-switch glow ring */
+      #fz-mode-ring {
+        position: absolute;
+        inset: -6px;
+        border-radius: 12px;
+        pointer-events: none;
+        border: 1px solid rgba(201,168,76,0.2);
+        animation: fzRingPulse 3s ease-in-out infinite;
+      }
+      @keyframes fzRingPulse {
+        0%,100% { box-shadow: 0 0 10px rgba(201,168,76,0.1); }
+        50%     { box-shadow: 0 0 24px rgba(201,168,76,0.35); }
+      }
     </style>
-</head>
-<body>
-<!-- Responsive Container -->
-<div class="w-full overflow-x-hidden">
+  </head>
+  <body>
+    <!-- HEN CURSOR -->
+    <div id="hen-cursor">🐓</div>
 
-<style>
-html,body{
-    overflow-x:hidden;
-}
-
-img{
-    max-width:100%;
-    height:auto;
-    display:block;
-}
-
-@media (max-width:768px){
-
-nav{
-    padding:16px !important;
-    flex-direction:column;
-    gap:15px;
-}
-
-nav h1{
-    font-size:24px !important;
-    text-align:center;
-}
-
-nav div{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:15px;
-}
-
-section{
-    padding-left:20px !important;
-    padding-right:20px !important;
-}
-
-h1{
-    font-size:38px !important;
-}
-
-h2{
-    font-size:30px !important;
-}
-
-h3{
-    font-size:24px !important;
-}
-
-p{
-    font-size:16px !important;
-    line-height:1.8;
-}
-
-}
-</style>
-<!-- Responsive Container -->
-<div class="w-full overflow-x-hidden">
-
-<style>
-html,body{
-    overflow-x:hidden;
-}
-
-img{
-    max-width:100%;
-    height:auto;
-    display:block;
-}
-
-@media (max-width:768px){
-
-nav{
-    padding:16px !important;
-    flex-direction:column;
-    gap:15px;
-}
-
-nav h1{
-    font-size:24px !important;
-    text-align:center;
-}
-
-nav div{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:15px;
-}
-
-section{
-    padding-left:20px !important;
-    padding-right:20px !important;
-}
-
-h1{
-    font-size:38px !important;
-}
-
-h2{
-    font-size:30px !important;
-}
-
-h3{
-    font-size:24px !important;
-}
-
-p{
-    font-size:16px !important;
-    line-height:1.8;
-}
-
-}
-</style>
- </div>
-
- <!-- PREMIUM NAVBAR -->
-
-<nav class="premium-nav flex justify-between items-center py-8 px-12">
-
-
-    <!-- LOGO -->
-
-    <h1 class="nav-logo text-3xl font-black tracking-tighter">
-        THE RED COCKS
-    </h1>
-
-
-
-    <!-- MENU -->
-
-    <div class="nav-menu flex gap-10 font-bold uppercase text-sm tracking-widest">
-
-
-        <a href="#home">
-            Home
-        </a>
-
-
-        <a href="#about">
-            About
-        </a>
-
-
-        <a href="#products">
-            Products
-        </a>
-
-
-        <a href="#vision">
-            Vision
-        </a>
-
-
+    <!-- PRELOADER -->
+    <div id="preloader">
+      <div class="pre-logo"><em>THE</em> RED COCKS</div>
+      <div class="pre-bar"><div class="pre-bar-fill"></div></div>
     </div>
 
-
-</nav>
-
-<style>
-
-
-/* NAVBAR */
-
-.premium-nav{
-
-background:rgba(5,5,5,.75);
-backdrop-filter:blur(18px);
-
-border-bottom:1px solid rgba(220,38,38,.25);
-
-position:relative;
-z-index:50;
-
-animation:navShow 1s ease;
-
-}
-
-
-
-
-/* LOGO */
-
-.nav-logo{
-
-color:#dc2626;
-
-text-shadow:
-0 0 15px rgba(220,38,38,.5);
-
-animation:logoFloat 3s infinite ease-in-out;
-
-}
-
-
-
-@keyframes logoFloat{
-
-0%,100%{
-
-transform:translateY(0);
-
-}
-
-50%{
-
-transform:translateY(-5px);
-
-}
-
-}
-
-
-/* MENU */
-
-.nav-menu a{
-
-color:white;
-
-position:relative;
-
-padding:8px 0;
-
-transition:.5s;
-
-}
-
-.nav-menu a::after{
-
-content:"";
-
-position:absolute;
-
-left:0;
-bottom:0;
-
-width:0%;
-height:2px;
-
-background:#ef4444;
-
-transition:.5s;
-
-}
-
-
-
-.nav-menu a:hover{
-
-color:#ef4444;
-
-transform:translateY(-6px);
-
-text-shadow:0 0 20px rgba(239,68,68,.6);
-
-}
-
-
-
-.nav-menu a:hover::after{
-
-width:100%;
-
-}
-
-
-
-
-
-/* NAV ENTRY */
-
-@keyframes navShow{
-
-from{
-
-opacity:0;
-transform:translateY(-40px);
-
-}
-
-to{
-
-opacity:1;
-transform:translateY(0);
-
-}
-
-}
-
-
-
-
-
-/* MOBILE */
-
-@media(max-width:768px){
-
-
-.premium-nav{
-
-padding:20px;
-
-flex-direction:column;
-
-gap:25px;
-
-}
-
-
-.nav-logo{
-
-font-size:24px;
-
-}
-
-
-.nav-menu{
-
-gap:20px;
-flex-wrap:wrap;
-justify-content:center;
-
-}
-
-
-.nav-menu a{
-
-font-size:12px;
-
-}
-
-
-}
-
-</style>
-   </div>
-
-    </nav>
-
-<!-- PREMIUM HERO SECTION -->
-
-   <!-- PREMIUM HERO SECTION -->
-
-<section id="home"
-class="relative overflow-hidden min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black px-6">
-
-
-<!-- Animated Background -->
-
-<div class="absolute inset-0 overflow-hidden">
-
-
-<div class="absolute top-20 left-10 w-72 h-72 
-bg-red-600/20 rounded-full blur-3xl animate-glowOne">
-</div>
-
-
-<div class="absolute bottom-20 right-10 w-96 h-96 
-bg-red-500/10 rounded-full blur-3xl animate-glowTwo">
-</div>
-
-
-</div>
-
-
-
-
-
-<div class="relative z-10 max-w-6xl text-center">
-
-
-
-<!-- Badge -->
-
-<span class="hero-badge inline-block px-5 py-2 rounded-full 
-border border-red-500 text-red-500 tracking-[5px] 
-uppercase text-sm font-bold mb-8">
-
-🌍 Trusted Worldwide
-
-</span>
-
-
-
-
-
-<!-- Heading -->
-
-
-<h1 class="hero-title text-5xl md:text-8xl font-black leading-tight text-white">
-
-
-GLOBAL PREMIUM
-
-<br>
-
-
-<span class="premium-text">
-
-MEAT & FARMING
-
-</span>
-
-
-<br>
-
-
-COMPANY
-
-
-</h1>
-
-
-
-
-
-
-<!-- Description -->
-
-<p class="hero-desc max-w-3xl mx-auto mt-8 
-text-gray-300 text-lg md:text-xl leading-8">
-
-
-Delivering premium-quality poultry, meat, and farm products with international standards, trusted by customers across the globe.
-
-
-</p>
-
-
-
-
-
-
-<!-- Buttons -->
-
-<div class="flex flex-wrap justify-center gap-6 mt-12">
-
-
-<a href="#products"
-class="hero-btn primary-btn">
-
-Explore Products
-
-</a>
-
-
-
-<a href="#contact"
-class="hero-btn second-btn">
-
-Contact Us
-
-</a>
-
-
-</div>
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-<style>
-
-
-/* BACKGROUND */
-
-@keyframes glowOne{
-
-0%,100%{
-transform:translate(0,0) scale(1);
-opacity:.4;
-}
-
-50%{
-transform:translate(40px,40px) scale(1.2);
-opacity:.8;
-}
-
-}
-
-
-
-@keyframes glowTwo{
-
-0%,100%{
-transform:translate(0,0) scale(1);
-}
-
-50%{
-transform:translate(-50px,-40px) scale(1.3);
-}
-
-}
-
-
-.animate-glowOne{
-
-animation:glowOne 8s infinite ease-in-out;
-
-}
-
-
-.animate-glowTwo{
-
-animation:glowTwo 10s infinite ease-in-out;
-
-}
-
-
-
-
-
-/* BADGE */
-
-.hero-badge{
-
-animation:badgeFloat 3s infinite ease-in-out;
-
-}
-
-
-
-@keyframes badgeFloat{
-
-50%{
-
-transform:translateY(-8px);
-
-}
-
-}
-
-
-
-
-
-/* TITLE */
-
-.hero-title{
-
-animation:titleReveal 1.5s ease forwards;
-
-}
-
-
-
-@keyframes titleReveal{
-
-from{
-
-opacity:0;
-transform:translateY(70px);
-filter:blur(15px);
-
-}
-
-
-to{
-
-opacity:1;
-transform:translateY(0);
-filter:blur(0);
-
-}
-
-}
-
-
-
-
-
-/* MOVING GRADIENT TEXT */
-
-
-.premium-text{
-
-background:linear-gradient(
-90deg,
-#dc2626,
-#ffffff,
-#dc2626,
-#991b1b
-);
-
-background-size:300%;
-
--webkit-background-clip:text;
-
-color:transparent;
-
-animation:textShine 5s linear infinite;
-
-}
-
-
-
-@keyframes textShine{
-
-0%{
-
-background-position:0%;
-
-}
-
-100%{
-
-background-position:300%;
-
-}
-
-}
-
-
-
-
-
-/* DESCRIPTION */
-
-
-.hero-desc{
-
-animation:descShow 2s ease;
-
-}
-
-
-@keyframes descShow{
-
-from{
-
-opacity:0;
-transform:translateY(30px);
-
-}
-
-to{
-
-opacity:1;
-transform:translateY(0);
-
-}
-
-}
-
-
-
-
-
-/* BUTTON */
-
-
-.hero-btn{
-
-padding:16px 34px;
-
-border-radius:50px;
-
-font-weight:800;
-
-transition:.5s;
-
-}
-
-
-
-.primary-btn{
-
-background:#dc2626;
-
-color:white;
-
-box-shadow:0 0 30px rgba(220,38,38,.5);
-
-}
-
-
-.second-btn{
-
-border:2px solid white;
-
-color:white;
-
-}
-
-.hero-btn:hover{
-
-transform:translateY(-10px) scale(1.08);
-
-box-shadow:0 20px 40px rgba(220,38,38,.5);
-
-}
-
-.hero-btn:active{
-
-transform:translateY(-5px) scale(.98);
-
-}
-
-
-/* MOBILE */
-
-@media(max-width:640px){
-
-.hero-title{
-
-font-size:42px;
-
-}
-
-.hero-desc{
-
-font-size:15px;
-
-}
-
-.hero-btn{
-
-width:100%;
-max-width:280px;
-
-}
-
-}
-
-</style>    </a>
+    <!-- VIEW TOGGLE -->
+    <div id="view-toggle-bar">
+      <button
+        class="view-btn active"
+        id="btn-desktop"
+        onclick="setView('desktop')"
+      >
+        <i class="fas fa-desktop"></i> Desktop
+      </button>
+      <button class="view-btn" id="btn-mobile" onclick="setView('mobile')">
+        <i class="fas fa-mobile-alt"></i> Mobile
+      </button>
+    </div>
+
+    <!-- LIVE NOTIFICATION -->
+    <div id="liveNotify">
+      <div class="notify-head">
+        <div class="live-dot"></div>
+        <h4>Live Activity</h4>
+      </div>
+      <p id="notifyText">Loading…</p>
+    </div>
+
+    <!-- SITE WRAPPER -->
+    <div id="site-wrapper">
+      <!-- ── NAVBAR ─────────────────────────────────────────────── -->
+      <div class="nav-wrap">
+        <nav class="premium-nav" id="mainNav">
+          <div class="nav-logo"><em>THE</em> RED COCKS</div>
+          <div class="nav-menu">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#products">Products</a>
+            <a href="#vision">Vision</a>
+            <a href="#contact" class="nav-cta">Contact Us</a>
+          </div>
+          <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </nav>
+        <div class="nav-mobile-menu" id="mobile-menu">
+          <a href="#home" onclick="closeMobileMenu()">Home</a>
+          <a href="#about" onclick="closeMobileMenu()">About</a>
+          <a href="#products" onclick="closeMobileMenu()">Products</a>
+          <a href="#vision" onclick="closeMobileMenu()">Vision</a>
+          <a href="#contact" onclick="closeMobileMenu()">Contact</a>
         </div>
- <!-- Premium Animated Stats -->
-
-<div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mt-20 stats-box">
-
-
-    <div class="stat-card">
-        <h2>25+</h2>
-        <p>Countries</p>
-    </div>
-
-
-    <div class="stat-card">
-        <h2>9M+</h2>
-        <p>Happy Clients</p>
-    </div>
-
-
-    <div class="stat-card">
-        <h2>100%</h2>
-        <p>Premium Quality</p>
-    </div>
-
-
-    <div class="stat-card">
-        <h2>24/7</h2>
-        <p>Customer Support</p>
-    </div>
-
-
-</div>
-
-
-
-<style>
-
-/* Premium Stats Animation */
-
-.stats-box{
-
-animation:statsReveal 1.2s ease forwards;
-
-}
-
-
-.stat-card{
-
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(15px);
-
-border-radius:22px;
-
-padding:25px;
-
-border:1px solid rgba(220,38,38,.25);
-
-text-align:center;
-
-position:relative;
-overflow:hidden;
-
-transition:.6s;
-
-animation:boxFloat 4s ease-in-out infinite;
-
-}
-
-
-
-/* Moving Glow */
-
-.stat-card::before{
-
-content:"";
-
-position:absolute;
-
-width:120px;
-height:120px;
-
-background:#dc2626;
-
-filter:blur(60px);
-
-opacity:.25;
-
-top:-50px;
-right:-50px;
-
-transition:.5s;
-
-}
-
-
-.stat-card:hover::before{
-
-opacity:.7;
-
-}
-
-/* Hover */
-
-.stat-card:hover{
-
-transform:translateY(-12px) scale(1.06);
-
-border-color:#ef4444;
-
-box-shadow:0 0 40px rgba(220,38,38,.45);
-
-}
-
-.stat-card h2{
-
-font-size:42px;
-
-font-weight:950;
-
-color:#ef4444;
-
-position:relative;
-
-z-index:2;
-
-text-shadow:0 0 20px rgba(239,68,68,.4);
-
-}
-
-
-
-.stat-card p{
-
-color:#9ca3af;
-
-margin-top:8px;
-
-font-size:16px;
-
-font-weight:600;
-
-position:relative;
-
-z-index:2;
-
-}
-
-
-
-
-
-/* Popup Entry */
-
-@keyframes statsReveal{
-
-from{
-
-opacity:0;
-
-transform:translateY(60px) scale(.9);
-
-filter:blur(10px);
-
-}
-
-
-to{
-
-opacity:1;
-
-transform:translateY(0) scale(1);
-
-filter:blur(0);
-
-}
-
-}
-
-
-
-
-
-/* Floating Effect */
-
-@keyframes boxFloat{
-
-0%,100%{
-
-translate:0 0;
-
-}
-
-
-50%{
-
-translate:0 -6px;
-
-}
-
-}
-
-
-/* Mobile */
-
-@media(max-width:640px){
-
-
-.stat-card{
-
-padding:18px;
-
-border-radius:18px;
-
-}
-
-
-.stat-card h2{
-
-font-size:32px;
-
-}
-
-
-.stat-card p{
-
-font-size:13px;
-
-}
-
-
-}
-
-</style>       
-<!-- OUR PRODUCTS & YOUR RECIPES -->
-
-<section class="products-section">
-
-
-<!-- PREMIUM TITLE -->
-
-<div class="products-title">
-
-    <p class="small-title">
-        PREMIUM COLLECTION
-    </p>
-
-
-    <h2>
-        Our <span>Products</span>
-        &
-        Your <span>Recipes</span>
-    </h2>
-
-
-    <div class="title-line"></div>
-
-
-
-    <!-- MOVING TEXT -->
-
-    <div class="text-slider">
-
-        <div class="text-track">
-
-            <span>
-            WHAT'S A DELICIOUS COMBINATION • PREMIUM CHICKEN • QUALITY PORK • FRESH EGGS •
-            </span>
-
-            <span>
-            WHAT'S A DELICIOUS COMBINATION • PREMIUM CHICKEN • QUALITY PORK • FRESH EGGS •
-            </span>
-
+      </div>
+
+      <!-- ── HERO ───────────────────────────────────────────────── -->
+      <section id="home">
+        <div class="hero-bg-glow-1"></div>
+        <div class="hero-bg-glow-2"></div>
+
+        <div class="hero-left">
+          <div class="hero-eyebrow">
+            <span></span> Global Premium Farming <span></span>
+          </div>
+          <h1 class="hero-title">
+            The World's<br />
+            <span class="red-word">Finest</span><br />
+            <span class="italic-word">Poultry &amp;</span><br />
+            Meat House
+          </h1>
+          <p class="hero-subtitle">
+            Delivering premium-quality poultry, meat, and farm products with
+            international standards — trusted by customers across 25+ countries.
+          </p>
+          <div class="hero-actions">
+            <a href="#products" class="btn-red">Explore Products</a>
+            <a href="#contact" class="btn-ghost">Get in Touch</a>
+          </div>
         </div>
 
-    </div>
-
-
-</div>
-
-
-<!-- DISHES -->
-
-<div class="slider-box">
-
-<div class="dish-track">
-
-
-<div class="dish-card">
-<img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0">
-<h3>Chicken Tikka</h3>
-</div>
-
-
-<div class="dish-card">
-<img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398">
-<h3>Butter Chicken</h3>
-</div>
-
-
-<div class="dish-card">
-<img src="https://images.unsplash.com/photo-1527477396000-e27163b481c2">
-<h3>Chicken Wings</h3>
-</div>
-
-
-<div class="dish-card">
-<img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8">
-<h3>Chicken Biryani</h3>
-</div>
-
-
-<div class="dish-card">
-<img src="https://images.unsplash.com/photo-1544025162-d76694265947">
-<h3>Pork BBQ Ribs</h3>
-</div>
-
-
-<div class="dish-card">
-<img src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143">
-<h3>Pork Belly</h3>
-</div>
-
-
-<div class="dish-card">
-<img src="https://images.unsplash.com/photo-1525351484163-7529414344d8">
-<h3>Egg Benedict</h3>
-</div>
-
-
-<div class="dish-card">
-<img src="https://images.unsplash.com/photo-1510693206972-df098062cb71">
-<h3>Egg Omelette</h3>
-</div>
-
-
-
-</div>
-
-</div>
-
-
-</section>
-
-
-
-
-
-<style>
-
-
-.products-section{
-
-background:#09090b;
-padding:70px 15px;
-overflow:hidden;
-
-}
-
-
-
-/* TITLE */
-
-.products-title{
-
-text-align:center;
-animation:titleShow 1.2s ease;
-
-}
-
-
-
-.small-title{
-
-color:#ef4444;
-font-size:12px;
-font-weight:900;
-letter-spacing:6px;
-
-}
-
-
-
-.products-title h2{
-
-font-size:clamp(35px,7vw,70px);
-font-weight:950;
-color:white;
-margin-top:15px;
-
-}
-
-
-
-.products-title h2 span{
-
-color:#dc2626;
-
-}
-
-
-
-.title-line{
-
-width:120px;
-height:4px;
-margin:25px auto;
-background:#dc2626;
-border-radius:20px;
-box-shadow:0 0 20px #dc2626;
-
-}
-
-
-
-
-
-/* MOVING TEXT */
-
-.text-slider{
-
-overflow:hidden;
-margin-top:20px;
-
-}
-
-
-.text-track{
-
-display:flex;
-width:max-content;
-animation:textMove 14s linear infinite;
-
-}
-
-
-
-.text-track span{
-
-font-size:18px;
-font-weight:900;
-letter-spacing:4px;
-color:#ef4444;
-padding-right:40px;
-
-transition:.5s;
-
-}
-
-
-
-.text-track span:hover{
-
-transform:translateY(-8px);
-text-shadow:0 0 25px #ef4444;
-
-}
-
-
-
-
-@keyframes textMove{
-
-from{
-
-transform:translateX(0);
-
-}
-
-to{
-
-transform:translateX(-50%);
-
-}
-
-}
-
-
-
-
-/* DISH SLIDER */
-
-
-.slider-box{
-
-margin-top:55px;
-overflow:hidden;
-
-}
-
-
-
-.dish-track{
-
-display:flex;
-gap:22px;
-width:max-content;
-
-animation:dishMove 25s linear infinite;
-
-}
-
-
-
-@keyframes dishMove{
-
-from{
-
-transform:translateX(0);
-
-}
-
-to{
-
-transform:translateX(-50%);
-
-}
-
-}
-
-
-
-
-/* CARD */
-
-
-.dish-card{
-
-width:230px;
-height:290px;
-background:#111;
-border-radius:24px;
-overflow:hidden;
-border:1px solid rgba(220,38,38,.5);
-flex-shrink:0;
-box-shadow:0 0 30px rgba(220,38,38,.2);
-transition:.5s;
-
-}
-
-
-
-.dish-card img{
-
-width:100%;
-height:200px;
-object-fit:cover;
-transition:.6s;
-
-}
-
-
-
-.dish-card h3{
-
-color:white;
-font-size:18px;
-font-weight:900;
-text-align:center;
-padding:18px;
-
-}
-
-
-.dish-card:hover{
-
-transform:translateY(-12px) scale(1.05);
-box-shadow:0 0 50px rgba(220,38,38,.6);
-
-}
-
-.dish-card:hover img{
-
-transform:scale(1.12);
-
-}
-
-@keyframes titleShow{
-
-from{
-
-opacity:0;
-transform:translateY(50px);
-filter:blur(10px);
-
-}
-
-to{
-
-opacity:1;
-transform:translateY(0);
-filter:blur(0);
-
-}
-
-}
-
-
-/* MOBILE PERFECT */
-
-@media(max-width:640px){
-
-
-.products-section{
-
-padding:50px 10px;
-
-}
-.small-title{
-
-font-size:10px;
-letter-spacing:4px;
-
-}
-
-.products-title h2{
-
-font-size:36px;
-
-}
-
-.text-track span{
-
-font-size:14px;
-letter-spacing:2px;
-
-}
-
-.dish-card{
-
-width:170px;
-height:230px;
-
-}
-
-.dish-card img{
-
-height:150px;
-
-}
-
-.dish-card h3{
-
-font-size:14px;
-padding:12px;
-
-}
-
-
-.dish-track{
-
-gap:15px;
-
-}
-
-}
-
-
-</style>
-    
-    <!-- ABOUT SECTION -->
-
-<section id="about" class="py-24 bg-zinc-950 px-6 md:px-12 overflow-hidden">
-
-
-<div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-14 items-center">
-
-
-<!-- PREMIUM FOUNDER IMAGE -->
-
-<div class="relative group about-image">
-
-
-<div class="absolute -inset-4 rounded-3xl 
-bg-gradient-to-r from-red-600 via-red-900 to-black
-blur-2xl opacity-50 animate-pulse">
-</div>
-
-
-<div class="relative w-80 h-80 rounded-3xl overflow-hidden
-border-2 border-red-700
-shadow-[0_0_50px_rgba(220,38,38,0.5)]
-animate-float">
-
-
-<img src="https://i.ibb.co/v4SJ1CSj/ceo.jpg"
-
-class="w-80 h-80 object-cover rounded-3xl
-transition duration-700
-group-hover:scale-110
-group-hover:brightness-110">
-
-
-<div class="absolute inset-0
-bg-gradient-to-r from-transparent via-white/30 to-transparent
-translate-x-[-100%]
-group-hover:translate-x-[100%]
-transition duration-1000">
-</div>
-
-</div>
-
-
-<div class="absolute -bottom-5 left-1/2 -translate-x-1/2
-px-7 py-2 rounded-full
-bg-gradient-to-r from-red-700 to-red-950
-border border-red-400
-text-white text-xs font-black
-tracking-[3px]
-shadow-xl">
-
-FOUNDER & CEO
-
-</div>
-
-</div>
-<!-- ABOUT TEXT -->
-
-<div class="space-y-6 about-text">
-
-
-<p class="inline-block px-5 py-2 rounded-full
-bg-red-600/20 border border-red-500
-text-red-500 font-bold
-tracking-[5px] uppercase
-animate-badge">
-
-Founder & CEO
-
-</p>
-
-
-
-
-<h3 class="text-5xl md:text-7xl font-black text-white leading-tight animate-heading">
-
-Alex Wayne
-
-</h3>
-
-
-
-
-<div class="w-24 h-1 rounded-full 
-bg-gradient-to-r from-red-600 via-red-500 to-transparent">
-</div>
-
-
-
-
-<p class="text-lg md:text-xl text-gray-300 leading-9 max-w-3xl animate-paragraph">
-
-
-<span class="text-white font-semibold">
-Alex Wayne
-</span>, a young entrepreneur from
-
-<span class="text-red-500 font-semibold">
-India
-</span>, founded
-
-<span class="text-red-500 font-bold">
-THE RED COCKS
-</span>
-
-with a clear vision:
-to deliver premium poultry products that meet international standards of quality,
-freshness, and reliability.
-
-
-<br><br>
-
-
-Every product reflects our commitment to excellence—from carefully managed farms
-and strict quality control to modern processing and global distribution.
-
-Our mission is simple:
-
-
-<span class="text-white font-semibold">
-
-deliver trusted quality, build lasting partnerships,
-and set a new benchmark for the global poultry industry.
-
-</span>
-
-
-</p>
-
-
-
-
-
-<div class="flex flex-wrap gap-4 pt-6">
-
-
-<div class="info-box">
-🌍 Global Vision
-</div>
-
-
-<div class="info-box">
-🐔 Premium Quality
-</div>
-
-
-<div class="info-box">
-🚚 Worldwide Distribution
-</div>
-
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-<style>
-
-
-/* PHOTO FLOAT */
-
-@keyframes floatPhoto{
-
-0%,100%{
-transform:translateY(0);
-}
-
-50%{
-transform:translateY(-12px);
-}
-
-}
-
-
-.animate-float{
-
-animation:floatPhoto 4s ease-in-out infinite;
-
-}
-
-
-
-
-
-/* TEXT ANIMATION */
-
-
-.about-text{
-
-animation:aboutReveal 1.3s ease forwards;
-
-}
-
-
-
-@keyframes aboutReveal{
-
-from{
-
-opacity:0;
-transform:translateX(60px);
-filter:blur(10px);
-
-}
-
-to{
-
-opacity:1;
-transform:translateX(0);
-filter:blur(0);
-
-}
-
-}
-
-
-
-
-.animate-heading{
-
-animation:headingGlow 3s infinite;
-
-}
-
-
-
-@keyframes headingGlow{
-
-0%,100%{
-
-text-shadow:0 0 10px transparent;
-
-}
-
-50%{
-
-text-shadow:0 0 25px rgba(220,38,38,.5);
-
-}
-
-}
-
-
-
-
-.animate-badge{
-
-animation:pulse 2s infinite;
-
-}
-
-
-
-
-
-.animate-paragraph{
-
-animation:paragraphMove 1.8s ease;
-
-}
-
-
-
-@keyframes paragraphMove{
-
-from{
-
-opacity:0;
-transform:translateY(30px);
-
-}
-
-to{
-
-opacity:1;
-transform:translateY(0);
-
-}
-
-}
-
-
-
-
-
-/* BUTTON BADGES */
-
-
-.info-box{
-
-padding:12px 24px;
-border-radius:50px;
-background:#18181b;
-border:1px solid rgba(220,38,38,.4);
-color:white;
-font-weight:700;
-transition:.4s;
-
-}
-.info-box:hover{
-
-transform:translateY(-8px) scale(1.05);
-border-color:#ef4444;
-box-shadow:0 0 30px rgba(220,38,38,.5);
-
-}
-
-/* MOBILE */
-
-
-@media(max-width:768px){
-
-
-.about-text{
-
-text-align:center;
-
-}
-
-
-.info-box{
-
-width:100%;
-text-align:center;
-
-}
-
-}
-
-</style>
+        <div class="hero-right">
+          <div class="hero-image-frame">
+            <img
+              src="https://images.unsplash.com/photo-1558030137-a56c1b003b68?w=900&q=80"
+              alt="Premium Meat"
+            />
+            <div class="hero-image-label">
+              <h4>Est. 2020</h4>
+              <p>Kolkata, India &mdash; Global Reach</p>
+            </div>
+          </div>
         </div>
 
-    </section>
-
-            </div>
-
-    </section>
-
-<!-- PREMIUM PRODUCTS -->
-
-<section id="products" class="py-24 bg-black">
-
-<div class="max-w-7xl mx-auto px-6">
-
-<div class="text-center mb-16">
-
-<p class="text-red-500 uppercase tracking-[6px] font-bold">
-Premium Collection
-</p>
-
-<h2 class="text-5xl font-black text-white mt-4">
-Our Premium Products
-</h2>
-
-<p class="text-gray-400 mt-5 max-w-2xl mx-auto">
-Premium quality meat and eggs, carefully selected and processed to meet international quality standards.
-</p>
-
-</div>
-
-<div class="grid md:grid-cols-3 gap-8">
-
-<!-- Product -->
-
-<div class="group bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 hover:border-red-500 hover:-translate-y-3 transition-all duration-500 shadow-xl hover:shadow-red-500/30">
-
-<div class="overflow-hidden">
-
-<img src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800"
-class="w-full h-72 object-cover group-hover:scale-110 duration-700">
-
-</div>
-
-<div class="p-7">
-
-<span class="bg-red-600 text-white text-xs px-3 py-1 rounded-full">
-Best Seller
-</span>
-
-<h3 class="text-2xl font-bold text-white mt-4">
-Fresh Chicken
-</h3>
-
-<p class="text-gray-400 mt-3">
-Premium farm-fresh chicken processed with international quality standards.
-</p>
-
-<div class="flex justify-between items-center mt-6">
-
-<span class="text-yellow-400 text-lg">
-★★★★★
-</span>
-
-<a href="#"
-class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-full transition">
-View Details →
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- Product -->
-
-<div class="group bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 hover:border-red-500 hover:-translate-y-3 transition-all duration-500 shadow-xl hover:shadow-red-500/30">
-
-<img src="https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=800"
-class="w-full h-72 object-cover group-hover:scale-110 duration-700">
-
-<div class="p-7">
-
-<span class="bg-red-600 text-white text-xs px-3 py-1 rounded-full">
-Premium
-</span>
-
-<h3 class="text-2xl font-bold text-white mt-4">
-Organic Eggs
-</h3>
-
-<p class="text-gray-400 mt-3">
-Farm fresh nutritious eggs with superior freshness and quality.
-</p>
-
-<div class="flex justify-between items-center mt-6">
-
-<span class="text-yellow-400 text-lg">
-★★★★★
-</span>
-
-<a href="#" class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-full">
-View Details →
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- Product -->
-
-<div class="group bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 hover:border-red-500 hover:-translate-y-3 transition-all duration-500 shadow-xl hover:shadow-red-500/30">
-
-<img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=800"
-class="w-full h-72 object-cover group-hover:scale-110 duration-700">
-
-<div class="p-7">
-
-<span class="bg-red-600 text-white text-xs px-3 py-1 rounded-full">
-Export Quality
-</span>
-
-<h3 class="text-2xl font-bold text-white mt-4">
-Premium Pork
-</h3>
-
-<p class="text-gray-400 mt-3">
-Carefully selected premium pork prepared for global quality standards.
-</p>
-
-<div class="flex justify-between items-center mt-6">
-
-<span class="text-yellow-400 text-lg">
-★★★★★
-</span>
-
-<a href="#" class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-full">
-View Details →
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-            </div>
-
+        <div class="hero-stats">
+          <div class="hstat">
+            <h3>25<sup>+</sup></h3>
+            <p>Countries Served</p>
+          </div>
+          <div class="hstat">
+            <h3>9M<sup>+</sup></h3>
+            <p>Happy Clients</p>
+          </div>
+          <div class="hstat">
+            <h3>100<sup>%</sup></h3>
+            <p>Premium Quality</p>
+          </div>
+          <div class="hstat">
+            <h3>24<sup>/7</sup></h3>
+            <p>Support</p>
+          </div>
         </div>
+      </section>
 
-    </section>
-
-</body>
-
-</html><!-- ABOUT SECTION (Updated with Vision) -->
-
-<section id="about" class="py-24 bg-zinc-950 px-12">
-
-    <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-16 items-center">
-
-<!-- Founder Image -->
-
-       <!-- PREMIUM ANIMATED FOUNDER PHOTO -->
-
-<div class="relative group">
-
-    <!-- Glow -->
-    <div class="absolute -inset-4 rounded-3xl 
-    bg-gradient-to-r from-red-600 via-yellow-500 to-red-900
-    blur-2xl opacity-40 animate-pulse">
-    </div>
-
-
-    <!-- Image -->
-
-    <div class="relative w-80 h-80 rounded-3xl overflow-hidden
-    border-2 border-red-600
-    shadow-[0_0_50px_rgba(220,38,38,0.6)]
-    animate-float">
-
-
-        <img src="https://i.ibb.co/v4SJ1CSj/ceo.jpg"
-        class="w-80 h-80 object-cover rounded-3xl
-        transition duration-700
-        group-hover:scale-110">
-
-
-        <!-- Shine -->
-        <div class="absolute inset-0 
-        bg-gradient-to-r from-transparent via-white/30 to-transparent
-        -translate-x-full group-hover:translate-x-full
-        transition duration-1000">
+      <!-- ── MARQUEE BAND ────────────────────────────────────────── -->
+      <div class="marquee-band">
+        <div class="marquee-track">
+          <span>PREMIUM QUALITY &bull;</span>
+          <span>GLOBAL DISTRIBUTION &bull;</span>
+          <span>FARM FRESH POULTRY &bull;</span>
+          <span>INTERNATIONAL STANDARDS &bull;</span>
+          <span>25+ COUNTRIES &bull;</span>
+          <span>TRUSTED WORLDWIDE &bull;</span>
+          <span>PREMIUM QUALITY &bull;</span>
+          <span>GLOBAL DISTRIBUTION &bull;</span>
+          <span>FARM FRESH POULTRY &bull;</span>
+          <span>INTERNATIONAL STANDARDS &bull;</span>
+          <span>25+ COUNTRIES &bull;</span>
+          <span>TRUSTED WORLDWIDE &bull;</span>
         </div>
+      </div>
 
-
-    </div>
-
-</div>
-
-
-<style>
-
-@keyframes float{
-
-0%,100%{
-transform:translateY(0);
-}
-
-50%{
-transform:translateY(-12px);
-}
-
-}
-
-.animate-float{
-animation:float 4s ease-in-out infinite;
-}
-
-</style> 
-  <div>
-           <!-- PREMIUM CEO INFO -->
-
-<div class="group relative overflow-hidden rounded-3xl border border-red-500/30 bg-gradient-to-br from-zinc-900 via-black to-zinc-900 p-10 shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:border-yellow-500/60 hover:shadow-red-600/30">
-
-    <!-- Glow Effect -->
-    <div class="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-red-600/20 blur-3xl transition-all duration-700 group-hover:bg-yellow-500/20"></div>
-
-    <div class="relative z-10">
-
-        <p class="mb-4 inline-block rounded-full border border-yellow-500/40 bg-yellow-500/10 px-5 py-2 text-sm font-bold uppercase tracking-[6px] text-yellow-400 transition-all duration-500 group-hover:scale-105">
-            Founder & CEO
-        </p>
-
-        <h3 class="mb-6 bg-gradient-to-r from-white via-yellow-300 to-red-500 bg-clip-text text-5xl font-black text-transparent transition-all duration-500 group-hover:tracking-wide md:text-6xl">
-            Alex Wayne
-        </h3>
-
-        <p class="text-lg leading-9 text-gray-300 md:text-xl">
-            <span class="font-semibold text-white">"Quality is our DNA."</span><br><br>
-
-            At <span class="font-bold text-red-500">THE RED COCKS</span>, we are committed to delivering premium-quality Meat & Farming products with integrity, innovation, and international standards. Every product reflects our dedication to freshness, food safety, and long-term customer trust.
-        </p>
-
-        <div class="mt-8 flex flex-wrap gap-3">
-
-            <span class="rounded-full border border-red-500 px-5 py-2 text-sm font-semibold text-white transition-all duration-300 hover:bg-red-600">
-                Premium Quality
-            </span>
-
-            <span class="rounded-full border border-yellow-500 px-5 py-2 text-sm font-semibold text-yellow-400 transition-all duration-300 hover:bg-yellow-500 hover:text-black">
-                Global Vision
-            </span>
-
-            <span class="rounded-full border border-zinc-600 px-5 py-2 text-sm font-semibold text-gray-300 transition-all duration-300 hover:border-red-500">
-                Trusted Brand
-            </span>
-
+      <!-- ── DISH SLIDER ──────────────────────────────────────────── -->
+      <section class="dish-section">
+        <div class="dish-section-head reveal">
+          <div class="sec-eyebrow">
+            <span></span> Premium Collection <span></span>
+          </div>
+          <h2 class="sec-title">Our <em>Products</em> &amp; Your Recipes</h2>
+          <div class="sec-rule"></div>
         </div>
-
-    </div>
-
-</div>
-             <!-- VISION BOX -->
-            <div class="bg-black p-6 rounded-2xl border-l-4 border-red-600">
-
-                <h4 class="text-2xl font-bold mb-2">Our Vision</h4>
-
-                <p class="text-gray-300 italic"></p>
-<div class="relative bg-gradient-to-br from-zinc-900 via-black to-zinc-900 p-8 rounded-3xl border border-red-500 shadow-2xl mx-auto max-w-2xl">    <!-- Animated Glow -->
-
-    <div class="absolute -top-10 -left-10 w-40 h-40 bg-red-600/20 blur-3xl animate-ping"></div>
-
-    <div class="relative z-10">
-
-        <span class="text-red-500 uppercase tracking-[5px] font-bold text-sm">
-            Our Vision
-        </span>
-
-        <h4 class="text-4xl font-black text-white mt-3 mb-5">
-            Building The Future of Premium Poultry
-        </h4>
-
-        <p class="text-gray-300 text-lg leading-8">
-            "To redefine global poultry & Farming standards by delivering exceptional quality,
-            sustainable farming, and trusted partnerships across the world."
-        </p>
-
-    </div>
-
-</div>
-
+        <div class="slider-overflow">
+          <div class="dish-track">
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80"
+                alt="Chicken Tikka"
+              />
+              <div class="dish-card-body">
+                <h3>Chicken Tikka</h3>
+                <p>Marinated to perfection</p>
+              </div>
             </div>
-
-           
-
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80"
+                alt="Butter Chicken"
+              />
+              <div class="dish-card-body">
+                <h3>Butter Chicken</h3>
+                <p>Rich &amp; creamy classic</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&q=80"
+                alt="Chicken Wings"
+              />
+              <div class="dish-card-body">
+                <h3>Chicken Wings</h3>
+                <p>Crispy golden wings</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80"
+                alt="Chicken Biryani"
+              />
+              <div class="dish-card-body">
+                <h3>Chicken Biryani</h3>
+                <p>Aromatic &amp; flavorful</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80"
+                alt="Pork BBQ Ribs"
+              />
+              <div class="dish-card-body">
+                <h3>Pork BBQ Ribs</h3>
+                <p>Slow-smoked perfection</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=600&q=80"
+                alt="Pork Belly"
+              />
+              <div class="dish-card-body">
+                <h3>Pork Belly</h3>
+                <p>Tender &amp; juicy cuts</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80"
+                alt="Eggs Benedict"
+              />
+              <div class="dish-card-body">
+                <h3>Eggs Benedict</h3>
+                <p>Farm-fresh eggs</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1510693206972-df098062cb71?w=600&q=80"
+                alt="Omelette"
+              />
+              <div class="dish-card-body">
+                <h3>Egg Omelette</h3>
+                <p>Pure &amp; natural</p>
+              </div>
+            </div>
+            <!-- Duplicate -->
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80"
+                alt="Chicken Tikka"
+              />
+              <div class="dish-card-body">
+                <h3>Chicken Tikka</h3>
+                <p>Marinated to perfection</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80"
+                alt="Butter Chicken"
+              />
+              <div class="dish-card-body">
+                <h3>Butter Chicken</h3>
+                <p>Rich &amp; creamy classic</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&q=80"
+                alt="Chicken Wings"
+              />
+              <div class="dish-card-body">
+                <h3>Chicken Wings</h3>
+                <p>Crispy golden wings</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80"
+                alt="Chicken Biryani"
+              />
+              <div class="dish-card-body">
+                <h3>Chicken Biryani</h3>
+                <p>Aromatic &amp; flavorful</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80"
+                alt="Pork BBQ Ribs"
+              />
+              <div class="dish-card-body">
+                <h3>Pork BBQ Ribs</h3>
+                <p>Slow-smoked perfection</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=600&q=80"
+                alt="Pork Belly"
+              />
+              <div class="dish-card-body">
+                <h3>Pork Belly</h3>
+                <p>Tender &amp; juicy cuts</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80"
+                alt="Eggs Benedict"
+              />
+              <div class="dish-card-body">
+                <h3>Eggs Benedict</h3>
+                <p>Farm-fresh eggs</p>
+              </div>
+            </div>
+            <div class="dish-card">
+              <img
+                src="https://images.unsplash.com/photo-1510693206972-df098062cb71?w=600&q=80"
+                alt="Omelette"
+              />
+              <div class="dish-card-body">
+                <h3>Egg Omelette</h3>
+                <p>Pure &amp; natural</p>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-    </div>
-
-    </div>
-</section><!-- CONTACT & SOCIAL SECTION -->
-
-<section id="contact" class="py-20 px-12 border-t border-zinc-800">
-
-    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 text-center">
-
-                </div>
-
-<!-- PREMIUM COUNTRY NETWORK SECTION -->
-<section class="country-network">
-
-    <h2>🌍 Our Global Network</h2>
-    <p class="sub-title">Serving Customers Across The World</p>
-
-    <div class="country-slider">
-        <div class="country-track">
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/us.png" alt="">
-                <h3>United States</h3>
+      <!-- ── ABOUT ───────────────────────────────────────────────── -->
+      <section id="about">
+        <div class="about-photo-col reveal-l">
+          <div class="about-photo-frame">
+            <img
+              src="https://i.ibb.co/v4SJ1CSj/ceo.jpg"
+              alt="Alex Wayne – Founder & CEO"
+            />
+            <div class="about-photo-caption">
+              <h4>Alex Wayne</h4>
+              <p>Founder &amp; CEO</p>
             </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/gb.png" alt="">
-                <h3>United Kingdom</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/ca.png" alt="">
-                <h3>Canada</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/au.png" alt="">
-                <h3>Australia</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/de.png" alt="">
-                <h3>Germany</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/ae.png" alt="">
-                <h3>United Arab Emirates</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/sg.png" alt="">
-                <h3>Singapore</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/in.png" alt="">
-                <h3>India</h3>
-            </div>
-
-            <!-- Duplicate for Infinite Scroll -->
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/us.png" alt="">
-                <h3>United States</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/gb.png" alt="">
-                <h3>United Kingdom</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/ca.png" alt="">
-                <h3>Canada</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/au.png" alt="">
-                <h3>Australia</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/de.png" alt="">
-                <h3>Germany</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/ae.png" alt="">
-                <h3>United Arab Emirates</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/sg.png" alt="">
-                <h3>Singapore</h3>
-            </div>
-
-            <div class="country-card">
-                <img src="https://flagcdn.com/w160/in.png" alt="">
-                <h3>India</h3>
-            </div>
-
+          </div>
+          <div class="about-accent-box"></div>
+          <div class="about-accent-dot"></div>
         </div>
-    </div>
-
-</section>
-
-<style>
-
-.country-network{
-    background:#090909;
-    padding:90px 20px;
-    overflow:hidden;
-}
-
-.country-network h2{
-    text-align:center;
-    color:#fff;
-    font-size:46px;
-    margin-bottom:10px;
-    font-weight:800;
-    letter-spacing:1px;
-}
-
-.sub-title{
-    text-align:center;
-    color:#bdbdbd;
-    font-size:18px;
-    margin-bottom:60px;
-}
-
-.country-slider{
-    overflow:hidden;
-    position:relative;
-}
-
-.country-track{
-    display:flex;
-    gap:28px;
-    width:max-content;
-    animation:marquee 26s linear infinite;
-}
-
-.country-track:hover{
-    animation-play-state:paused;
-}
-
-/* Premium Glass Cards */
-
-.country-card{
-    min-width:220px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:22px;
-    backdrop-filter:blur(15px);
-    padding:24px;
-    text-align:center;
-    box-shadow:0 10px 30px rgba(255,0,0,.12);
-
-    opacity:0;
-    transform:translateY(80px);
-    animation:popup .8s ease forwards;
-
-    transition:.4s;
-}
-
-.country-card:nth-child(1){animation-delay:.1s;}
-.country-card:nth-child(2){animation-delay:.2s;}
-.country-card:nth-child(3){animation-delay:.3s;}
-.country-card:nth-child(4){animation-delay:.4s;}
-.country-card:nth-child(5){animation-delay:.5s;}
-.country-card:nth-child(6){animation-delay:.6s;}
-.country-card:nth-child(7){animation-delay:.7s;}
-.country-card:nth-child(8){animation-delay:.8s;}
-
-.country-card:hover{
-    transform:translateY(-14px) scale(1.06);
-    border-color:#ff3030;
-    box-shadow:
-    0 20px 45px rgba(255,0,0,.35),
-    0 0 35px rgba(255,0,0,.28);
-}
-
-.country-card img{
-    width:95px;
-    height:65px;
-    border-radius:10px;
-    display:block;
-    margin:auto;
-    margin-bottom:18px;
-    transition:.45s;
-    box-shadow:0 10px 25px rgba(0,0,0,.35);
-}
-
-.country-card:hover img{
-    transform:translateY(-8px) scale(1.12) rotate(-2deg);
-}
-
-.country-card h3{
-    color:#fff;
-    font-size:18px;
-    margin:0;
-    font-weight:600;
-}
-
-/* Right to Left Infinite Animation */
-
-@keyframes marquee{
-    from{
-        transform:translateX(0);
-    }
-    to{
-        transform:translateX(-50%);
-    }
-}
-
-/* Premium Pop Up */
-
-@keyframes popup{
-    0%{
-        opacity:0;
-        transform:translateY(80px) scale(.85);
-    }
-
-    60%{
-        opacity:1;
-        transform:translateY(-10px) scale(1.03);
-    }
-
-    100%{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
-/* Mobile */
-
-@media(max-width:768px){
-
-.country-network{
-    padding:70px 15px;
-}
-
-.country-network h2{
-    font-size:30px;
-}
-
-.sub-title{
-    font-size:15px;
-}
-
-.country-track{
-    gap:18px;
-    animation-duration:18s;
-}
-
-.country-card{
-    min-width:170px;
-    padding:18px;
-}
-
-.country-card img{
-    width:70px;
-    height:48px;
-}
-
-.country-card h3{
-    font-size:15px;
-}
-
-}
-
-</style>
-</style>
-<!-- PREMIUM CUSTOMER REVIEWS SECTION -->
-
-<section class="review-section">
-
-<h2>⭐ Trusted by Customers Worldwide</h2>
-<p class="review-subtitle">
-4.9/5 Average Rating • 9,000,00+ Happy Customers
-</p>
-
-<div class="review-slider">
-
-<div class="review-track">
-
-<!-- Review 1 -->
-<div class="review-card">
-<div class="profile">
-<img src="https://i.pravatar.cc/100?img=11">
-<div>
-<h3>James Wilson <span>✔ Verified Buyer</span></h3>
-<div class="stars">★★★★★</div>
-</div>
-</div>
-
-<p>
-"The quality exceeded my expectations. Fresh products, premium packaging, and very fast delivery. Highly recommended!"
-</p>
-</div>
-
-<!-- Review 2 -->
-<div class="review-card">
-<div class="profile">
-<img src="https://i.pravatar.cc/100?img=32">
-<div>
-<h3>Emma Brown <span>✔ Verified Buyer</span></h3>
-<div class="stars">★★★★★</div>
-</div>
-</div>
-
-<p>
-"The eggs arrived perfectly fresh. Customer service was excellent. Definitely ordering again."
-</p>
-</div>
-
-<!-- Review 3 -->
-<div class="review-card">
-<div class="profile">
-<img src="https://i.pravatar.cc/100?img=15">
-<div>
-<h3>Daniel Smith <span>✔ Verified Buyer</span></h3>
-<div class="stars">★★★★★</div>
-</div>
-</div>
-
-<p>
-"Best supplier I've worked with. Everything was exactly as promised."
-</p>
-</div>
-
-<!-- Review 4 -->
-<div class="review-card">
-<div class="profile">
-<img src="https://i.pravatar.cc/100?img=25">
-<div>
-<h3>Sophia Davis <span>✔ Verified Buyer</span></h3>
-<div class="stars">★★★★★</div>
-</div>
-</div>
-
-<p>
-"Premium quality products with professional packaging. Amazing experience!"
-</p>
-</div>
-
-<!-- Review 5 -->
-<div class="review-card">
-<div class="profile">
-<img src="https://i.pravatar.cc/100?img=41">
-<div>
-<h3>Michael Johnson <span>✔ Verified Buyer</span></h3>
-<div class="stars">★★★★★</div>
-</div>
-</div>
-
-<p>
-"Fast shipping and outstanding freshness. Will recommend to everyone."
-</p>
-</div>
-
-<!-- Duplicate for Infinite Scroll -->
-
-<div class="review-card">
-<div class="profile">
-<img src="https://i.pravatar.cc/100?img=11">
-<div>
-<h3>James Wilson <span>✔ Verified Buyer</span></h3>
-<div class="stars">★★★★★</div>
-</div>
-</div>
-
-<p>
-"The quality exceeded my expectations. Fresh products and excellent service."
-</p>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<style>
-
-.review-section{
-background:#0b0b0b;
-padding:80px 20px;
-overflow:hidden;
-}
-
-.review-section h2{
-text-align:center;
-font-size:40px;
-color:#fff;
-margin:0;
-}
-
-.review-subtitle{
-text-align:center;
-color:#bdbdbd;
-font-size:18px;
-margin:15px 0 50px;
-}
-
-.review-slider{
-overflow:hidden;
-}
-
-.review-track{
-display:flex;
-gap:30px;
-width:max-content;
-animation:reviewSlide 30s linear infinite;
-}
-
-.review-card{
-width:360px;
-background:#141414;
-border:1px solid rgba(255,255,255,.08);
-border-radius:22px;
-padding:25px;
-box-shadow:0 15px 40px rgba(255,0,0,.15);
-transition:.35s;
-}
-
-.review-card:hover{
-transform:translateY(-8px);
-box-shadow:0 20px 45px rgba(255,0,0,.35);
-border-color:#ff2b2b;
-}
-
-.profile{
-display:flex;
-align-items:center;
-gap:15px;
-margin-bottom:20px;
-}
-
-.profile img{
-width:70px;
-height:70px;
-border-radius:50%;
-border:3px solid #ff2b2b;
-}
-
-.profile h3{
-margin:0;
-font-size:18px;
-color:#fff;
-}
-
-.profile span{
-display:block;
-margin-top:5px;
-font-size:13px;
-color:#00e676;
-}
-
-.stars{
-margin-top:8px;
-color:#FFD700;
-font-size:18px;
-letter-spacing:2px;
-}
-
-.review-card p{
-margin-top:20px;
-color:#d5d5d5;
-font-size:15px;
-line-height:1.7;
-}
-
-@keyframes reviewSlide{
-0%{
-transform:translateX(0);
-}
-100%{
-transform:translateX(-50%);
-}
-}
-
-.review-track:hover{
-animation-play-state:paused;
-}
-
-@media(max-width:768px){
-
-.review-section h2{
-font-size:30px;
-}
-
-.review-card{
-width:300px;
-}
-
-.profile img{
-width:60px;
-height:60px;
-}
-
-.profile h3{
-font-size:16px;
-}
-
-}
-
-</style>
-<div class="review-card">
-<h3>⭐⭐⭐⭐⭐</h3>
-<p>"THE RED COCKS has completely changed the standard of premium poultry. Fresh products, professional service, and exceptional quality."</p>
-<h4>— Michael Carter 🇺🇸</h4>
-</div>
-
-<div class="review-card">
-<h3>⭐⭐⭐⭐⭐</h3>
-<p>"CEO Alex Wayne's vision for quality and customer satisfaction is reflected in every order. Outstanding experience."</p>
-<h4>— Emily Brown 🇬🇧</h4>
-</div>
-
-<div class="review-card">
-<h3>⭐⭐⭐⭐⭐</h3>
-<p>"The packaging, freshness, and delivery speed exceeded our expectations. Highly recommended."</p>
-<h4>— David Wilson 🇨🇦</h4>
-</div>
-
-<div class="review-card">
-<h3>⭐⭐⭐⭐⭐</h3>
-<p>"THE RED COCKS is becoming one of the most trusted premium poultry brands we've worked with."</p>
-<h4>— Sarah Johnson 🇦🇺</h4>
-</div>
-
-<div class="review-card">
-<h3>⭐⭐⭐⭐⭐</h3>
-<p>"Alex Wayne's dedication to quality and innovation makes THE RED COCKS stand out in the industry."</p>
-<h4>— Daniel Lee 🇸🇬</h4>
-</div>
-
-<div class="review-card">
-<h3>⭐⭐⭐⭐⭐</h3>
-<p>"Every shipment arrives fresh and professionally packed. Excellent quality from THE RED COCKS."</p>
-<h4>— Ahmed Khan 🇦🇪</h4>
-</div>
-<!-- PREMIUM SOCIAL MEDIA SECTION -->
-
-<section class="social-section">
-
-<h2>Follow THE RED COCKS</h2>
-
-<p class="social-text">
-Stay connected with our latest products, premium poultry updates, behind-the-scenes content and exclusive offers.
-</p>
-
-<a href="https://instagram.com/ik.aniii" target="_blank" class="instagram-card">
-
-<div class="icon">
-<i class="fab fa-instagram"></i>
-</div>
-
-<div class="content">
-<h3>@ik.aniii</h3>
-<p>Official Instagram</p>
-</div>
-
-<div class="arrow">
-➜
-</div>
-
-</a>
-
-</section>
-
-<!-- Font Awesome -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-<style>
-
-.social-section{
-padding:80px 20px;
-background:#0d0d0d;
-text-align:center;
-}
-
-.social-section h2{
-font-size:42px;
-color:#fff;
-margin-bottom:15px;
-}
-
-.social-text{
-max-width:650px;
-margin:auto;
-color:#bdbdbd;
-font-size:17px;
-line-height:1.8;
-margin-bottom:45px;
-}
-
-.instagram-card{
-
-display:flex;
-align-items:center;
-justify-content:space-between;
-
-max-width:650px;
-margin:auto;
-
-padding:22px 30px;
-
-background:linear-gradient(135deg,#ff0069,#ff512f,#ffcc00);
-
-border-radius:22px;
-
-text-decoration:none;
-
-color:#fff;
-
-box-shadow:0 15px 40px rgba(255,0,90,.45);
-
-transition:.4s;
-
-animation:float 3s ease-in-out infinite;
-
-}
-
-.instagram-card:hover{
-
-transform:scale(1.04);
-
-box-shadow:0 25px 60px rgba(255,0,90,.6);
-
-}
-
-.icon{
-
-font-size:60px;
-
-animation:spin 10s linear infinite;
-
-}
-
-.content{
-
-flex:1;
-
-text-align:left;
-
-margin-left:25px;
-
-}
-
-.content h3{
-
-margin:0;
-
-font-size:28px;
-
-}
-
-.content p{
-
-margin-top:8px;
-
-font-size:16px;
-
-opacity:.95;
-
-}
-
-.arrow{
-
-font-size:34px;
-
-transition:.3s;
-
-}
-
-.instagram-card:hover .arrow{
-
-transform:translateX(10px);
-
-}
-
-@keyframes float{
-
-0%,100%{
-
-transform:translateY(0);
-
-}
-
-50%{
-
-transform:translateY(-8px);
-
-}
-
-}
-
-@keyframes spin{
-
-100%{
-
-transform:rotate(360deg);
-
-}
-
-}
-
-@media(max-width:768px){
-
-.instagram-card{
-
-flex-direction:column;
-
-text-align:center;
-
-gap:20px;
-
-}
-
-.content{
-
-margin:0;
-
-text-align:center;
-
-}
-
-.icon{
-
-font-size:50px;
-
-}
-
-.content h3{
-
-font-size:24px;
-
-}
-
-}
-
-</style><!-- PREMIUM CONTACT CARD -->
-
-<style>
-@keyframes floatCard{
-0%,100%{transform:translateY(0);}
-50%{transform:translateY(-8px);}
-}
-
-@keyframes glow{
-0%{box-shadow:0 0 15px rgba(255,0,0,.2);}
-50%{box-shadow:0 0 35px rgba(255,0,0,.6);}
-100%{box-shadow:0 0 15px rgba(255,0,0,.2);}
-}
-
-@keyframes pulseDot{
-0%{transform:scale(1);}
-50%{transform:scale(1.15);}
-100%{transform:scale(1);}
-}
-
-.contact-card{
-animation:floatCard 5s ease-in-out infinite,
-glow 3s infinite;
-}
-
-.contact-item:hover{
-transform:translateX(12px);
-background:rgba(255,0,0,.08);
-}
-
-.contact-item{
-transition:.4s;
-}
-
-.contact-icon{
-animation:pulseDot 2s infinite;
-}
-</style>
-
-<div class="contact-card bg-gradient-to-br from-black via-zinc-900 to-black border border-red-500/30 rounded-3xl p-8 backdrop-blur-xl max-w-xl mx-auto">
-
-<h2 class="text-3xl font-bold text-white text-center mb-2">
-📞 Contact Us
-</h2>
-
-<p class="text-center text-gray-400 mb-8">
-We're always here to help you.
-</p>
-
-<div class="space-y-5">
-
-<div class="contact-item flex items-center gap-5 rounded-2xl p-4">
-
-<div class="contact-icon w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-2xl">
-🇮🇳
-</div>
-
-<div>
-<p class="text-gray-400 text-sm">India Support</p>
-<p class="text-white font-semibold text-lg">
-+91 98XX XXX XXX
-</p>
-</div>
-
-</div>
-
-<div class="contact-item flex items-center gap-5 rounded-2xl p-4">
-
-<div class="contact-icon w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-2xl">
-🌍
-</div>
-
-<div>
-<p class="text-gray-400 text-sm">International</p>
-<p class="text-white font-semibold text-lg">
-+91 00000 00000
-</p>
-</div>
-
-</div>
-
-<div class="contact-item flex items-center gap-5 rounded-2xl p-4">
-
-<div class="contact-icon w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-2xl">
-📧
-</div>
-
-<div>
-<p class="text-gray-400 text-sm">Email</p>
-<p class="text-white font-semibold text-lg">
-contact@theredcocksind
-</p>
-</div>
-
-</div>
-
-<div class="contact-item flex items-center gap-5 rounded-2xl p-4">
-
-<div class="contact-icon w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-2xl">
-📍
-</div>
-
-<div>
-<p class="text-gray-400 text-sm">Head Office</p>
-<p class="text-white font-semibold text-lg">
-Kolkata, India
-</p>
-</div>
-
-</div>
-
-</div>
-
-<div class="mt-8">
-
-<a href="mailto:contact@theredcocksind@gmail.com"
-class="block text-center bg-red-600 hover:bg-red-700 transition duration-300 text-white font-bold py-4 rounded-2xl shadow-lg shadow-red-600/30">
-
-Contact Our Team →
-
-</a>
-
-</div>
-
-</div>
-
-<!-- CEO THANK YOU SECTION -->
-
-<section id="ceo-message" class="relative overflow-hidden py-32 bg-gradient-to-br from-black via-zinc-950 to-black">
-
-    <!-- Gold Glow -->
-    <div class="absolute top-0 left-1/4 w-80 h-80 bg-yellow-500/10 blur-3xl rounded-full animate-pulse"></div>
-    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-400/10 blur-3xl rounded-full animate-pulse"></div>
-
-    <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
-
-        <div class="inline-block mb-8 px-6 py-2 rounded-full border border-yellow-500 text-yellow-400 uppercase tracking-[6px] font-bold animate-pulse">
-            A Personal Message
+        <div class="about-text-col reveal-r delay-2">
+          <div class="sec-eyebrow"><span></span> Our Founder <span></span></div>
+          <h2 class="sec-title">
+            Driven by <em>Passion,</em><br />Built on Quality
+          </h2>
+          <div class="sec-rule"></div>
+          <p class="about-body" style="margin-top: 32px">
+            <strong>Alex Wayne</strong>, a young entrepreneur from
+            <span class="red">India</span>, founded
+            <span class="red">THE RED COCKS</span> with a clear vision: to
+            deliver premium poultry products that meet international standards
+            of quality, freshness, and reliability. <br /><br />
+            Every product reflects our commitment to excellence — from carefully
+            managed farms and strict quality control to modern processing and
+            global distribution. Our mission is simple:
+            <strong
+              >deliver trusted quality, build lasting partnerships, and set a
+              new benchmark for the global poultry industry.</strong
+            >
+          </p>
+          <div class="about-pills">
+            <div class="pill">🌍 Global Vision</div>
+            <div class="pill">🐔 Premium Quality</div>
+            <div class="pill">🚚 Worldwide Shipping</div>
+            <div class="pill">🏆 Industry Leader</div>
+            <div class="pill">✅ Certified Hygienic</div>
+          </div>
         </div>
+      </section>
 
-        <h2 class="text-5xl md:text-7xl font-black text-white mb-8">
-            Thank You
-        </h2>
-
-        <div class="w-32 h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600 mx-auto rounded-full mb-10"></div>
-
-        <p class="text-xl text-gray-300 leading-10 max-w-4xl mx-auto">
-
-            To every customer, partner, and supporter of
-            <span class="text-yellow-400 font-bold">THE RED COCKS</span>,
-
-            thank you for believing in our vision.
-
-            Every order you place inspires us to work harder, improve every day,
-            and deliver products that reflect our commitment to quality,
-            integrity, and excellence.
-
-            Your trust is our greatest achievement, and we remain dedicated
-            to building long-term relationships through premium products
-            and exceptional service.
-
-            Together, we are creating something meaningful that reaches beyond borders.
-
-        </p>
-
-        <div class="mt-16">
-
-            <h3 class="text-4xl font-black text-yellow-400">
-                Alex Wayne
-            </h3>
-
-            <p class="text-gray-400 mt-3 tracking-[4px] uppercase">
-                Founder & CEO • THE RED COCKS
+      <!-- ── PRODUCTS GRID ───────────────────────────────────────── -->
+      <section id="products">
+        <div class="products-inner">
+          <div class="products-header reveal">
+            <div class="sec-eyebrow">
+              <span></span> Premium Collection <span></span>
+            </div>
+            <h2 class="sec-title">Our <em>Signature</em> Products</h2>
+            <p class="sub" style="margin-top: 16px">
+              Premium quality meat and eggs, carefully selected and processed to
+              meet international quality standards.
             </p>
+            <div class="sec-rule"></div>
+          </div>
+          <div class="products-grid">
+            <div class="product-card reveal delay-1">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&q=80&auto=format&fit=crop"
+                  alt="Fresh Chicken"
+                  loading="lazy"
+                  onerror="this.onerror=null;this.src='https://picsum.photos/seed/freshchicken/800/600'"
+                />
+                <div class="product-overlay"></div>
+                <div class="product-tag-wrap">
+                  <span class="product-tag">Best Seller</span>
+                </div>
+              </div>
+              <div class="product-body">
+                <h3 class="product-name">Fresh Chicken</h3>
+                <p class="product-desc">
+                  Premium farm-fresh chicken processed with international
+                  quality standards.
+                </p>
+                <div class="product-footer">
+                  <span class="product-stars">★★★★★</span>
+                  <a href="#contact" class="product-link">Enquire →</a>
+                </div>
+              </div>
+            </div>
+            <div class="product-card reveal delay-2">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1569288063643-5d29ad63df3d?w=800&q=80&auto=format&fit=crop"
+                  alt="Organic Eggs"
+                  loading="lazy"
+                  onerror="this.onerror=null;this.src='https://picsum.photos/seed/organiceggs/800/600'"
+                />
+                <div class="product-overlay"></div>
+                <div class="product-tag-wrap">
+                  <span class="product-tag">Premium</span>
+                </div>
+              </div>
+              <div class="product-body">
+                <h3 class="product-name">Organic Eggs</h3>
+                <p class="product-desc">
+                  Farm-fresh nutritious eggs with superior freshness and
+                  quality.
+                </p>
+                <div class="product-footer">
+                  <span class="product-stars">★★★★★</span>
+                  <a href="#contact" class="product-link">Enquire →</a>
+                </div>
+              </div>
+            </div>
+            <div class="product-card reveal delay-3">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1432139509613-5c4255815697?w=800&q=80&auto=format&fit=crop"
+                  alt="Premium Pork"
+                  loading="lazy"
+                  onerror="this.onerror=null;this.src='https://picsum.photos/seed/premiummeat/800/600'"
+                />
+                <div class="product-overlay"></div>
+                <div class="product-tag-wrap">
+                  <span class="product-tag">Export Quality</span>
+                </div>
+              </div>
+              <div class="product-body">
+                <h3 class="product-name">Premium Pork</h3>
+                <p class="product-desc">
+                  Carefully selected premium pork prepared for global quality
+                  standards.
+                </p>
+                <div class="product-footer">
+                  <span class="product-stars">★★★★★</span>
+                  <a href="#contact" class="product-link">Enquire →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <!-- ── VISION ──────────────────────────────────────────────── -->
+      <section id="vision">
+        <div class="vision-bg-text">VISION</div>
+        <div class="vision-inner reveal">
+          <div class="sec-eyebrow" style="justify-content: center">
+            <span></span> Our Vision <span></span>
+          </div>
+          <h2 class="sec-title" style="text-align: center">
+            Building the <em>Future</em><br />of Premium Poultry
+          </h2>
+          <div class="sec-rule centered"></div>
+          <p class="vision-quote">
+            To redefine global poultry &amp; farming standards by delivering
+            exceptional quality, sustainable farming, and trusted partnerships
+            across the world.
+          </p>
+          <p class="vision-attr">— Alex Wayne, Founder &amp; CEO</p>
+        </div>
+      </section>
+
+      <!-- ── GLOBAL NETWORK ─────────────────────────────────────── -->
+      <section class="country-section">
+        <div class="country-head reveal">
+          <div class="sec-eyebrow" style="justify-content: center">
+            <span></span> Our Reach <span></span>
+          </div>
+          <h2 class="sec-title" style="text-align: center">
+            Our <em>Global</em> Network
+          </h2>
+          <div class="sec-rule centered"></div>
+          <p style="color: var(--muted); margin-top: 16px; font-size: 15px">
+            Serving customers across 25+ countries worldwide
+          </p>
+        </div>
+        <div class="country-slider">
+          <div class="country-track">
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/us.png" alt="USA" />
+              <h3>United States</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/gb.png" alt="UK" />
+              <h3>United Kingdom</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/ca.png" alt="Canada" />
+              <h3>Canada</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/au.png" alt="Australia" />
+              <h3>Australia</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/de.png" alt="Germany" />
+              <h3>Germany</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/ae.png" alt="UAE" />
+              <h3>United Arab Emirates</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/sg.png" alt="Singapore" />
+              <h3>Singapore</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/in.png" alt="India" />
+              <h3>India</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/jp.png" alt="Japan" />
+              <h3>Japan</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/fr.png" alt="France" />
+              <h3>France</h3>
+            </div>
+            <!-- Duplicate -->
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/us.png" alt="USA" />
+              <h3>United States</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/gb.png" alt="UK" />
+              <h3>United Kingdom</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/ca.png" alt="Canada" />
+              <h3>Canada</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/au.png" alt="Australia" />
+              <h3>Australia</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/de.png" alt="Germany" />
+              <h3>Germany</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/ae.png" alt="UAE" />
+              <h3>United Arab Emirates</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/sg.png" alt="Singapore" />
+              <h3>Singapore</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/in.png" alt="India" />
+              <h3>India</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/jp.png" alt="Japan" />
+              <h3>Japan</h3>
+            </div>
+            <div class="country-card">
+              <img src="https://flagcdn.com/w160/fr.png" alt="France" />
+              <h3>France</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── REVIEWS ─────────────────────────────────────────────── -->
+      <section class="review-section">
+        <div class="review-head reveal">
+          <div class="sec-eyebrow" style="justify-content: center">
+            <span></span> Customer Reviews <span></span>
+          </div>
+          <h2 class="sec-title" style="text-align: center">
+            Trusted by <em>Millions</em> Worldwide
+          </h2>
+          <div class="sec-rule centered"></div>
+          <p class="rating-sub" style="margin-top: 16px">
+            4.9 / 5 Average Rating &bull; 9,000,000+ Happy Customers
+          </p>
+        </div>
+        <div class="review-slider">
+          <div class="review-track">
+            <div class="review-card">
+              <div class="review-profile">
+                <img
+                  src="https://i.pravatar.cc/100?img=11"
+                  alt="James Wilson"
+                />
+                <div>
+                  <h3>James Wilson</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "The quality exceeded my expectations. Fresh products, premium
+                packaging, and very fast delivery. Highly recommended!"
+              </p>
+            </div>
+            <div class="review-card">
+              <div class="review-profile">
+                <img src="https://i.pravatar.cc/100?img=32" alt="Emma Brown" />
+                <div>
+                  <h3>Emma Brown</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "The eggs arrived perfectly fresh. Customer service was
+                excellent. Definitely ordering again."
+              </p>
+            </div>
+            <div class="review-card">
+              <div class="review-profile">
+                <img
+                  src="https://i.pravatar.cc/100?img=15"
+                  alt="Daniel Smith"
+                />
+                <div>
+                  <h3>Daniel Smith</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "Best supplier I've worked with. Everything was exactly as
+                promised. Professional and reliable."
+              </p>
+            </div>
+            <div class="review-card">
+              <div class="review-profile">
+                <img
+                  src="https://i.pravatar.cc/100?img=25"
+                  alt="Sophia Davis"
+                />
+                <div>
+                  <h3>Sophia Davis</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "Premium quality products with professional packaging. Amazing
+                experience overall!"
+              </p>
+            </div>
+            <div class="review-card">
+              <div class="review-profile">
+                <img
+                  src="https://i.pravatar.cc/100?img=41"
+                  alt="Michael Johnson"
+                />
+                <div>
+                  <h3>Michael Johnson</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "Fast shipping and outstanding freshness. Will recommend to
+                everyone I know."
+              </p>
+            </div>
+            <div class="review-card">
+              <div class="review-profile">
+                <img
+                  src="https://i.pravatar.cc/100?img=47"
+                  alt="Charlotte Lee"
+                />
+                <div>
+                  <h3>Charlotte Lee</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "Excellent quality and professional service. THE RED COCKS sets
+                the standard in the industry."
+              </p>
+            </div>
+            <!-- Duplicate -->
+            <div class="review-card">
+              <div class="review-profile">
+                <img
+                  src="https://i.pravatar.cc/100?img=11"
+                  alt="James Wilson"
+                />
+                <div>
+                  <h3>James Wilson</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "The quality exceeded my expectations. Fresh products, premium
+                packaging, and very fast delivery."
+              </p>
+            </div>
+            <div class="review-card">
+              <div class="review-profile">
+                <img src="https://i.pravatar.cc/100?img=32" alt="Emma Brown" />
+                <div>
+                  <h3>Emma Brown</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "The eggs arrived perfectly fresh. Customer service was
+                excellent. Definitely ordering again."
+              </p>
+            </div>
+            <div class="review-card">
+              <div class="review-profile">
+                <img
+                  src="https://i.pravatar.cc/100?img=15"
+                  alt="Daniel Smith"
+                />
+                <div>
+                  <h3>Daniel Smith</h3>
+                  <div class="verified">✔ Verified Buyer</div>
+                </div>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <p>
+                "Best supplier I've worked with. Everything was exactly as
+                promised."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SOCIAL ───────────────────────────────────────────────── -->
+      <section class="social-section">
+        <div class="reveal">
+          <div class="sec-eyebrow" style="justify-content: center">
+            <span></span> Stay Connected <span></span>
+          </div>
+          <h2 class="sec-title" style="text-align: center">
+            Follow <em>THE RED COCKS</em>
+          </h2>
+          <div class="sec-rule centered"></div>
+        </div>
+        <p class="sub reveal delay-2">
+          Stay connected with our latest products, premium poultry updates,
+          behind-the-scenes content, and exclusive offers.
+        </p>
+        <a
+          href="https://instagram.com/ik.aniii"
+          target="_blank"
+          rel="noopener"
+          class="instagram-card reveal delay-3"
+        >
+          <i class="fab fa-instagram ig-icon"></i>
+          <div class="ig-text">
+            <h3>@ik.aniii</h3>
+            <p>Official Instagram — Follow Us</p>
+          </div>
+          <span class="ig-arrow">→</span>
+        </a>
+      </section>
+
+      <!-- ── CONTACT ─────────────────────────────────────────────── -->
+      <section id="contact">
+        <div class="contact-inner">
+          <div class="reveal">
+            <div class="sec-eyebrow">
+              <span></span> Get in Touch <span></span>
+            </div>
+            <h2 class="sec-title">Contact <em>Us</em></h2>
+            <div class="sec-rule"></div>
+          </div>
+          <div class="contact-card reveal delay-2">
+            <h3 class="contact-card-title">We'd Love to Hear From You</h3>
+            <p class="contact-card-sub">
+              Our team is always ready to assist you.
+            </p>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-phone"></i></div>
+              <div>
+                <p class="contact-label">India Support</p>
+                <p class="contact-value">+91 98XX XXX XXX</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-globe"></i></div>
+              <div>
+                <p class="contact-label">International</p>
+                <p class="contact-value">+91 00000 00000</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <p class="contact-label">Email</p>
+                <p class="contact-value">contact@theredcocks.in</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div>
+                <p class="contact-label">Head Office</p>
+                <p class="contact-value">Kolkata, India</p>
+              </div>
+            </div>
+            <a href="mailto:contact@theredcocks.in" class="contact-cta"
+              >Send Us a Message →</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CEO MESSAGE ─────────────────────────────────────────── -->
+      <section class="ceo-section">
+        <div class="ceo-inner">
+          <div class="ceo-photo-wrap reveal-l">
+            <div class="ceo-tilt-wrap" id="ceoTiltWrap">
+              <div class="ceo-tilt-inner" id="ceoTiltInner">
+                <div class="ceo-photo-frame">
+                  <img
+                    src="https://i.ibb.co/v47DMrNQ/Whats-App-Image-2026-07-16-at-11-52-48-AM.jpg"
+                    alt="Alex Wayne – Founder & CEO"
+                  />
+                </div>
+                <div class="ceo-photo-shine"></div>
+                <div class="ceo-spark"></div>
+                <div class="ceo-spark"></div>
+                <div class="ceo-spark"></div>
+                <div class="ceo-spark"></div>
+                <div class="ceo-premium-badge">★ Premium CEO</div>
+              </div>
+            </div>
+            <div class="ceo-accent-line"></div>
+          </div>
+          <div class="ceo-text reveal-r delay-2">
+            <div class="sec-eyebrow">
+              <span></span> A Message from Our Founder <span></span>
+            </div>
+            <h2 class="ceo-heading">
+              <span class="wt">Thank</span> <span class="rd">You</span><br />
+              <span class="wt">For Choosing</span><br />
+              <span class="gd">The Red Cocks</span>
+            </h2>
+            <div class="ceo-rule"></div>
+            <p class="ceo-body">
+              Dear Valued Customer,<br /><br />
+              Thank you for choosing <strong>THE RED COCKS</strong>. Every order
+              you place motivates us to maintain the highest standards of
+              quality, freshness, hygiene, and customer care. We sincerely
+              appreciate your trust and support. We look forward to serving you
+              with excellence today and in the years to come.
+            </p>
+            <div class="ceo-sig">
+              <h4>Alex Wayne</h4>
+              <p>Founder &amp; CEO — THE RED COCKS</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── PRODUCT SLIDER 2 ────────────────────────────────────── -->
+      <section class="ps2-section">
+        <div class="ps2-head reveal">
+          <div class="sec-eyebrow" style="justify-content: center">
+            <span></span> Our Range <span></span>
+          </div>
+          <h2 class="sec-title" style="text-align: center">
+            Premium <em>Collection</em>
+          </h2>
+          <div class="sec-rule centered"></div>
+          <p
+            style="
+              color: var(--muted);
+              margin-top: 14px;
+              font-size: 14px;
+              letter-spacing: 2px;
+            "
+          >
+            FRESH &bull; HYGIENIC &bull; INTERNATIONAL STANDARDS
+          </p>
+        </div>
+        <div style="overflow: hidden">
+          <div class="ps2-track">
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=900&q=80"
+                alt="Whole Chicken"
+              />
+              <h3>Whole Chicken</h3>
+            </div>
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=900&q=80"
+                alt="Drumsticks"
+              />
+              <h3>Chicken Drumsticks</h3>
+            </div>
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=900&q=80"
+                alt="Organic Eggs"
+              />
+              <h3>Organic Eggs</h3>
+            </div>
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=900&q=80"
+                alt="Premium Pork"
+              />
+              <h3>Premium Pork</h3>
+            </div>
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1544025162-d76694265947?w=900&q=80"
+                alt="Frozen Export"
+              />
+              <h3>Frozen Export</h3>
+            </div>
+            <!-- Duplicate -->
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=900&q=80"
+                alt="Whole Chicken"
+              />
+              <h3>Whole Chicken</h3>
+            </div>
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=900&q=80"
+                alt="Drumsticks"
+              />
+              <h3>Chicken Drumsticks</h3>
+            </div>
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=900&q=80"
+                alt="Organic Eggs"
+              />
+              <h3>Organic Eggs</h3>
+            </div>
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=900&q=80"
+                alt="Premium Pork"
+              />
+              <h3>Premium Pork</h3>
+            </div>
+            <div class="ps2-card">
+              <img
+                src="https://images.unsplash.com/photo-1544025162-d76694265947?w=900&q=80"
+                alt="Frozen Export"
+              />
+              <h3>Frozen Export</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── FOOD ORBIT ──────────────────────────────────────────── -->
+      <section class="orbit-section">
+        <div class="food-circle">
+          <div class="food-item">🍗<span>Chicken</span></div>
+          <div class="food-item">🥩<span>Pork</span></div>
+          <div class="food-item">🥚<span>Eggs</span></div>
+          <div class="food-item">🍖<span>Wings</span></div>
+          <div class="food-item">🥓<span>Smoked</span></div>
+          <div class="food-item">🍳<span>Farm Eggs</span></div>
+          <div class="food-center">
+            <h2>Premium Foods</h2>
+            <p>Order From Your Nearest Store</p>
+            <a href="#contact">Order Now</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── INDIA NETWORK ───────────────────────────────────────── -->
+      <section id="india-network">
+        <div class="in-head reveal">
+          <div class="sec-eyebrow" style="justify-content:center;"><span></span> Global Reach <span></span></div>
+          <h2 class="sec-title" style="text-align:center;">Connected to <em>India,</em><br>Trusted by the World</h2>
+          <div class="sec-rule centered"></div>
+          <p style="color:var(--muted);margin-top:16px;font-size:14px;text-align:center;">25 countries. One source. THE RED COCKS.</p>
         </div>
 
-        <div class="flex justify-center gap-6 mt-14 flex-wrap">
+        <div class="in-stage" id="inStage">
+          <!-- SVG lines drawn by JS -->
+          <svg class="in-svg" id="inSvg" viewBox="0 0 720 720" xmlns="http://www.w3.org/2000/svg"></svg>
 
-            <div class="px-8 py-4 rounded-full bg-gradient-to-r from-yellow-700 to-yellow-500 text-black font-bold shadow-2xl hover:scale-110 transition duration-500">
-                🏆 Excellence
+          <!-- India center node -->
+          <div class="india-node" id="indiaNode" style="position:absolute;">
+            <div class="india-node-ring">
+              <img src="https://flagcdn.com/w160/in.png" alt="India">
             </div>
-
-            <div class="px-8 py-4 rounded-full bg-gradient-to-r from-yellow-700 to-yellow-500 text-black font-bold shadow-2xl hover:scale-110 transition duration-500">
-                🤝 Trust
-            </div>
-
-            <div class="px-8 py-4 rounded-full bg-gradient-to-r from-yellow-700 to-yellow-500 text-black font-bold shadow-2xl hover:scale-110 transition duration-500">
-                🌍 Global Vision
-            </div>
-
+            <div class="india-node-label">INDIA</div>
+          </div>
+          <!-- Country flag nodes injected by JS -->
         </div>
 
+        <!-- Brand reveal after convergence -->
+        <div class="in-brand-reveal" id="inBrandReveal">
+          <div class="in-brand-title">THE RED COCKS</div>
+          <p class="in-brand-sub">Global Premium Meat &amp; Farming — Born in India, Loved Worldwide</p>
+          <div class="in-count-badge">
+            <span>🇮🇳</span> 25 Countries Connected
+          </div>
+        </div>
+      </section>
+
+      <!-- ── FOOTER ──────────────────────────────────────────────── -->
+      <footer>
+        <div class="footer-top">
+          <div class="footer-brand">
+            <div class="footer-logo"><em>THE</em> RED COCKS</div>
+            <p>
+              Global premium meat &amp; farming company delivering excellence
+              from farm to table — trusted by millions worldwide.
+            </p>
+            <div class="footer-social">
+              <a
+                href="https://instagram.com/ik.aniii"
+                target="_blank"
+                rel="noopener"
+                title="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="mailto:contact@theredcocks.in" title="Email"
+                ><i class="fas fa-envelope"></i
+              ></a>
+              <a href="tel:+910000000000" title="Phone"
+                ><i class="fas fa-phone"></i
+              ></a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h5>Navigation</h5>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#about">About Us</a></li>
+              <li><a href="#products">Products</a></li>
+              <li><a href="#vision">Our Vision</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h5>Products</h5>
+            <ul>
+              <li><a href="#products">Fresh Chicken</a></li>
+              <li><a href="#products">Organic Eggs</a></li>
+              <li><a href="#products">Premium Pork</a></li>
+              <li><a href="#products">Frozen Export</a></li>
+              <li><a href="#contact">Custom Orders</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h5>Contact</h5>
+            <ul>
+              <li>
+                <a href="mailto:contact@theredcocks.in"
+                  >contact@theredcocks.in</a
+                >
+              </li>
+              <li><a href="#">Kolkata, India</a></li>
+              <li><a href="#">+91 98XX XXX XXX</a></li>
+              <li>
+                <a
+                  href="https://instagram.com/ik.aniii"
+                  target="_blank"
+                  rel="noopener"
+                  >@ik.aniii</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            &copy; 2025 <span class="gold">THE RED COCKS</span>. All rights
+            reserved.
+          </p>
+          <p>
+            Global Premium Meat &amp; Farming Company &mdash; Kolkata, India
+          </p>
+        </div>
+      </footer>
+    </div>
+    <!-- end #site-wrapper -->
+
+    <!-- FUN ZONE — HEN & EGG WIDGET -->
+    <div id="fun-zone">
+      <div id="fz-mode-ring"></div>
+      <!-- HEN STATE -->
+      <div id="fz-hen" class="fz-state active">
+        <div id="fz-hearts"></div>
+        <div id="fz-hen-emoji" title="Tap me!">🐓</div>
+        <div class="fz-label">Tap me!</div>
+      </div>
+      <!-- EGG STATE -->
+      <div id="fz-egg" class="fz-state">
+        <div id="fz-chick-container"></div>
+        <div id="fz-egg-emoji" title="Crack me!">🥚</div>
+        <div class="fz-label">Crack me!</div>
+      </div>
+      <!-- mode indicator -->
+      <div id="fz-dots">
+        <div class="fz-dot on" id="fzd-0"></div>
+        <div class="fz-dot"    id="fzd-1"></div>
+      </div>
     </div>
 
-</section>
-<!-- ================= PREMIUM PRODUCT SLIDER ================= -->
-
-<section class="product-slider">
-
-<h2>OUR PREMIUM COLLECTION</h2>
-
-<p>Fresh • Hygienic • Premium Quality</p>
-
-<div class="slider">
-
-<div class="slide-track">
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=900" alt="">
-<h3>Whole Chicken</h3>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=900" alt="">
-<h3>Chicken Drumsticks</h3>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=900" alt="">
-<h3>Organic Eggs</h3>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=900" alt="">
-<h3>Premium Pork</h3>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=900" alt="">
-<h3>Frozen Export</h3>
-</div>
-
-<!-- Duplicate for Infinite Scroll -->
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=900">
-<h3>Whole Chicken</h3>
-</div>
-
-
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=900">
-<h3>Chicken Drumsticks</h3>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=900">
-<h3>Organic Eggs</h3>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=900">
-<h3>Premium Pork</h3>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=900">
-<h3>Frozen Export</h3>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<style>
-
-.product-slider{
-padding:100px 0;
-background:#050505;
-overflow:hidden;
-}
-
-.product-slider h2{
-text-align:center;
-font-size:50px;
-font-weight:900;
-color:#fff;
-}
-
-.product-slider p{
-text-align:center;
-color:#bbb;
-margin-bottom:50px;
-}
-
-.slider{
-overflow:hidden;
-}
-
-.slide-track{
-
-display:flex;
-
-width:calc(320px * 12);
-
-animation:scroll 35s linear infinite;
-
-}
-
-.card{
-
-width:300px;
-
-margin:15px;
-
-background:#111;
-
-border-radius:20px;
-
-overflow:hidden;
-
-border:1px solid #222;
-
-transition:.4s;
-
-}
-
-.card:hover{
-
-transform:translateY(-10px);
-
-box-shadow:0 0 30px rgba(255,0,0,.5);
-
-}
-
-.card img{
-
-width:100%;
-
-height:220px;
-
-object-fit:cover;
-
-}
-
-.card h3{
-
-padding:20px;
-
-text-align:center;
-
-font-size:22px;
-
-color:white;
-
-}
-
-@keyframes scroll{
-
-0%{
-
-transform:translateX(0);
-
-}
-
-100%{
-
-transform:translateX(calc(-320px * 6));
-
-}
-
-}
-
-.slide-track:hover{
-
-animation-play-state:paused;
-
-}
-
-@media(max-width:768px){
-
-.product-slider h2{
-
-font-size:32px;
-
-}
-
-.card{
-
-width:240px;
-
-}
-
-.card img{
-
-height:170px;
-
-}
-
-}
-
-</style>
-<!-- ================= THANK YOU FROM CEO ================= -->
-
-<section class="relative py-28 bg-black overflow-hidden">
-
-<div class="absolute inset-0 bg-gradient-to-r from-red-900/10 via-transparent to-yellow-500/10"></div>
-
-<div class="max-w-7xl mx-auto px-6">
-
-<div class="grid md:grid-cols-2 gap-16 items-center">
-
-<!-- CEO PHOTO -->
-
-<div class="flex justify-center">
-
-<div class="relative group">
-
-<div class="absolute -inset-4 bg-gradient-to-r from-red-600 via-yellow-500 to-red-600 rounded-3xl blur-2xl opacity-40 animate-pulse"></div>
-
-<img
-src="https://i.ibb.co/v47DMrNQ/Whats-App-Image-2026-07-16-at-11-52-48-AM.jpg"
-
-alt="Alex Wayne"
-
-class="relative w-[340px] md:w-[420px] rounded-3xl border-2 border-yellow-500 shadow-[0_0_60px_rgba(255,0,0,.4)] transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-2">
-
-</div>
-
-</div>
-
-<!-- TEXT -->
-
-<div>
-
-<p class="inline-block px-5 py-2 rounded-full bg-red-600/20 border border-red-500 text-red-400 uppercase tracking-[6px] font-bold animate-pulse">
-
-Message From The Founder
-
-</p>
-
-<h2 class="mt-6 text-5xl md:text-7xl font-black leading-tight">
-
-<span class="text-white">
-
-Thank You
-
-</span>
-
-<br>
-
-<span class="text-red-500">
-
-For Choosing
-
-</span>
-
-<br>
-
-<span class="bg-gradient-to-r from-yellow-400 via-white to-red-500 bg-clip-text text-transparent">
-
-THE RED COCKS
-
-</span>
-
-</h2>
-
-<div class="w-36 h-1 bg-gradient-to-r from-red-600 to-yellow-500 rounded-full my-8"></div>
-
-<p class="text-gray-300 text-xl leading-10">
-
-Dear Valued Customer,
-
-<br><br>
-
-Thank you for choosing <span class="text-white font-bold">THE RED COCKS</span>.
-
-Every order you place motivates us to maintain the highest standards of quality, freshness, hygiene, and customer care.
-
-We sincerely appreciate your trust and support. We look forward to serving you with excellence today and in the years to come.
-
-</p>
-
-<div class="mt-10">
-
-<h3 class="text-4xl font-black text-white">
-
-Alex Wayne
-
-</h3>
-
-<p class="text-yellow-400 uppercase tracking-[5px]">
-
-Founder & CEO
-
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-<!-- 3D ROOSTER DANCE SECTION -->
-
-<section class="relative py-20 bg-black overflow-hidden">
-
-<div class="absolute inset-0 bg-red-900/20 blur-3xl"></div>
-
-<div class="relative z-10 text-center">
-
-</p>
-
-<h2 class="text-5xl md:text-6xl font-black text-white mt-4">
-Thank You For Being
-<span class="text-red-500">Part Of Our Journey</span>
-</h2>
-
-<p class="text-gray-400 text-xl mt-5">
-Premium Quality • Happy Farming • Trusted Customers
-</p>
-
-
-<div class="mt-12 flex justify-center">
-
-<div class="relative w-full max-w-4xl rounded-3xl overflow-hidden border-2 border-yellow-500 shadow-[0_0_60px_red]">
-
-<!-- ================= LIVE PREMIUM NOTIFICATION ================= -->
-
-<div id="liveNotify" class="live-notify">
-
-<div class="notify-head">
-
-<div class="live-dot"></div>
-
-<div>
-
-<h4>Live Activity</h4>
-
-<p id="notifyTime">Just Now</p>
-
-</div>
-
-</div>
-
-<p id="notifyText">
-Loading...
-</p>
-
-</div>
-
-<style>
-
-.live-notify{
-
-position:fixed;
-
-left:25px;
-
-bottom:20px;
-
-width:200px;
-
-max-width:90%;
-
-padding:14px;
-
-border-radius:22px;
-
-background:rgba(20,20,20,.85);
-
-backdrop-filter:blur(20px);
-
-border:1px solid rgba(255,0,0,.3);
-
-box-shadow:
-0 20px 50px rgba(0,0,0,.45),
-0 0 30px rgba(220,38,38,.25);
-
-color:#fff;
-
-z-index:99999;
-
-opacity:0;
-
-transform:translateY(120px);
-
-transition:.8s;
-
-}
-
-.live-notify.show{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-.notify-head{
-
-display:flex;
-
-align-items:center;
-
-gap:12px;
-
-margin-bottom:12px;
-
-}
-
-.notify-head h4{
-
-font-size:12px;
-
-font-weight:800;
-
-margin:0;
-
-}
-
-.notify-head p{
-
-margin:0;
-
-font-size:10px;
-
-color:#9ca3af;
-
-}
-
-.live-dot{
-
-width:9px;
-
-height:9px;
-
-border-radius:50%;
-
-background:#22c55e;
-
-box-shadow:0 0 15px #22c55e;
-
-animation:livePulse 1.s infinite;
-
-}
-
-#notifyText{
-
-font-size:15px;
-
-line-height:1.1;
-
-color:#e5e5e5;
-
-}
-
-@keyframes livePulse{
-
-0%,100%{
-
-transform:scale(1);
-
-}
-
-50%{
-
-transform:scale(1.5);
-
-}
-
-}
-
-@media(max-width:768px){
-
-.live-notify{
-
-left:9px;
-
-right:9px;
-
-bottom:2px;
-
-width:auto;
-
-padding:15px;
-
-border-radius:18px;
-
-}
-
-#notifyText{
-
-font-size:14px;
-
-}
-
-}
-
-</style>
-
-<script>
-
-const notifications=[
-
-"🇮🇳 Rahul from Kolkata ordered Premium Chicken.",
-"🇮🇳 kathi how much price of 1kg pork .",
-"uk  nice product and timely delevary .",
-"IN Sumit Bohot acha hain thank u the red cocks.",
-"🇦🇪 Ahmed from Dubai requested a Pork quotation.",
-"🇺🇸 Charlotte from Seattle left a ⭐⭐⭐⭐⭐ review: 'Excellent quality and professional service.'",
-"🇬🇧 Amelia from London said: 'Fresh products and fast communication. Highly recommended.'",
-"🇩🇪 Jonas from Frankfurt left a ⭐⭐⭐⭐⭐ review: 'Premium quality with reliable export support.'",
-"🇫🇷 Chloé from Paris commented: 'Very satisfied with the packaging and freshness.'",
-"🇦🇪 Fatima from Abu Dhabi said: 'The customer support team was very helpful.'",
-"🇯🇵 Sakura from Tokyo left a ⭐⭐⭐⭐⭐ review: 'Outstanding quality and timely response.'",
-"🇸🇬 Benjamin from Singapore commented: 'Professional company with international standards.'",
-"🇨🇦 Emily from Montreal said: 'Excellent experience. Looking forward to ordering again.'",
-"🇦🇺 Jack from Melbourne left a ⭐⭐⭐⭐⭐ review: 'High-quality products and trusted service.'",
-"🇮🇹 Sofia from Milan commented: 'Great quality, secure packaging, and smooth delivery.'",
-"🇸🇬 Sophia from Singapore viewed Premium Eggs.",
-
-"🇺🇸 James from New York contacted sales.",
-
-"🇬🇧 Olivia from London ordered Fresh Chicken.",
-
-"🇨🇦 Noah from Toronto became a new customer.",
-
-"🇦🇺 Liam from Sydney requested export details.",
-
-"🇯🇵 Takashi from Tokyo ordered Premium Eggs.",
-
-"🇩🇪 Michael from Berlin viewed Pork Products.",
-
-"🇫🇷 Lucas from Paris placed a Chicken order.",
-
-"🇮🇹 Marco from Rome contacted support.",
-
-"🇧🇷 Gabriel from Brazil ordered Frozen Chicken.",
-
-"🇿🇦 Ethan from Cape Town viewed products.",
-
-"🇶🇦 Hassan from Doha requested pricing.",
-
-"🇸🇦 Abdullah from Riyadh placed an inquiry.",
-
-"🇹🇭 Narin from Bangkok ordered Eggs.",
-"🇰🇷 Min-jun from Seoul ordered Premium Chicken.",
-"🇨🇳 Wei from Shanghai requested a Pork quotation.",
-"🇫🇷 Pierre from Paris ordered Frozen Chicken.",
-"🇩🇪 Lukas from Berlin viewed Premium Eggs.",
-"🇪🇸 Carlos from Madrid placed a bulk order.",
-"🇹🇷 Mehmet from Istanbul requested export pricing.",
-"🇯🇵 Haruto from Tokyo asked about today's chicken prices.",
-"🇦🇪 Omar from Dubai placed an order for Premium Chicken.",
-"🇮🇹 Giovanni from Milan requested a bulk order quotation.",
-"🇲🇽 Alejandro from Mexico City ordered Frozen Chicken Wings.",
-"🇵🇱 Jakub from Warsaw asked about export delivery time.",
-"🇸🇪 Erik from Stockholm placed an order for Fresh Eggs.",
-"🇳🇱 Daan from Amsterdam requested the latest product catalogue.",
-"🇨🇭 Luca from Zurich asked about minimum order quantity.",
-"🇧🇪 Thomas from Brussels ordered Premium Pork Products.",
-"🇳🇴 Magnus from Oslo requested international shipping information.",
-"🇮🇩 Budi from Jakarta viewed Chicken Wings.",
-
-"🇳🇵 Suman from Nepal contacted sales.",
-"🇺🇸 Mason from Chicago placed an order for Premium Chicken.",
-"🇬🇧 Harry from Birmingham asked about wholesale pricing.",
-"🇦🇪 Saeed from Dubai requested an export quotation.",
-"🇸🇬 Ethan from Singapore ordered Frozen Chicken Breast.",
-"🇩🇪 Felix from Munich asked about the minimum order quantity.",
-"🇫🇷 Hugo from Marseille placed a bulk chicken order.",
-"🇳🇱 Bram from Amsterdam requested today's export price list.",
-"🇮🇹 Matteo from Florence ordered Premium Chicken Wings.",
-"🇪🇸 Diego from Valencia asked about delivery availability.",
-"🇯🇵 Ren from Kyoto requested a fresh eggs quotation.",
-
-"🇮🇳 Priya from Mumbai requested Premium Chicken."
-
-];
-
-let i=0;
-
-const box=document.getElementById("liveNotify");
-
-const text=document.getElementById("notifyText");
-
-function showNotify(){
-
-text.innerHTML=notifications[i];
-
-box.classList.add("show");
-
-setTimeout(()=>{
-
-box.classList.remove("show");
-
-},3000);
-
-i++;
-
-if(i>=notifications.length){
-
-i=0;
-
-}
-
-}
-
-showNotify();
-
-setInterval(showNotify,4000);
-
-</script>
-
-@theredcocks.top 
-<source src="YOUR_3D_ROOSTER_VIDEO.mp4" type="video/mp4">
-
-</video>
-
-</div>
-
-</div>
-
-
-<h3 class="mt-12 text-3xl font-bold text-white">
-🐓 THE RED COCKS
-</h3>
-
-<p class="text-yellow-400 mt-2 tracking-widest">
-PREMIUM MEAT & FARMING COMPANY
-</p>
-
-
-</div>
-
-</section>
-<section class="premium-food">
-
-<div class="food-circle">
-<div class="food-item">🍗<span>Fresh Chicken</span></div>
-<div class="food-item">🥩<span>Premium Pork</span></div>
-<div class="food-item">🥚<span>Organic Eggs</span></div>
-<div class="food-item">🍖<span>Chicken Wings</span></div>
-<div class="food-item">🥓<span>Smoked Pork</span></div>
-<div class="food-item">🍳<span>Farm Eggs</span></div>
-
-<div class="center-box">
-<h2>Premium Foods</h2>
-<p>Order Now<br>Your Nearest Store</p>
-<a href="#contact">Order Now</a>
-</div>
-
-</div>
-
-</section>
-
-<style>
-
-.premium-food{
-background:#070707;
-padding:120px 20px;
-display:flex;
-justify-content:center;
-align-items:center;
-overflow:hidden;
-}
-
-.food-circle{
-position:relative;
-width:500px;
-height:500px;
-animation:rotateCircle 30s linear infinite;
-}
-
-.food-item{
-position:absolute;
-width:130px;
-height:130px;
-border-radius:50%;
-background:rgba(255,255,255,.06);
-backdrop-filter:blur(15px);
-border:1px solid rgba(255,0,0,.25);
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-color:#fff;
-font-size:40px;
-font-weight:700;
-box-shadow:0 0 30px rgba(255,0,0,.2);
-animation:float 2.5s ease-in-out infinite;
-transition:.4s;
-}
-
-.food-item span{
-font-size:14px;
-margin-top:10px;
-}
-
-.food-item:hover{
-transform:scale(1.15);
-box-shadow:0 0 45px rgba(255,0,0,.6);
-}
-
-.food-item:nth-child(1){top:0;left:185px;animation-delay:.2s;}
-.food-item:nth-child(2){top:90px;right:0;animation-delay:.4s;}
-.food-item:nth-child(3){bottom:90px;right:0;animation-delay:.6s;}
-.food-item:nth-child(4){bottom:0;left:185px;animation-delay:.8s;}
-.food-item:nth-child(5){bottom:90px;left:0;animation-delay:1s;}
-.food-item:nth-child(6){top:90px;left:0;animation-delay:1.2s;}
-
-.center-box{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:220px;
-height:220px;
-border-radius:50%;
-background:linear-gradient(135deg,#b30000,#ff3030);
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-color:#fff;
-box-shadow:0 0 60px rgba(255,0,0,.5);
-animation:pulse 2s infinite;
-}
-
-.center-box h2{
-margin:0;
-font-size:26px;
-font-weight:800;
-}
-
-.center-box p{
-margin:12px 0;
-font-size:14px;
-line-height:1.6;
-}
-
-.center-box a{
-text-decoration:none;
-color:#fff;
-background:#111;
-padding:10px 22px;
-border-radius:999px;
-font-weight:700;
-transition:.3s;
-}
-
-.center-box a:hover{
-background:#fff;
-color:#000;
-}
-
-@keyframes rotateCircle{
-from{transform:rotate(0deg);}
-to{transform:rotate(360deg);}
-}
-
-@keyframes float{
-0%,100%{
-transform:translateY(0) scale(1);
-}
-50%{
-transform:translateY(-15px) scale(1.08);
-}
-}
-
-@keyframes pulse{
-0%,100%{
-transform:translate(-50%,-50%) scale(1);
-box-shadow:0 0 35px rgba(255,0,0,.4);
-}
-50%{
-transform:translate(-50%,-50%) scale(1.08);
-box-shadow:0 0 70px rgba(255,0,0,.8);
-}
-}
-
-@media(max-width:768px){
-
-.food-circle{
-width:330px;
-height:330px;
-}
-
-.food-item{
-width:85px;
-height:85px;
-font-size:28px;
-}
-
-.food-item span{
-font-size:10px;
-}
-
-.food-item:nth-child(1){left:122px;}
-.food-item:nth-child(2){top:60px;}
-.food-item:nth-child(3){bottom:60px;}
-.food-item:nth-child(4){left:122px;}
-.food-item:nth-child(5){bottom:60px;}
-.food-item:nth-child(6){top:60px;}
-
-.center-box{
-width:150px;
-height:150px;
-}
-
-.center-box h2{
-font-size:18px;
-}
-
-.center-box p{
-font-size:11px;
-}
-
-.center-box a{
-padding:8px 16px;
-font-size:12px;
-}
-
-}
-
-</style>
+    <script>
+      /* ── PRELOADER ──────────────────────────────────────────────── */
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          document.getElementById("preloader").classList.add("done");
+        }, 1600);
+      });
+
+      /* ── HEN CURSOR ──────────────────────────────────────────── */
+      const henCursor = document.getElementById("hen-cursor");
+      if (henCursor && window.matchMedia("(hover: hover)").matches) {
+        document.addEventListener("mousemove", (e) => {
+          henCursor.style.left = e.clientX + "px";
+          henCursor.style.top  = e.clientY + "px";
+        });
+        document.addEventListener("mouseover", (e) => {
+          if (e.target.closest("a,button,[role=button]")) {
+            henCursor.classList.add("hover-state");
+          } else {
+            henCursor.classList.remove("hover-state");
+          }
+        });
+      }
+
+      /* ── VIEW TOGGLE ────────────────────────────────────────────── */
+      function setView(mode) {
+        const body = document.body;
+        document
+          .getElementById("btn-desktop")
+          .classList.toggle("active", mode === "desktop");
+        document
+          .getElementById("btn-mobile")
+          .classList.toggle("active", mode === "mobile");
+        body.classList.toggle("mobile-view", mode === "mobile");
+      }
+
+      /* ── NAVBAR SCROLL ──────────────────────────────────────────── */
+      const nav = document.getElementById("mainNav");
+      window.addEventListener("scroll", () => {
+        nav.classList.toggle("scrolled", window.scrollY > 60);
+      });
+
+      /* ── HAMBURGER ──────────────────────────────────────────────── */
+      function toggleMobileMenu() {
+        document.getElementById("mobile-menu").classList.toggle("open");
+      }
+      function closeMobileMenu() {
+        document.getElementById("mobile-menu").classList.remove("open");
+      }
+
+      /* ── SCROLL REVEAL ──────────────────────────────────────────── */
+      const revealEls = document.querySelectorAll(
+        ".reveal, .reveal-l, .reveal-r",
+      );
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.12 },
+      );
+      revealEls.forEach((el) => observer.observe(el));
+
+      /* ── LIVE NOTIFICATIONS ─────────────────────────────────────── */
+      const notifications = [
+        "🇮🇳 Rahul from Kolkata ordered Premium Chicken.",
+        "🇦🇪 Ahmed from Dubai requested a Pork quotation.",
+        "🇺🇸 Charlotte from Seattle left ⭐⭐⭐⭐⭐ — 'Excellent quality and professional service.'",
+        "🇬🇧 Amelia from London: 'Fresh products and fast communication. Highly recommended.'",
+        "🇩🇪 Jonas from Frankfurt: 'Premium quality with reliable export support.'",
+        "🇫🇷 Chloé from Paris: 'Very satisfied with the packaging and freshness.'",
+        "🇯🇵 Sakura from Tokyo left ⭐⭐⭐⭐⭐ — 'Outstanding quality and timely response.'",
+        "🇸🇬 Benjamin from Singapore: 'Professional company with international standards.'",
+        "🇨🇦 Emily from Montreal: 'Excellent experience. Looking forward to ordering again.'",
+        "🇦🇺 Jack from Melbourne left ⭐⭐⭐⭐⭐ — 'High-quality products and trusted service.'",
+        "🇮🇹 Sofia from Milan: 'Great quality, secure packaging, and smooth delivery.'",
+        "🇺🇸 James from New York contacted sales.",
+        "🇬🇧 Olivia from London ordered Fresh Chicken.",
+        "🇨🇦 Noah from Toronto became a new customer.",
+        "🇯🇵 Takashi from Tokyo ordered Premium Eggs.",
+        "🇰🇷 Min-jun from Seoul ordered Premium Chicken.",
+        "🇲🇽 Alejandro from Mexico City ordered Frozen Chicken Wings.",
+        "🇸🇦 Abdullah from Riyadh placed an inquiry.",
+        "🇮🇳 Priya from Mumbai requested Premium Chicken.",
+        "🇸🇬 Sophia from Singapore viewed Premium Eggs.",
+      ];
+      let nIdx = 0;
+      const notifyBox = document.getElementById("liveNotify");
+      const notifyText = document.getElementById("notifyText");
+      function showNotify() {
+        notifyText.textContent = notifications[nIdx];
+        notifyBox.classList.add("show");
+        setTimeout(() => notifyBox.classList.remove("show"), 3400);
+        nIdx = (nIdx + 1) % notifications.length;
+      }
+      setTimeout(() => {
+        showNotify();
+        setInterval(showNotify, 5500);
+      }, 2000);
+
+      /* ── FUN ZONE — HEN & EGG ──────────────────────────────── */
+      (function () {
+        const henState  = document.getElementById('fz-hen');
+        const eggState  = document.getElementById('fz-egg');
+        const henEmoji  = document.getElementById('fz-hen-emoji');
+        const eggEmoji  = document.getElementById('fz-egg-emoji');
+        const heartsBox = document.getElementById('fz-hearts');
+        const chickBox  = document.getElementById('fz-chick-container');
+        const dot0      = document.getElementById('fzd-0');
+        const dot1      = document.getElementById('fzd-1');
+        if (!henState) return;
+
+        let mode = 'hen';
+        let eggCracked = false;
+        let cycleTimer = null;
+
+        function switchToEgg() {
+          mode = 'egg';
+          henState.classList.remove('active');
+          eggState.classList.add('active');
+          eggEmoji.textContent = '🥚';
+          eggEmoji.style.opacity = '1';
+          eggEmoji.classList.remove('egg-shaking','egg-cracking');
+          eggCracked = false;
+          chickBox.innerHTML = '';
+          dot0.classList.remove('on');
+          dot1.classList.add('on');
+        }
+        function switchToHen() {
+          mode = 'hen';
+          eggState.classList.remove('active');
+          henState.classList.add('active');
+          dot1.classList.remove('on');
+          dot0.classList.add('on');
+        }
+        function cycle() {
+          if (mode === 'hen') switchToEgg(); else switchToHen();
+        }
+        cycleTimer = setInterval(cycle, 7000);
+
+        /* ─── HEN CLICK → happy dance + floating hearts ─── */
+        const HEARTS = ['❤️','💛','🧡','💕','🥰','💖'];
+        function doHenHappy() {
+          henEmoji.classList.remove('hen-happy');
+          void henEmoji.offsetWidth;
+          henEmoji.classList.add('hen-happy');
+          henEmoji.addEventListener('animationend', () => henEmoji.classList.remove('hen-happy'), { once: true });
+
+          const r = henEmoji.getBoundingClientRect();
+          for (let i = 0; i < 6; i++) {
+            setTimeout(() => {
+              const h = document.createElement('div');
+              h.className = 'fz-heart';
+              h.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+              h.style.left = (r.left + r.width / 2 - 12 + (Math.random() - 0.5) * 50) + 'px';
+              h.style.top  = (r.top - 4) + 'px';
+              document.body.appendChild(h);
+              setTimeout(() => h.remove(), 1400);
+            }, i * 100);
+          }
+        }
+        henEmoji.addEventListener('click', doHenHappy);
+        henEmoji.addEventListener('touchstart', (e) => { e.preventDefault(); doHenHappy(); }, { passive: false });
+
+        /* ─── EGG CLICK → crack → chick hatches ─── */
+        function doEggCrack() {
+          if (eggCracked) return;
+          // Stage 1: shake
+          eggEmoji.classList.add('egg-shaking');
+          setTimeout(() => {
+            eggEmoji.classList.remove('egg-shaking');
+            // Stage 2: crack flash
+            eggEmoji.textContent = '🍳'; // cracked look
+            eggEmoji.classList.add('egg-cracking');
+            setTimeout(() => {
+              eggEmoji.style.opacity = '0';
+              eggCracked = true;
+              // Stage 3: chick pops out
+              const chick = document.createElement('div');
+              chick.id = 'fz-chick';
+              chick.textContent = '🐣';
+              chickBox.innerHTML = '';
+              chickBox.appendChild(chick);
+
+              // Stage 4: mini chicks scatter in all directions
+              const rect = eggEmoji.getBoundingClientRect();
+              const bx = rect.left + rect.width  / 2;
+              const by = rect.top  + rect.height / 2;
+              const dirs = [
+                { dx: -130, dy: -110, rot: '-40deg' },
+                { dx:  130, dy: -110, rot:  '40deg' },
+                { dx: -160, dy:   10, rot: '-70deg' },
+                { dx:  160, dy:   10, rot:  '70deg' },
+                { dx:    0, dy: -145, rot:   '0deg' },
+                { dx:   70, dy:  -80, rot:  '50deg' },
+                { dx:  -70, dy:  -80, rot: '-50deg' },
+              ];
+              dirs.forEach((d, i) => {
+                setTimeout(() => {
+                  const mc = document.createElement('div');
+                  mc.className = 'fz-mini-chick';
+                  mc.textContent = i % 2 === 0 ? '🐥' : '🐤';
+                  mc.style.left = bx + 'px';
+                  mc.style.top  = by + 'px';
+                  mc.style.setProperty('--fly-to',  `translate(${d.dx}px,${d.dy}px)`);
+                  mc.style.setProperty('--fly-rot', d.rot);
+                  document.body.appendChild(mc);
+                  setTimeout(() => mc.remove(), 1700);
+                }, i * 65);
+              });
+
+              // Auto-reset after 4s so egg can be cracked again next cycle
+              setTimeout(() => {
+                if (mode === 'egg') switchToHen();
+              }, 4000);
+            }, 380);
+          }, 560);
+        }
+        eggEmoji.addEventListener('click', doEggCrack);
+        eggEmoji.addEventListener('touchstart', (e) => { e.preventDefault(); doEggCrack(); }, { passive: false });
+      })();
+
+      /* ── CEO TILT EFFECT ────────────────────────────────────── */
+      (function() {
+        const wrap  = document.getElementById('ceoTiltWrap');
+        const inner = document.getElementById('ceoTiltInner');
+        if (!wrap || !inner) return;
+        const MAX = 14;
+        function applyTilt(rx, ry) {
+          inner.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03)`;
+        }
+        wrap.addEventListener('mousemove', e => {
+          const r  = wrap.getBoundingClientRect();
+          const cx = r.left + r.width  / 2;
+          const cy = r.top  + r.height / 2;
+          const ry =  ((e.clientX - cx) / (r.width  / 2)) * MAX;
+          const rx = -((e.clientY - cy) / (r.height / 2)) * MAX;
+          applyTilt(rx, ry);
+        });
+        wrap.addEventListener('mouseleave', () => {
+          inner.style.transition = 'transform 0.6s ease';
+          inner.style.transform  = 'rotateX(0deg) rotateY(0deg) scale(1)';
+          setTimeout(() => { inner.style.transition = 'transform 0.08s linear'; }, 650);
+        });
+        // Touch support
+        wrap.addEventListener('touchmove', e => {
+          e.preventDefault();
+          const t  = e.touches[0];
+          const r  = wrap.getBoundingClientRect();
+          const cx = r.left + r.width  / 2;
+          const cy = r.top  + r.height / 2;
+          const ry =  ((t.clientX - cx) / (r.width  / 2)) * MAX;
+          const rx = -((t.clientY - cy) / (r.height / 2)) * MAX;
+          applyTilt(rx, ry);
+        }, { passive: false });
+        wrap.addEventListener('touchend', () => {
+          inner.style.transition = 'transform 0.6s ease';
+          inner.style.transform  = 'rotateX(0deg) rotateY(0deg) scale(1)';
+          setTimeout(() => { inner.style.transition = 'transform 0.08s linear'; }, 650);
+        });
+      })();
+
+      /* ── INDIA NETWORK ANIMATION ────────────────────────────── */
+      (function() {
+        const stage = document.getElementById('inStage');
+        if (!stage) return;
+
+        // 24 countries around India (center = 360,360 in a 720×720 stage)
+        const countries = [
+          { code:'us', name:'USA' },
+          { code:'gb', name:'UK' },
+          { code:'ca', name:'Canada' },
+          { code:'au', name:'Australia' },
+          { code:'de', name:'Germany' },
+          { code:'ae', name:'UAE' },
+          { code:'sg', name:'Singapore' },
+          { code:'fr', name:'France' },
+          { code:'jp', name:'Japan' },
+          { code:'kr', name:'S. Korea' },
+          { code:'it', name:'Italy' },
+          { code:'br', name:'Brazil' },
+          { code:'mx', name:'Mexico' },
+          { code:'sa', name:'Saudi Arabia' },
+          { code:'nl', name:'Netherlands' },
+          { code:'es', name:'Spain' },
+          { code:'cn', name:'China' },
+          { code:'th', name:'Thailand' },
+          { code:'my', name:'Malaysia' },
+          { code:'id', name:'Indonesia' },
+          { code:'za', name:'S. Africa' },
+          { code:'nz', name:'New Zealand' },
+          { code:'ru', name:'Russia' },
+          { code:'tr', name:'Turkey' },
+        ];
+
+        const CX = 360, CY = 360, R = 260;
+        const isSmall  = window.innerWidth < 480;
+        const isMobile = window.innerWidth < 760;
+        const stageSize = isSmall ? 300 : isMobile ? 340 : 720;
+        const scale = stageSize / 720;
+        const cx = CX * scale, cy = CY * scale, r = R * scale;
+
+        // Build SVG lines
+        const svg = document.getElementById('inSvg');
+        const lines = [];
+        countries.forEach((c, i) => {
+          const angle = (i / countries.length) * 2 * Math.PI - Math.PI / 2;
+          const fx = cx + r * Math.cos(angle);
+          const fy = cy + r * Math.sin(angle);
+          const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          ln.setAttribute('x1', fx); ln.setAttribute('y1', fy);
+          ln.setAttribute('x2', cx); ln.setAttribute('y2', cy);
+          ln.setAttribute('stroke', i % 2 === 0 ? '#C41E3A' : '#C9A84C');
+          ln.setAttribute('stroke-width', isMobile ? '0.8' : '1.2');
+          ln.setAttribute('stroke-linecap', 'round');
+          ln.setAttribute('opacity', '0.7');
+          svg.appendChild(ln);
+          lines.push({ el: ln, fx, fy });
+        });
+
+        // Build flag nodes
+        const nodes = [];
+        countries.forEach((c, i) => {
+          const angle = (i / countries.length) * 2 * Math.PI - Math.PI / 2;
+          const fx = cx + r * Math.cos(angle);
+          const fy = cy + r * Math.sin(angle);
+          const nw = isMobile ? 38 : 64;
+          const nh = isMobile ? 26 : 42;
+          const div = document.createElement('div');
+          div.className = 'flag-node';
+          div.style.left = (fx - nw/2) + 'px';
+          div.style.top  = (fy - nh/2 - 12) + 'px';
+          div.innerHTML  = `<img src="https://flagcdn.com/w160/${c.code}.png" alt="${c.name}"><span>${c.name}</span>`;
+          stage.appendChild(div);
+          nodes.push({ el: div, fx, fy, nw, nh });
+        });
+
+        // Position India center node
+        const indiaNode = document.getElementById('indiaNode');
+        if (indiaNode) {
+          const iw = isMobile ? 64 : 110;
+          indiaNode.style.left = (cx - iw/2) + 'px';
+          indiaNode.style.top  = (cy - iw/2 - 14) + 'px';
+        }
+
+        let started = false;
+        const sectionObs = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting && !started) {
+            started = true;
+            runAnimation();
+          }
+        }, { threshold: 0.3 });
+        sectionObs.observe(stage);
+
+        function runAnimation() {
+          // Step 1: Nodes fade in staggered
+          nodes.forEach((n, i) => {
+            setTimeout(() => { n.el.classList.add('visible'); }, i * 80);
+          });
+
+          // Step 2: Draw lines one by one
+          const lineDelay = 2200;
+          lines.forEach((l, i) => {
+            setTimeout(() => {
+              const len = Math.hypot(l.fx - cx, l.fy - cy);
+              l.el.setAttribute('stroke-dasharray', len);
+              l.el.setAttribute('stroke-dashoffset', len);
+              l.el.style.transition = 'stroke-dashoffset 0.7s ease';
+              l.el.style.strokeDashoffset = '0';
+              l.el.setAttribute('stroke-dashoffset', '0');
+            }, lineDelay + i * 130);
+          });
+
+          // Step 3: All flags converge to India center
+          const convergeDelay = lineDelay + countries.length * 130 + 800;
+          setTimeout(() => {
+            nodes.forEach((n, i) => {
+              n.el.style.transition = `transform ${0.8 + i * 0.02}s cubic-bezier(0.34,1.56,0.64,1)`;
+              const tx = cx - n.fx;
+              const ty = cy - n.fy;
+              n.el.style.transform = `translate(${tx}px, ${ty}px) scale(0.4)`;
+              n.el.style.opacity   = '0.5';
+            });
+            // Fade lines
+            lines.forEach(l => { l.el.style.opacity = '0'; l.el.style.transition = 'opacity 0.6s'; });
+          }, convergeDelay);
+
+          // Step 4: India pulse + brand reveal
+          setTimeout(() => {
+            if (indiaNode) {
+              indiaNode.querySelector('.india-node-ring').style.transform = 'scale(1.35)';
+              indiaNode.querySelector('.india-node-ring').style.transition = 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1)';
+            }
+            const reveal = document.getElementById('inBrandReveal');
+            if (reveal) reveal.classList.add('show');
+          }, convergeDelay + 1200);
+        }
+      })();
+    </script>
+  </body>
+</html>
