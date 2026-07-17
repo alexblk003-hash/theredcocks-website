@@ -2827,7 +2827,7 @@ We're always here to help you.
 <div>
 <p class="text-gray-400 text-sm">Email</p>
 <p class="text-white font-semibold text-lg">
-contact@theredcocks.top
+contact@theredcocksind
 </p>
 </div>
 
@@ -2852,7 +2852,7 @@ Kolkata, India
 
 <div class="mt-8">
 
-<a href="mailto:contact@theredcocks.top"
+<a href="mailto:contact@theredcocksind@gmail.com"
 class="block text-center bg-red-600 hover:bg-red-700 transition duration-300 text-white font-bold py-4 rounded-2xl shadow-lg shadow-red-600/30">
 
 Contact Our Team →
@@ -3263,13 +3263,295 @@ Premium Quality • Happy Farming • Trusted Customers
 
 <div class="relative w-full max-w-4xl rounded-3xl overflow-hidden border-2 border-yellow-500 shadow-[0_0_60px_red]">
 
-<video 
-autoplay 
-loop 
-muted 
-playsinline
-class="w-full">
+<!-- ================= LIVE PREMIUM NOTIFICATION ================= -->
 
+<div id="liveNotify" class="live-notify">
+
+<div class="notify-head">
+
+<div class="live-dot"></div>
+
+<div>
+
+<h4>Live Activity</h4>
+
+<p id="notifyTime">Just Now</p>
+
+</div>
+
+</div>
+
+<p id="notifyText">
+Loading...
+</p>
+
+</div>
+
+<style>
+
+.live-notify{
+
+position:fixed;
+
+left:25px;
+
+bottom:25px;
+
+width:340px;
+
+max-width:90%;
+
+padding:18px;
+
+border-radius:22px;
+
+background:rgba(20,20,20,.85);
+
+backdrop-filter:blur(20px);
+
+border:1px solid rgba(255,0,0,.3);
+
+box-shadow:
+0 20px 50px rgba(0,0,0,.45),
+0 0 30px rgba(220,38,38,.25);
+
+color:#fff;
+
+z-index:99999;
+
+opacity:0;
+
+transform:translateY(120px);
+
+transition:.8s;
+
+}
+
+.live-notify.show{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+.notify-head{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+margin-bottom:12px;
+
+}
+
+.notify-head h4{
+
+font-size:16px;
+
+font-weight:800;
+
+margin:0;
+
+}
+
+.notify-head p{
+
+margin:0;
+
+font-size:12px;
+
+color:#9ca3af;
+
+}
+
+.live-dot{
+
+width:12px;
+
+height:12px;
+
+border-radius:50%;
+
+background:#22c55e;
+
+box-shadow:0 0 15px #22c55e;
+
+animation:livePulse 1.s infinite;
+
+}
+
+#notifyText{
+
+font-size:15px;
+
+line-height:1.7;
+
+color:#e5e5e5;
+
+}
+
+@keyframes livePulse{
+
+0%,100%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.5);
+
+}
+
+}
+
+@media(max-width:768px){
+
+.live-notify{
+
+left:12px;
+
+right:12px;
+
+bottom:12px;
+
+width:auto;
+
+padding:15px;
+
+border-radius:18px;
+
+}
+
+#notifyText{
+
+font-size:14px;
+
+}
+
+}
+
+</style>
+
+<script>
+
+const notifications=[
+
+"🇮🇳 Rahul from Kolkata ordered Premium Chicken.",
+"🇮🇳 kathi how much price of 1kg pork .",
+"uk  nice product and timely delevary .",
+"IN Sumit Bohot acha hain thank u the red cocks.",
+"🇦🇪 Ahmed from Dubai requested a Pork quotation.",
+"🇺🇸 Charlotte from Seattle left a ⭐⭐⭐⭐⭐ review: 'Excellent quality and professional service.'",
+"🇬🇧 Amelia from London said: 'Fresh products and fast communication. Highly recommended.'",
+"🇩🇪 Jonas from Frankfurt left a ⭐⭐⭐⭐⭐ review: 'Premium quality with reliable export support.'",
+"🇫🇷 Chloé from Paris commented: 'Very satisfied with the packaging and freshness.'",
+"🇦🇪 Fatima from Abu Dhabi said: 'The customer support team was very helpful.'",
+"🇯🇵 Sakura from Tokyo left a ⭐⭐⭐⭐⭐ review: 'Outstanding quality and timely response.'",
+"🇸🇬 Benjamin from Singapore commented: 'Professional company with international standards.'",
+"🇨🇦 Emily from Montreal said: 'Excellent experience. Looking forward to ordering again.'",
+"🇦🇺 Jack from Melbourne left a ⭐⭐⭐⭐⭐ review: 'High-quality products and trusted service.'",
+"🇮🇹 Sofia from Milan commented: 'Great quality, secure packaging, and smooth delivery.'",
+"🇸🇬 Sophia from Singapore viewed Premium Eggs.",
+
+"🇺🇸 James from New York contacted sales.",
+
+"🇬🇧 Olivia from London ordered Fresh Chicken.",
+
+"🇨🇦 Noah from Toronto became a new customer.",
+
+"🇦🇺 Liam from Sydney requested export details.",
+
+"🇯🇵 Takashi from Tokyo ordered Premium Eggs.",
+
+"🇩🇪 Michael from Berlin viewed Pork Products.",
+
+"🇫🇷 Lucas from Paris placed a Chicken order.",
+
+"🇮🇹 Marco from Rome contacted support.",
+
+"🇧🇷 Gabriel from Brazil ordered Frozen Chicken.",
+
+"🇿🇦 Ethan from Cape Town viewed products.",
+
+"🇶🇦 Hassan from Doha requested pricing.",
+
+"🇸🇦 Abdullah from Riyadh placed an inquiry.",
+
+"🇹🇭 Narin from Bangkok ordered Eggs.",
+"🇰🇷 Min-jun from Seoul ordered Premium Chicken.",
+"🇨🇳 Wei from Shanghai requested a Pork quotation.",
+"🇫🇷 Pierre from Paris ordered Frozen Chicken.",
+"🇩🇪 Lukas from Berlin viewed Premium Eggs.",
+"🇪🇸 Carlos from Madrid placed a bulk order.",
+"🇹🇷 Mehmet from Istanbul requested export pricing.",
+"🇯🇵 Haruto from Tokyo asked about today's chicken prices.",
+"🇦🇪 Omar from Dubai placed an order for Premium Chicken.",
+"🇮🇹 Giovanni from Milan requested a bulk order quotation.",
+"🇲🇽 Alejandro from Mexico City ordered Frozen Chicken Wings.",
+"🇵🇱 Jakub from Warsaw asked about export delivery time.",
+"🇸🇪 Erik from Stockholm placed an order for Fresh Eggs.",
+"🇳🇱 Daan from Amsterdam requested the latest product catalogue.",
+"🇨🇭 Luca from Zurich asked about minimum order quantity.",
+"🇧🇪 Thomas from Brussels ordered Premium Pork Products.",
+"🇳🇴 Magnus from Oslo requested international shipping information.",
+"🇮🇩 Budi from Jakarta viewed Chicken Wings.",
+
+"🇳🇵 Suman from Nepal contacted sales.",
+"🇺🇸 Mason from Chicago placed an order for Premium Chicken.",
+"🇬🇧 Harry from Birmingham asked about wholesale pricing.",
+"🇦🇪 Saeed from Dubai requested an export quotation.",
+"🇸🇬 Ethan from Singapore ordered Frozen Chicken Breast.",
+"🇩🇪 Felix from Munich asked about the minimum order quantity.",
+"🇫🇷 Hugo from Marseille placed a bulk chicken order.",
+"🇳🇱 Bram from Amsterdam requested today's export price list.",
+"🇮🇹 Matteo from Florence ordered Premium Chicken Wings.",
+"🇪🇸 Diego from Valencia asked about delivery availability.",
+"🇯🇵 Ren from Kyoto requested a fresh eggs quotation.",
+
+"🇮🇳 Priya from Mumbai requested Premium Chicken."
+
+];
+
+let i=0;
+
+const box=document.getElementById("liveNotify");
+
+const text=document.getElementById("notifyText");
+
+function showNotify(){
+
+text.innerHTML=notifications[i];
+
+box.classList.add("show");
+
+setTimeout(()=>{
+
+box.classList.remove("show");
+
+},3000);
+
+i++;
+
+if(i>=notifications.length){
+
+i=0;
+
+}
+
+}
+
+showNotify();
+
+setInterval(showNotify,4000);
+
+</script>
+
+@theredcocks.top 
 <source src="YOUR_3D_ROOSTER_VIDEO.mp4" type="video/mp4">
 
 </video>
@@ -3291,3 +3573,205 @@ PREMIUM MEAT & FARMING COMPANY
 </div>
 
 </section>
+</body<!-- Paste before </body> -->
+
+<div id="recipePopup"></div>
+
+<style>
+#recipePopup{
+position:fixed;
+top:20px;
+right:20px;
+z-index:99999;
+width:320px;
+pointer-events:none;
+}
+
+.popup{
+display:flex;
+align-items:center;
+gap:12px;
+background:rgba(18,18,18,.95);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,0,0,.25);
+border-radius:18px;
+padding:12px;
+margin-bottom:10px;
+box-shadow:0 15px 35px rgba(0,0,0,.45);
+animation:slide 3s ease forwards;
+}
+
+.popup img{
+width:65px;
+height:65px;
+border-radius:14px;
+object-fit:cover;
+}
+
+.popup h4{
+margin:0;
+color:#fff;
+font-size:17px;
+font-weight:800;
+}
+
+.popup p{
+margin:4px 0 0;
+color:#bbb;
+font-size:13px;
+}
+
+@keyframes slide{
+
+0%{
+opacity:0;
+transform:translateY(-100px);
+}
+
+15%{
+opacity:1;
+transform:translateY(0);
+}
+
+85%{
+opacity:1;
+transform:translateY(0);
+}
+
+100%{
+opacity:0;
+transform:translateY(-100px);
+}
+
+}
+
+@media(max-width:768px){
+
+#recipePopup{
+
+left:10px;
+right:10px;
+width:auto;
+
+}
+
+.popup img{
+
+width:55px;
+height:55px;
+
+}
+
+}
+</style>
+
+<script>
+
+const dishes=[
+
+{
+name:"Butter Chicken",
+img:"https://picsum.photos/100?1"
+},
+
+{
+name:"Chicken Biryani",
+img:"https://picsum.photos/100?2"
+},
+
+{
+name:"Chicken Tikka",
+img:"https://picsum.photos/100?3"
+},
+
+{
+name:"Grilled Chicken",
+img:"https://picsum.photos/100?4"
+},
+
+{
+name:"BBQ Chicken",
+img:"https://picsum.photos/100?5"
+},
+
+{
+name:"Pork Ribs",
+img:"https://picsum.photos/100?6"
+},
+
+{
+name:"Pork Belly",
+img:"https://picsum.photos/100?7"
+},
+
+{
+name:"Sweet Pork",
+img:"https://picsum.photos/100?8"
+},
+
+{
+name:"Egg Omelette",
+img:"https://picsum.photos/100?9"
+},
+
+{
+name:"Egg Benedict",
+img:"https://picsum.photos/100?10"
+},
+
+{
+name:"Boiled Eggs",
+img:"https://picsum.photos/100?11"
+},
+
+{
+name:"Cheese Omelette",
+img:"https://picsum.photos/100?12"
+}
+
+];
+
+let i=0;
+
+const box=document.getElementById("recipePopup");
+
+function showDish(){
+
+const d=dishes[i];
+
+const card=document.createElement("div");
+
+card.className="popup";
+
+card.innerHTML=`
+<img src="${d.img}">
+<div>
+<h4>${d.name}</h4>
+<p>🔥 Premium Recipe</p>
+</div>
+`;
+
+box.appendChild(card);
+
+setTimeout(()=>{
+
+card.remove();
+
+},3000);
+
+i++;
+
+if(i>=dishes.length){
+
+i=0;
+
+}
+
+}
+
+showDish();
+
+setInterval(showDish,1000);
+
+</script> 
+
