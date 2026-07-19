@@ -6108,5 +6108,321 @@ addAmbientParticles();
 
 })();
 </script>
+
+<!-- ============================================================
+     PREMIUM CINEMATIC ENHANCEMENT LAYER
+     Additive only — does not modify any original markup/CSS/JS above.
+     Adds: cinematic loader, glass/glow nav + AI orb, animated counters,
+     3D tilt cards, GSAP/ScrollTrigger parallax, ambient Three.js embers,
+     contact-form glow.
+     ============================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+/* ---------- Cinematic Loader ---------- */
+#trc-loader{position:fixed;inset:0;z-index:99999;background:radial-gradient(circle at 50% 42%,#150a0a 0%,#050202 70%,#000 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;font-family:"Outfit",system-ui,sans-serif;}
+#trc-loader .trc-embers{position:absolute;inset:0;pointer-events:none;}
+#trc-loader .trc-rooster-wrap{position:relative;width:220px;height:220px;margin-bottom:26px;}
+#trc-loader svg.trc-rooster{width:100%;height:100%;overflow:visible;}
+#trc-loader .trc-eye{transform-box:fill-box;transform-origin:center;}
+#trc-loader .trc-title{font-family:"Playfair Display",Georgia,serif;font-weight:900;letter-spacing:2px;font-size:clamp(22px,4vw,34px);
+  color:#f3e6c9;text-align:center;opacity:0;text-shadow:0 0 8px rgba(201,168,76,.6),0 0 26px rgba(196,30,58,.35);}
+#trc-loader .trc-title em{font-style:italic;color:#e8263f;}
+#trc-loader .trc-sub{margin-top:10px;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#c9a84c;opacity:0;}
+#trc-loader .trc-ring{width:64px;height:64px;margin-top:28px;opacity:0;}
+#trc-loader .trc-ring circle{fill:none;stroke-width:2;}
+#trc-loader .trc-ring .trc-ring-bg{stroke:rgba(201,168,76,0.15);}
+#trc-loader .trc-ring .trc-ring-fg{stroke:#c9a84c;stroke-linecap:round;transform-origin:center;transform:rotate(-90deg);
+  filter:drop-shadow(0 0 6px rgba(201,168,76,.8));}
+#trc-flash{position:fixed;inset:0;z-index:100000;background:radial-gradient(circle,#fff8e6 0%,#e8263f 45%,transparent 75%);
+  opacity:0;pointer-events:none;}
+
+/* ---------- Nav glass + glow (additive strengthening) ---------- */
+.premium-nav{backdrop-filter:blur(18px) saturate(160%) !important;-webkit-backdrop-filter:blur(18px) saturate(160%) !important;
+  box-shadow:0 1px 0 rgba(201,168,76,.18), 0 8px 32px rgba(196,30,58,.16), 0 0 40px rgba(196,30,58,.08) !important;}
+.trc-ai-orb{position:relative;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+  margin-right:9px;vertical-align:middle;border-radius:50%;flex-shrink:0;}
+.trc-ai-orb::before,.trc-ai-orb::after{content:"";position:absolute;inset:0;border-radius:50%;}
+.trc-ai-orb::before{background:conic-gradient(from 0deg,#c41e3a,#e8c675,#c9a84c,#e8263f,#c41e3a);
+  animation:trcOrbSpin 3.2s linear infinite;filter:blur(0.3px);}
+.trc-ai-orb::after{inset:3px;background:radial-gradient(circle at 35% 30%,#1a1a1a,#050202 70%);border-radius:50%;}
+.trc-ai-orb-core{position:relative;z-index:1;width:6px;height:6px;border-radius:50%;background:#f3e6c9;
+  box-shadow:0 0 8px 2px rgba(232,224,212,.9);animation:trcOrbPulse 1.6s ease-in-out infinite;}
+@keyframes trcOrbSpin{to{transform:rotate(360deg);}}
+@keyframes trcOrbPulse{0%,100%{transform:scale(0.8);opacity:.7;}50%{transform:scale(1.25);opacity:1;}}
+.nav-logo{display:inline-flex !important;align-items:center;}
+
+/* ---------- 3D tilt cards ---------- */
+.product-card,.dish-card,.country-card,.ps2-card,.review-card{will-change:transform;transform-style:preserve-3d;}
+
+/* ---------- Contact form glow ---------- */
+#contact input,#contact textarea,#contact select{
+  transition:box-shadow .35s ease, border-color .35s ease !important;}
+#contact input:focus,#contact textarea:focus,#contact select:focus{
+  border-color:#c41e3a !important;
+  box-shadow:0 0 0 1px rgba(196,30,58,.5), 0 0 22px rgba(196,30,58,.35), 0 0 46px rgba(201,168,76,.15) !important;
+  outline:none !important;}
+#contact button[type="submit"],#contact .btn-red{position:relative;}
+#contact button[type="submit"]:hover,#contact .btn-red:hover{
+  box-shadow:0 0 24px rgba(196,30,58,.55), 0 0 50px rgba(201,168,76,.25) !important;}
+
+/* ---------- Ambient ember canvas ---------- */
+#trc-embers-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;}
+
+/* ---------- Chef hero / rooster subtle glow lift ---------- */
+#chef-rooster-btn{filter:drop-shadow(0 0 14px rgba(196,30,58,.45));}
+
+@media (prefers-reduced-motion: reduce){
+  .trc-ai-orb::before,#trc-loader .trc-embers{animation:none !important;}
+}
+</style>
+
+<!-- Cinematic loader markup -->
+<div id="trc-loader" aria-hidden="true">
+  <div class="trc-embers" id="trc-embers-dom"></div>
+  <div class="trc-rooster-wrap">
+    <svg class="trc-rooster" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="trcBodyG" cx="42%" cy="30%" r="65%">
+          <stop offset="0%" stop-color="#EED24E"/><stop offset="55%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#7A5510"/>
+        </radialGradient>
+        <radialGradient id="trcCombG" cx="50%" cy="0%" r="90%">
+          <stop offset="0%" stop-color="#FF5050"/><stop offset="100%" stop-color="#8B0018"/>
+        </radialGradient>
+        <filter id="trcGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- shadow -->
+      <ellipse cx="110" cy="196" rx="58" ry="8" fill="rgba(0,0,0,.4)"/>
+      <!-- folded "lotus" legs -->
+      <path d="M55 180 Q110 205 165 180 Q150 165 110 168 Q70 165 55 180 Z" fill="#8B6914" opacity=".85"/>
+      <!-- tail feathers -->
+      <path d="M150 130 Q195 95 205 55 Q192 105 165 140 Z" fill="#C9A84C" opacity=".85"/>
+      <path d="M148 138 Q182 118 198 82 Q178 122 158 148 Z" fill="#D4A835" opacity=".7"/>
+      <!-- body -->
+      <ellipse cx="108" cy="140" rx="52" ry="46" fill="url(#trcBodyG)"/>
+      <!-- wing -->
+      <path d="M78 118 Q120 112 130 150 Q108 172 82 156 Q68 138 78 118 Z" fill="#7A5510" opacity=".55"/>
+      <!-- head -->
+      <circle cx="100" cy="76" r="30" fill="url(#trcBodyG)"/>
+      <!-- comb -->
+      <path class="trc-comb" d="M88 54 Q84 34 92 26 Q98 18 103 32 Q110 20 116 32 Q121 24 126 38 Q127 50 111 56 Z" fill="url(#trcCombG)" filter="url(#trcGlow)"/>
+      <!-- wattle -->
+      <path d="M92 92 Q88 108 98 116 Q108 108 104 92 Z" fill="url(#trcCombG)" filter="url(#trcGlow)"/>
+      <!-- beak -->
+      <path d="M124 72 L142 78 L124 86 Z" fill="#F0C828"/>
+      <!-- CLOSED eyes (meditative) -->
+      <g class="trc-eye" id="trcEyeL">
+        <path d="M78 72 Q86 78 94 72" stroke="#1A0D00" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g>
+      <g class="trc-eye" id="trcEyeR">
+        <path d="M104 70 Q112 76 120 70" stroke="#1A0D00" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </div>
+  <div class="trc-title" id="trcTitle"><em>THE</em> RED COCKS</div>
+  <div class="trc-sub" id="trcSub">Premium Global Poultry &amp; Meat</div>
+  <svg class="trc-ring" id="trcRing" viewBox="0 0 64 64">
+    <circle class="trc-ring-bg" cx="32" cy="32" r="27"/>
+    <circle class="trc-ring-fg" id="trcRingFg" cx="32" cy="32" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6"/>
+  </svg>
+</div>
+<div id="trc-flash"></div>
+<canvas id="trc-embers-canvas"></canvas>
+
+<script>
+(function(){
+  "use strict";
+  function ready(fn){ if(document.readyState!=="loading"){fn();} else {document.addEventListener("DOMContentLoaded",fn);} }
+
+  ready(function(){
+
+    /* ================= CINEMATIC LOADER ================= */
+    (function loaderSeq(){
+      var loader=document.getElementById("trc-loader");
+      var flash=document.getElementById("trc-flash");
+      if(!loader) return;
+      var hasGSAP = typeof gsap!=="undefined";
+      var tl = hasGSAP ? gsap.timeline() : null;
+
+      function fallbackFade(){
+        loader.style.transition="opacity .8s ease";
+        loader.style.opacity="0";
+        setTimeout(function(){ loader.style.display="none"; },820);
+      }
+
+      if(!hasGSAP){ setTimeout(fallbackFade, 2400); return; }
+
+      gsap.set(["#trcTitle","#trcSub","#trcRing"],{opacity:0,y:14});
+      tl.to("#trcTitle",{opacity:1,y:0,duration:.9,ease:"power2.out"},0.15)
+        .to("#trcSub",{opacity:1,y:0,duration:.7,ease:"power2.out"},0.4)
+        .to("#trcRing",{opacity:1,duration:.5},0.5)
+        .to("#trcRingFg",{strokeDashoffset:0,duration:1.6,ease:"power1.inOut"},0.55)
+        // cinematic zoom into the eyes
+        .to("#trcEyeL,#trcEyeR",{scale:2.6,duration:.9,ease:"power3.in",transformOrigin:"center"},"+=0.35")
+        .to(".trc-rooster-wrap",{scale:1.5,duration:.9,ease:"power3.in"},"<")
+        // eyes "open" — morph the closed lash into an open glowing eye
+        .add(function(){
+          ["trcEyeL","trcEyeR"].forEach(function(id){
+            var g=document.getElementById(id);
+            if(!g) return;
+            g.innerHTML='<circle cx="'+(id==="trcEyeL"?"86":"112")+'" cy="'+(id==="trcEyeL"?"73":"73")+'" r="5.5" fill="#1a0d00"/><circle cx="'+(id==="trcEyeL"?"87":"113")+'" cy="'+(id==="trcEyeL"?"71":"71")+'" r="1.8" fill="#fff"/>';
+          });
+        })
+        .fromTo(".trc-rooster-wrap",{filter:"brightness(1)"},{filter:"brightness(2.2)",duration:.35,ease:"power2.in"},">-0.05")
+        .to(flash,{opacity:1,duration:.18,ease:"power2.in"},">-0.1")
+        .to(flash,{opacity:0,duration:.6,ease:"power2.out"})
+        .to(loader,{opacity:0,duration:.6,ease:"power2.out",onComplete:function(){ loader.style.display="none"; }},"<");
+    })();
+
+    /* ================= NAV: glass glow + AI orb ================= */
+    (function navOrb(){
+      var logo=document.querySelector(".nav-logo");
+      if(!logo || logo.querySelector(".trc-ai-orb")) return;
+      var orb=document.createElement("span");
+      orb.className="trc-ai-orb";
+      orb.setAttribute("aria-hidden","true");
+      var core=document.createElement("span");
+      core.className="trc-ai-orb-core";
+      orb.appendChild(core);
+      logo.insertBefore(orb, logo.firstChild);
+    })();
+
+    /* ================= ANIMATED COUNTERS ================= */
+    (function counters(){
+      var nodes=document.querySelectorAll(".hstat h3, .in-premium-stat-num");
+      if(!nodes.length) return;
+      var done=new WeakSet();
+      function animate(el){
+        if(done.has(el)) return;
+        done.add(el);
+        var full=(el.childNodes[0]&&el.childNodes[0].nodeValue)?el.childNodes[0].nodeValue.trim():el.textContent.replace(/[^0-9.]/g,"");
+        var target=parseFloat(full.replace(/[^0-9.]/g,""));
+        if(isNaN(target)) return;
+        var firstNode=el.childNodes[0];
+        var isTextNode = firstNode && firstNode.nodeType===3;
+        var start=0, dur=1600, startTime=null;
+        function frame(ts){
+          if(!startTime) startTime=ts;
+          var p=Math.min((ts-startTime)/dur,1);
+          var eased=1-Math.pow(1-p,3);
+          var val=Math.floor(start+(target-start)*eased);
+          if(isTextNode){ firstNode.nodeValue=String(val); }
+          if(p<1) requestAnimationFrame(frame); else if(isTextNode){ firstNode.nodeValue=String(target); }
+        }
+        requestAnimationFrame(frame);
+      }
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting) animate(e.target); });
+      },{threshold:.4});
+      nodes.forEach(function(n){ io.observe(n); });
+    })();
+
+    /* ================= 3D TILT CARDS ================= */
+    (function tilt(){
+      var sel=".product-card,.dish-card,.country-card,.ps2-card,.review-card";
+      var current=null;
+      function onMove(e){
+        var el=e.target.closest ? e.target.closest(sel) : null;
+        if(!el){ if(current){ resetTilt(current); current=null; } return; }
+        current=el;
+        var r=el.getBoundingClientRect();
+        var px=(e.clientX-r.left)/r.width;
+        var py=(e.clientY-r.top)/r.height;
+        var rx=(py-0.5)*-10;
+        var ry=(px-0.5)*10;
+        el.style.transform="perspective(900px) rotateX("+rx.toFixed(2)+"deg) rotateY("+ry.toFixed(2)+"deg) translateY(-6px) scale(1.015)";
+        el.style.transition="transform .05s linear";
+      }
+      function resetTilt(el){
+        el.style.transition="transform .5s cubic-bezier(.16,1,.3,1)";
+        el.style.transform="";
+      }
+      document.addEventListener("mousemove", function(e){
+        window.requestAnimationFrame(function(){ onMove(e); });
+      });
+      document.addEventListener("mouseleave", function(){ if(current){ resetTilt(current); current=null; } }, true);
+    })();
+
+    /* ================= GSAP SCROLL PARALLAX ================= */
+    (function parallax(){
+      if(typeof gsap==="undefined") return;
+      if(typeof ScrollTrigger!=="undefined"){ gsap.registerPlugin(ScrollTrigger); } else { return; }
+
+      var glow1=document.querySelector(".hero-bg-glow-1");
+      var glow2=document.querySelector(".hero-bg-glow-2");
+      if(glow1){ gsap.to(glow1,{yPercent:22,ease:"none",scrollTrigger:{trigger:"#home",start:"top top",end:"bottom top",scrub:true}}); }
+      if(glow2){ gsap.to(glow2,{yPercent:-18,ease:"none",scrollTrigger:{trigger:"#home",start:"top top",end:"bottom top",scrub:true}}); }
+
+      var roosterStage=document.querySelector(".rooster-stage");
+      if(roosterStage){
+        gsap.to(roosterStage,{yPercent:-10,scale:1.04,ease:"none",scrollTrigger:{trigger:"#home",start:"top top",end:"bottom top",scrub:true}});
+      }
+
+      document.querySelectorAll(".sec-title").forEach(function(t){
+        gsap.fromTo(t,{opacity:0,y:26,scale:.97},{opacity:1,y:0,scale:1,duration:1,ease:"power3.out",
+          scrollTrigger:{trigger:t,start:"top 88%"}});
+      });
+    })();
+
+    /* ================= AMBIENT THREE.JS EMBERS ================= */
+    (function embers(){
+      if(typeof THREE==="undefined") return;
+      var canvas=document.getElementById("trc-embers-canvas");
+      if(!canvas) return;
+      var renderer;
+      try{ renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:false}); }
+      catch(e){ return; }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      var scene=new THREE.Scene();
+      var camera=new THREE.PerspectiveCamera(55, window.innerWidth/window.innerHeight, 1, 2000);
+      camera.position.z=500;
+
+      var COUNT=140;
+      var positions=new Float32Array(COUNT*3);
+      var speeds=new Float32Array(COUNT);
+      for(var i=0;i<COUNT;i++){
+        positions[i*3]=(Math.random()-0.5)*window.innerWidth;
+        positions[i*3+1]=(Math.random()-0.5)*window.innerHeight;
+        positions[i*3+2]=(Math.random()-0.5)*400;
+        speeds[i]=0.3+Math.random()*0.9;
+      }
+      var geo=new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.BufferAttribute(positions,3));
+      var colorChoice=[0xC9A84C,0xE0C060,0xC41E3A];
+      var mat=new THREE.PointsMaterial({size:2.4,color:colorChoice[0],transparent:true,opacity:.55,depthWrite:false});
+      var points=new THREE.Points(geo,mat);
+      scene.add(points);
+
+      function animate(){
+        var pos=geo.attributes.position.array;
+        for(var i=0;i<COUNT;i++){
+          pos[i*3+1]+=speeds[i]*0.35;
+          if(pos[i*3+1]>window.innerHeight/2){ pos[i*3+1]=-window.innerHeight/2; }
+        }
+        geo.attributes.position.needsUpdate=true;
+        renderer.render(scene,camera);
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      window.addEventListener("resize", function(){
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect=window.innerWidth/window.innerHeight;
+        camera.updateProjectionMatrix();
+      });
+    })();
+
+  });
+})();
+</script>
+
 </body>
 </html>
