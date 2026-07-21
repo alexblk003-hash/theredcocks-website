@@ -363,11 +363,44 @@
       .scroll-section.active {
         transform: translateY(0px) !important;
       }
-      /* Big ambient glow blurs are very GPU-heavy on mobile */
-      .blur-\[150px\] { filter: blur(60px) !important; }
-      .blur-\[180px\] { filter: blur(70px) !important; }
-      .backdrop-blur-3xl { backdrop-filter: blur(12px) !important; }
-      .backdrop-blur-xl { backdrop-filter: blur(8px) !important; }
+      /* Big ambient glow blurs are very GPU-heavy on mobile - drop them almost entirely */
+      .blur-\[150px\] { filter: blur(40px) !important; }
+      .blur-\[180px\] { filter: blur(40px) !important; }
+      .backdrop-blur-3xl { backdrop-filter: blur(8px) !important; }
+      .backdrop-blur-xl { backdrop-filter: blur(6px) !important; }
+
+      /* The WebGL particle background is the single biggest cause of scroll jank
+         on phones - remove it completely on mobile (JS render loop is also skipped). */
+      #canvas3d-container { display: none !important; }
+
+      /* Only paint sections when they are near the viewport. This stops the
+         browser from constantly re-rendering the whole long page while scrolling. */
+      .scroll-section {
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 800px;
+      }
+
+      /* Animating box-shadow / border-color forces a repaint on EVERY frame.
+         Across ~50 flag cards + stat/nav cards this destroys scroll performance.
+         Kill the glow pulses on mobile (keep the marquee slide animations only). */
+      .elite-nav-box,
+      .pro-glass-card,
+      .flag-badge,
+      .featured-pop-card,
+      .ig-glow-icon,
+      #chick-bubble { animation: none !important; }
+
+      /* Flag cards: keep them visible but stop the per-frame float + glow repaint */
+      .flag-3d-card { animation: none !important; will-change: auto !important; }
+
+      /* Reduce compositor pressure from the many will-change layers */
+      .floating-card-1,
+      .floating-card-2,
+      .video-perspective-box { animation: none !important; }
+
+      /* The chroma-key chick widget runs getImageData every frame (very heavy);
+         hide it on mobile. The JS below also skips its processing loop. */
+      #chick-widget { display: none !important; }
     }
   </style>
   <!-- END RESPONSIVE FIX -->
@@ -1709,7 +1742,11 @@
     const renderer = new THREE.WebGLRenderer({ antialias: !isMobilePerf, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(isMobilePerf ? 1 : Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
+    // On mobile we never render the WebGL scene (it's the biggest scroll-jank source),
+    // so don't even attach the canvas.
+    if (!isMobilePerf) {
+      container.appendChild(renderer.domElement);
+    }
 
     // Quantum Gold Particle Cloud
     const particlesGeometry = new THREE.BufferGeometry();
@@ -1828,9 +1865,15 @@
 
       renderer.render(scene, camera);
     }
-    animate();
+    // Only run the continuous render loop on desktop. Mobile keeps the static
+    // dark background, so scrolling stays smooth. Section reveal still works
+    // because the IntersectionObserver above runs on all devices.
+    if (!isMobilePerf) {
+      animate();
+    }
 
     window.addEventListener('resize', () => {
+      if (isMobilePerf) return;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1880,6 +1923,16 @@
 
   <script>
   (function(){
+    // On phones the per-frame getImageData/putImageData chroma-key is a major
+    // main-thread cost that stutters scrolling. Skip the widget entirely on mobile.
+    if (window.innerWidth <= 768) {
+      const w = document.getElementById('chick-widget');
+      if (w) w.style.display = 'none';
+      const v = document.getElementById('chick-video');
+      if (v) { try { v.pause(); } catch(e){} }
+      return;
+    }
+
     const video  = document.getElementById('chick-video');
     const canvas = document.getElementById('chick-canvas');
     const ctx    = canvas.getContext('2d',{willReadFrequently:true});
