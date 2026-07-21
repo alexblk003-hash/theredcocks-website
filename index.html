@@ -315,9 +315,32 @@
       .grid.grid-cols-1.sm\:grid-cols-3 { grid-template-columns: 1fr !important; gap: 1rem !important; }
     }
 
-    /* ─── Floating side cards (hero) ─── */
-    @media (max-width: 1024px) {
-      .floating-card-1, .floating-card-2 { display: none !important; }
+    /* ─── Floating side cards (hero) — kept absolute/floating like desktop, just smaller & repositioned so they fit narrow screens ─── */
+    @media (max-width: 1023px) {
+      .hero-side-videos {
+        position: absolute !important;
+        inset: 0 !important;
+        display: block !important;
+        overflow: hidden !important;
+      }
+      .hero-side-videos .floating-card-1 {
+        top: 84px !important;
+        left: 6px !important;
+      }
+      .hero-side-videos .floating-card-2 {
+        top: 84px !important;
+        right: 6px !important;
+      }
+      .hero-side-video-box {
+        width: 96px !important;
+        height: 124px !important;
+        border-radius: 16px !important;
+      }
+      .hero-side-videos span {
+        font-size: 7px !important;
+        padding: 4px 7px !important;
+        letter-spacing: 0.08em !important;
+      }
     }
 
     /* ─── WebGL canvas stays behind content ─── */
@@ -325,6 +348,27 @@
 
     /* ─── Prevent horizontal scroll globally ─── */
     .scroll-section { max-width: 100vw; overflow-x: hidden; }
+
+    /* ─── MOBILE PERFORMANCE FIX ───
+       On phones the heavy 3D perspective/rotateX scroll animation + big blur
+       glows + WebGL background were causing sections to feel laggy and
+       show up late. This lightens things ONLY on small screens - desktop
+       keeps the full effect untouched. */
+    @media (max-width: 768px) {
+      .scroll-section {
+        transform: translateY(30px) !important;
+        transition: opacity 0.5s ease, transform 0.5s ease !important;
+        will-change: opacity, transform;
+      }
+      .scroll-section.active {
+        transform: translateY(0px) !important;
+      }
+      /* Big ambient glow blurs are very GPU-heavy on mobile */
+      .blur-\[150px\] { filter: blur(60px) !important; }
+      .blur-\[180px\] { filter: blur(70px) !important; }
+      .backdrop-blur-3xl { backdrop-filter: blur(12px) !important; }
+      .backdrop-blur-xl { backdrop-filter: blur(8px) !important; }
+    }
   </style>
   <!-- END RESPONSIVE FIX -->
 </head>
@@ -378,11 +422,11 @@
       <div class="absolute bottom-10 right-1/4 w-[500px] h-[500px] bg-yellow-500/10 rounded-full blur-[180px]"></div>
     </div>
 
-    <!-- Side Floating Cinematic Videos (Desktop Only) -->
-    <div class="absolute inset-0 pointer-events-none z-30 overflow-hidden hidden lg:block">
+    <!-- Side Floating Cinematic Videos (now shown on all screen sizes) -->
+    <div class="hero-side-videos absolute inset-0 pointer-events-none z-30 overflow-hidden lg:block">
       <!-- Left Floating Card -->
       <div class="absolute top-48 left-12 flex flex-col items-center gap-3 floating-card-1 pointer-events-auto">
-        <div class="w-44 h-56 rounded-[24px] overflow-hidden border border-amber-500/40 backdrop-blur-xl shadow-[0_0_40px_rgba(245,158,11,0.3)] bg-black">
+        <div class="hero-side-video-box w-44 h-56 rounded-[24px] overflow-hidden border border-amber-500/40 backdrop-blur-xl shadow-[0_0_40px_rgba(245,158,11,0.3)] bg-black">
           <video autoplay muted loop playsinline preload="auto" class="w-full h-full object-cover">
             <source src="https://files.catbox.moe/wigihg.mp4" type="video/mp4">
           </video>
@@ -392,7 +436,7 @@
 
       <!-- Right Floating Card -->
       <div class="absolute top-52 right-12 flex flex-col items-center gap-3 floating-card-2 pointer-events-auto">
-        <div class="w-52 h-44 rounded-[24px] overflow-hidden border border-amber-500/40 backdrop-blur-xl shadow-[0_0_40px_rgba(245,158,11,0.3)] bg-black">
+        <div class="hero-side-video-box w-52 h-44 rounded-[24px] overflow-hidden border border-amber-500/40 backdrop-blur-xl shadow-[0_0_40px_rgba(245,158,11,0.3)] bg-black">
           <video autoplay muted loop playsinline preload="auto" class="w-full h-full object-cover">
             <source src="https://files.catbox.moe/zbzso2.mp4" type="video/mp4">
           </video>
@@ -1657,17 +1701,19 @@
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x010101, 0.002);
 
+    const isMobilePerf = window.innerWidth <= 768;
+
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 400;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobilePerf, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isMobilePerf ? 1 : Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
     // Quantum Gold Particle Cloud
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1000;
+    const particlesCount = isMobilePerf ? 250 : 1000;
     const posArray = new Float32Array(particlesCount * 3);
 
     for(let i = 0; i < particlesCount * 3; i++) {
@@ -1715,14 +1761,15 @@
 
     const observerOptions = {
       root: null,
-      rootMargin: '-5% 0px -5% 0px',
-      threshold: 0.1
+      rootMargin: isMobilePerf ? '0px 0px -10% 0px' : '-5% 0px -5% 0px',
+      threshold: isMobilePerf ? 0.01 : 0.1
     };
 
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const themeColorHex = entry.target.getAttribute('data-theme-color');
         const intensity = parseFloat(entry.target.getAttribute('data-intensity'));
+        const sectionVideos = entry.target.querySelectorAll('video');
 
         if(entry.isIntersecting) {
           entry.target.classList.add('active');
@@ -1739,12 +1786,21 @@
             aboutVideo.currentTime = 0;
             aboutVideo.play().catch(() => {});
           }
+
+          // Only decode/play videos for sections actually on screen (mobile: big perf win)
+          if(isMobilePerf) {
+            sectionVideos.forEach(v => v.play().catch(() => {}));
+          }
         } else {
           entry.target.classList.remove('active');
 
           if(entry.target.id === 'about' && aboutVideo) {
             aboutVideo.pause();
             aboutVideo.currentTime = 0;
+          }
+
+          if(isMobilePerf) {
+            sectionVideos.forEach(v => v.pause());
           }
         }
       });
