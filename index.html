@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>THE RED COCKS | Ultra-Elite Billionaire Sanctuary & Masterpiece Provision</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Three.js for Next-Gen 3D Quantum Particle Atmosphere -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -22,7 +23,15 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* WebGL Canvas Background */
+    /* Premium editorial display typeface for headings — pairs a serif
+       masthead feel with the clean Inter body copy underneath it. */
+    h1, h2, h3, .font-display {
+      font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    }
+
+    /* Lightweight scroll-tinted background layer (replaces the old WebGL canvas).
+       Pure CSS + a couple of CSS-variable writes on scroll — no per-frame canvas
+       rendering, so it stays smooth on every device including phones. */
     #canvas3d-container {
       position: fixed;
       top: 0;
@@ -31,6 +40,12 @@
       height: 100vh;
       z-index: -1;
       pointer-events: none;
+      --scroll-tint: #d97706;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 15%, color-mix(in srgb, var(--scroll-tint) 22%, transparent), transparent 70%),
+        #010101;
+      transition: background 0.5s ease-out;
+      will-change: background;
     }
 
     /* Custom Scrollbar for Ultra High-End Feel */
@@ -66,18 +81,111 @@
     }
     .elite-nav-link:hover::after { width: 100%; }
 
-    /* Holographic Navbar Core */
+    /* Holographic Navbar Core — premium continuous hue-cycling glow */
     @keyframes eliteNavCore {
-      0%, 100% {
-        box-shadow: 0 0 40px rgba(217, 119, 6, 0.3), inset 0 0 20px rgba(253, 224, 71, 0.15);
-        border-color: rgba(217, 119, 6, 0.5);
+      0% {
+        box-shadow: 0 0 40px rgba(217, 119, 6, 0.35), inset 0 0 20px rgba(253, 224, 71, 0.15);
+        border-color: rgba(217, 119, 6, 0.55);
+      }
+      25% {
+        box-shadow: 0 0 60px rgba(244, 63, 94, 0.55), inset 0 0 26px rgba(251, 113, 133, 0.25);
+        border-color: rgba(244, 63, 94, 0.8);
       }
       50% {
-        box-shadow: 0 0 70px rgba(253, 224, 71, 0.6), inset 0 0 30px rgba(217, 119, 6, 0.35);
-        border-color: rgba(253, 224, 71, 0.9);
+        box-shadow: 0 0 70px rgba(168, 85, 247, 0.6), inset 0 0 30px rgba(196, 132, 252, 0.3);
+        border-color: rgba(168, 85, 247, 0.85);
+      }
+      75% {
+        box-shadow: 0 0 60px rgba(56, 130, 246, 0.55), inset 0 0 26px rgba(96, 165, 250, 0.25);
+        border-color: rgba(56, 130, 246, 0.8);
+      }
+      100% {
+        box-shadow: 0 0 40px rgba(217, 119, 6, 0.35), inset 0 0 20px rgba(253, 224, 71, 0.15);
+        border-color: rgba(217, 119, 6, 0.55);
       }
     }
-    .elite-nav-box { animation: eliteNavCore 5s infinite ease-in-out; }
+    .elite-nav-box {
+      animation: eliteNavCore 12s infinite ease-in-out;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Continuous premium sheen sweeping across the glass navbar */
+    @keyframes eliteNavSheen {
+      0% { transform: translateX(-120%) skewX(-15deg); }
+      100% { transform: translateX(220%) skewX(-15deg); }
+    }
+    .elite-nav-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 35%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+      animation: eliteNavSheen 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    /* Rotating hue keyframe — used by the small circular AI halo ring around the emblem */
+    @keyframes eliteNavRotateGlow { to { transform: rotate(360deg); } }
+
+    /* AI emblem: subtle continuous 3D breathing tilt (transform-only, so it
+       stays smooth on phones) + a blinking "AI active" status dot. */
+    @keyframes aiOrbBreathe {
+      0%, 100% { transform: perspective(300px) scale(1) rotateY(0deg); }
+      50% { transform: perspective(300px) scale(1.05) rotateY(10deg); }
+    }
+    @keyframes aiStatusBlink {
+      0%, 100% { opacity: 0.55; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ─── PREMIUM CONTACT SECTION: HUD frame + pro card details ─── */
+    .premium-frame { padding: 32px 12px; }
+    .corner-bracket {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      pointer-events: none;
+      animation: cornerBracketPulse 3.5s ease-in-out infinite;
+    }
+    .corner-tl { top: 0; left: 0; border-top: 2px solid rgba(253,224,71,0.65); border-left: 2px solid rgba(253,224,71,0.65); }
+    .corner-tr { top: 0; right: 0; border-top: 2px solid rgba(253,224,71,0.65); border-right: 2px solid rgba(253,224,71,0.65); }
+    .corner-bl { bottom: 0; left: 0; border-bottom: 2px solid rgba(253,224,71,0.65); border-left: 2px solid rgba(253,224,71,0.65); }
+    .corner-br { bottom: 0; right: 0; border-bottom: 2px solid rgba(253,224,71,0.65); border-right: 2px solid rgba(253,224,71,0.65); }
+    @keyframes cornerBracketPulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+    .contact-card-pro { padding-top: 2.75rem !important; }
+    .contact-card-index {
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      font-family: 'Playfair Display', serif;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      color: rgba(253, 224, 71, 0.45);
+    }
+    .contact-status-pill {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6ee7b7;
+    }
+    .contact-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background: #34d399;
+      box-shadow: 0 0 6px rgba(52,211,153,0.9);
+      animation: aiStatusBlink 1.6s ease-in-out infinite;
+    }
 
     /* Gold Shimmer Text */
     @keyframes goldShimmer {
@@ -216,6 +324,84 @@
     .ig-glow-icon {
       animation: igPulseGlow 3s ease-in-out infinite;
     }
+
+    /* ─── PREMIUM POLISH LAYER ───────────────────────────────
+       Additive refinements only — nothing above is touched.
+       Goal: subtler grain/depth, calmer glows, crisper hovers,
+       so the whole site reads as a high-end, expensive build. */
+
+    /* Subtle film-grain texture — adds tactile depth instead of flat black */
+    #grain-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0.035;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    @media (max-width: 768px) { #grain-overlay { display: none; } }
+
+    /* Cinematic vignette at the screen edges */
+    #vignette-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 39;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%);
+    }
+
+    /* Thin gold scroll-progress line — a small, quiet luxury-site signature */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      z-index: 10000;
+      background: linear-gradient(90deg, #d97706, #fde047, #d97706);
+      box-shadow: 0 0 12px rgba(253,224,71,0.7);
+      transition: width 0.1s linear;
+    }
+
+    /* Crisper, more restrained card hover — less garish, more "expensive" */
+    .pro-glass-card {
+      transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1),
+                  border-color 0.6s cubic-bezier(0.19, 1, 0.22, 1),
+                  box-shadow 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    /* Buttons: subtle lift + brighten instead of a hard scale-pop */
+    .video-perspective-box video,
+    button {
+      transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1),
+                  box-shadow 0.35s cubic-bezier(0.19, 1, 0.22, 1),
+                  filter 0.35s ease;
+    }
+    button:hover {
+      filter: brightness(1.08);
+    }
+
+    /* Slightly calmer, more premium glow intensity across the gaudiest shadows */
+    .elite-nav-box { animation-duration: 7s; }
+    .gold-shimmer-text { animation-duration: 7s; }
+
+    /* Refined section seams — a soft gradient hairline instead of a flat border */
+    section.border-t { position: relative; border-top-color: transparent !important; }
+    section.border-t::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(217,119,6,0.5), rgba(253,224,71,0.5), rgba(217,119,6,0.5), transparent);
+    }
+
+    /* Selection color feels more intentional than the browser default */
+    ::selection { background: rgba(253,224,71,0.35); color: #fff; }
+
+    /* FAQ accordion: hide native <summary> marker triangles cross-browser */
+    #faq summary::-webkit-details-marker { display: none; }
+    #faq summary { list-style: none; }
+    #faq details[open] summary { margin-bottom: 4px; }
   </style>
 
   <!-- RESPONSIVE FIX: All screen sizes -->
@@ -247,7 +433,7 @@
       nav { top: 8px !important; width: 96% !important; }
       nav .px-6 { padding-left: 12px !important; padding-right: 12px !important; }
       nav span.text-amber-300 { font-size: 10px !important; letter-spacing: 0.12em !important; }
-      nav button { font-size: 9px !important; padding: 8px 14px !important; }
+      nav button:not(#mobile-menu-btn) { font-size: 9px !important; padding: 8px 14px !important; }
     }
 
     /* ─── Hero section ─── */
@@ -295,9 +481,9 @@
       .pro-glass-card .text-4xl { font-size: 1.5rem !important; }
     }
 
-    /* ─── Baby chick widget: smaller + lower on mobile ─── */
+    /* ─── Baby chick widget: smaller + lifted higher on mobile ─── */
     @media (max-width: 640px) {
-      #chick-widget { bottom: 20px !important; }
+      #chick-widget { bottom: 90px !important; }
       #chick-bubble { padding: 4px 7px !important; }
       #chick-bubble div:first-child { font-size: 6.5px !important; }
       #chick-bubble #chick-text    { font-size: 9px   !important; }
@@ -343,35 +529,31 @@
       }
     }
 
-    /* ─── WebGL canvas stays behind content ─── */
+    /* ─── Lightweight tinted background layer stays behind content ─── */
     #canvas3d-container { z-index: -1 !important; }
 
     /* ─── Prevent horizontal scroll globally ─── */
     .scroll-section { max-width: 100vw; overflow-x: hidden; }
 
-    /* ─── MOBILE PERFORMANCE FIX ───
-       On phones the heavy 3D perspective/rotateX scroll animation + big blur
-       glows + WebGL background were causing sections to feel laggy and
-       show up late. This lightens things ONLY on small screens - desktop
-       keeps the full effect untouched. */
+    /* ─── MOBILE PERFORMANCE TUNING ───
+       The old WebGL particle background was the real cause of scroll jank on
+       phones. It's gone now, so the 3D perspective scroll-reveal can run on
+       mobile too — just with a shorter throw and smaller angle than desktop,
+       which keeps it feeling like real 3D while staying cheap for phone GPUs. */
     @media (max-width: 768px) {
       .scroll-section {
-        transform: translateY(30px) !important;
-        transition: opacity 0.5s ease, transform 0.5s ease !important;
+        transform: perspective(800px) translateY(40px) rotateX(8deg) scale(0.96) !important;
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
         will-change: opacity, transform;
       }
       .scroll-section.active {
-        transform: translateY(0px) !important;
+        transform: perspective(800px) translateY(0px) rotateX(0deg) scale(1) !important;
       }
       /* Big ambient glow blurs are very GPU-heavy on mobile - drop them almost entirely */
       .blur-\[150px\] { filter: blur(40px) !important; }
       .blur-\[180px\] { filter: blur(40px) !important; }
       .backdrop-blur-3xl { backdrop-filter: blur(8px) !important; }
       .backdrop-blur-xl { backdrop-filter: blur(6px) !important; }
-
-      /* The WebGL particle background is the single biggest cause of scroll jank
-         on phones - remove it completely on mobile (JS render loop is also skipped). */
-      #canvas3d-container { display: none !important; }
 
       /* Only paint sections when they are near the viewport. This stops the
          browser from constantly re-rendering the whole long page while scrolling. */
@@ -398,27 +580,102 @@
       .floating-card-2,
       .video-perspective-box { animation: none !important; }
 
-      /* The chroma-key chick widget runs getImageData every frame (very heavy);
-         hide it on mobile. The JS below also skips its processing loop. */
-      #chick-widget { display: none !important; }
+      /* Chick widget is now enabled on mobile too — see JS below for the
+         lighter mobile processing rate. */
     }
   </style>
   <!-- END RESPONSIVE FIX -->
+
+  <!-- MOBILE NAV MENU: styling -->
+  <style>
+    .mobile-nav-link {
+      color: #e5e7eb;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px 14px;
+      border-radius: 14px;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .mobile-nav-link:active,
+    .mobile-nav-link:hover {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fde047;
+    }
+    #mobile-menu-panel { max-height: 0; }
+    #mobile-menu-panel.open { max-height: 520px; }
+    #mobile-menu-btn {
+      flex-shrink: 0;
+      width: 40px !important;
+      height: 40px !important;
+      padding: 0 !important;
+    }
+    @media (max-width: 380px) {
+      nav .gap-2 { gap: 6px !important; }
+      #mobile-menu-btn { width: 36px !important; height: 36px !important; }
+    }
+    #mobile-menu-btn .hamburger-line { transform-origin: center; }
+    #mobile-menu-btn.open .hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #mobile-menu-btn.open .hamburger-line:nth-child(2) { opacity: 0; }
+    #mobile-menu-btn.open .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ─── Extra professional / smooth-mobile polish ───
+       Purely additive refinements — nothing above is removed. */
+    @media (max-width: 480px) {
+      /* Tighter, calmer letter-spacing reads cleaner on small screens */
+      .tracking-\[0\.15em\]  { letter-spacing: 0.06em !important; }
+      .tracking-\[0\.2em\]   { letter-spacing: 0.08em !important; }
+      .tracking-\[0\.25em\]  { letter-spacing: 0.1em  !important; }
+      .tracking-\[0\.3em\]   { letter-spacing: 0.12em !important; }
+      .tracking-\[0\.4em\]   { letter-spacing: 0.15em !important; }
+      /* Section padding feels tighter/cleaner on phones */
+      section.py-28 { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; }
+    }
+
+    /* Comfortable, reliably-tappable buttons/links on touch devices */
+    @media (max-width: 768px) {
+      button, a.elite-nav-link, a.mobile-nav-link { min-height: 40px; }
+      section#products button, section#products a { min-height: 44px; }
+    }
+
+    /* Avoid the grey tap-flash + accidental text selection on buttons (feels more native/app-like) */
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    /* Smoother native scrolling on iOS Safari */
+    html, body { -webkit-overflow-scrolling: touch; }
+
+    /* Respect users who prefer reduced motion — calmer, more professional by default */
+    @media (prefers-reduced-motion: reduce) {
+      .gold-shimmer-text, .elite-nav-box, .flag-badge, .pro-glass-card,
+      .featured-pop-card, .ig-glow-icon, .floating-card-1, .floating-card-2,
+      .video-perspective-box, #chick-bubble { animation: none !important; }
+    }
+  </style>
 </head>
 <body class="selection:bg-rose-500 selection:text-black">
 
   <!-- Interactive 3D WebGL Background Container -->
   <div id="canvas3d-container"></div>
+  <div id="grain-overlay"></div>
+  <div id="vignette-overlay"></div>
+  <div id="scroll-progress"></div>
 
   <!-- ULTRA LUXURY FLOATING NAVBAR -->
-  <nav class="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-7xl">
+  <nav class="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-7xl" style="position:fixed;">
     <div class="relative flex items-center justify-between px-6 py-3.5 rounded-full bg-black/85 backdrop-blur-3xl border border-amber-600/50 elite-nav-box shadow-2xl">
       
       <!-- Brand Logo / Identity -->
       <div class="flex items-center gap-3 z-10">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-200 p-[2px] shadow-[0_0_20px_rgba(245,158,11,0.8)] flex items-center justify-center">
-          <div class="w-full h-full bg-black rounded-full flex items-center justify-center">
-            <span class="text-lg animate-pulse">👑</span>
+        <div class="relative w-10 h-10 flex items-center justify-center">
+          <!-- Continuously rotating AI halo ring around the emblem -->
+          <div style="position:absolute; inset:-4px; border-radius:9999px; background:conic-gradient(from 0deg, #fde047, #f43f5e, #a855f7, #3b82f6, #fde047); animation: eliteNavRotateGlow 6s linear infinite; opacity:0.75; filter: blur(2px);"></div>
+          <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-200 p-[2px] shadow-[0_0_20px_rgba(245,158,11,0.8)] flex items-center justify-center" style="animation: aiOrbBreathe 4s ease-in-out infinite;">
+            <div class="w-full h-full bg-black rounded-full flex items-center justify-center relative overflow-hidden">
+              <span class="text-lg">👑</span>
+              <!-- AI-active status indicator, blinking continuously -->
+              <span style="position:absolute; bottom:1px; right:1px; width:6px; height:6px; border-radius:9999px; background:#34d399; box-shadow:0 0 6px rgba(52,211,153,0.9); animation: aiStatusBlink 1.6s ease-in-out infinite;"></span>
+            </div>
           </div>
         </div>
         <span class="text-amber-300 font-black tracking-[0.25em] text-xs sm:text-sm uppercase hidden sm:block">THE RED COCKS</span>
@@ -431,18 +688,41 @@
         <a href="#about" class="elite-nav-link">Heritage</a>
         <a href="#ceo" class="elite-nav-link">Founder</a>
         <a href="#reviews" class="elite-nav-link">Reviews</a>
-        <a href="#global" class="elite-nav-link">Global</a>
+        <a href="#global-export" class="elite-nav-link">Global</a>
         <a href="#contact" class="elite-nav-link">Contact</a>
         <a href="#vision" class="elite-nav-link">Concierge</a>
       </div>
 
-      <!-- Action Button -->
-      <div class="z-10">
-        <button class="px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-black font-extrabold text-[11px] sm:text-xs tracking-widest uppercase shadow-[0_0_30px_rgba(245,158,11,0.7)] hover:scale-105 transition-all duration-300 border border-white/30 cursor-pointer">
-          💎 VIP ACCESS
+      <!-- Action Button + Mobile Menu Toggle -->
+      <div class="z-10 flex items-center gap-2">
+        <button class="px-4 sm:px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-black font-extrabold text-[11px] sm:text-xs tracking-widest uppercase shadow-[0_0_30px_rgba(245,158,11,0.7)] hover:scale-105 transition-all duration-300 border border-white/30 cursor-pointer">
+          💎WLCOME
+        </button>
+
+        <!-- Hamburger (mobile only) -->
+        <button id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false" class="md:hidden flex flex-col items-center justify-center gap-[5px] w-10 h-10 rounded-full border border-amber-500/40 bg-black/60">
+          <span class="hamburger-line block w-4 h-[2px] bg-amber-300 rounded transition-all duration-300"></span>
+          <span class="hamburger-line block w-4 h-[2px] bg-amber-300 rounded transition-all duration-300"></span>
+          <span class="hamburger-line block w-4 h-[2px] bg-amber-300 rounded transition-all duration-300"></span>
         </button>
       </div>
 
+    </div>
+
+    <!-- Mobile Nav Panel -->
+    <div id="mobile-menu-panel" class="md:hidden max-h-0 overflow-hidden transition-all duration-400 ease-out mt-2 mx-1">
+      <div class="flex flex-col gap-1 p-4 rounded-3xl bg-black/95 border border-amber-600/40 backdrop-blur-2xl shadow-2xl">
+        <a href="#home" class="mobile-nav-link">Sanctuary</a>
+        <a href="#products" class="mobile-nav-link">Masterpieces</a>
+        <a href="#about" class="mobile-nav-link">Heritage</a>
+        <a href="#ceo" class="mobile-nav-link">Founder</a>
+        <a href="#reviews" class="mobile-nav-link">Reviews</a>
+        <a href="#global-export" class="mobile-nav-link">Global</a>
+        <a href="#contact" class="mobile-nav-link">Contact</a>
+        <a href="#vision" class="mobile-nav-link">Concierge</a>
+        <a href="#certifications" class="mobile-nav-link">Compliance</a>
+        <a href="#faq" class="mobile-nav-link">FAQ</a>
+      </div>
     </div>
   </nav>
 
@@ -460,7 +740,7 @@
       <!-- Left Floating Card -->
       <div class="absolute top-48 left-12 flex flex-col items-center gap-3 floating-card-1 pointer-events-auto">
         <div class="hero-side-video-box w-44 h-56 rounded-[24px] overflow-hidden border border-amber-500/40 backdrop-blur-xl shadow-[0_0_40px_rgba(245,158,11,0.3)] bg-black">
-          <video autoplay muted loop playsinline preload="auto" class="w-full h-full object-cover">
+          <video autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover">
             <source src="https://files.catbox.moe/wigihg.mp4" type="video/mp4">
           </video>
         </div>
@@ -470,7 +750,7 @@
       <!-- Right Floating Card -->
       <div class="absolute top-52 right-12 flex flex-col items-center gap-3 floating-card-2 pointer-events-auto">
         <div class="hero-side-video-box w-52 h-44 rounded-[24px] overflow-hidden border border-amber-500/40 backdrop-blur-xl shadow-[0_0_40px_rgba(245,158,11,0.3)] bg-black">
-          <video autoplay muted loop playsinline preload="auto" class="w-full h-full object-cover">
+          <video autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover">
             <source src="https://files.catbox.moe/zbzso2.mp4" type="video/mp4">
           </video>
         </div>
@@ -482,11 +762,11 @@
     <div class="relative z-20 flex flex-col items-center justify-center max-w-5xl mx-auto my-auto text-center">
       
       <!-- Center Perspective Video Box -->
-      <div class="relative w-[280px] h-[170px] sm:w-[380px] sm:h-[225px] md:w-[460px] md:h-[275px] mb-8 video-perspective-box mx-auto">
-        <video autoplay muted loop playsinline preload="auto"
-          class="w-full h-full object-cover rounded-[30px] border-2 border-amber-400/60 shadow-[0_30px_90px_rgba(245,158,11,0.5)]"
+      <div class="relative w-[280px] sm:w-[380px] md:w-[460px] mb-8 video-perspective-box mx-auto">
+        <video autoplay muted loop playsinline preload="metadata"
+          class="w-full h-auto block rounded-[30px] border-2 border-amber-400/60 shadow-[0_30px_90px_rgba(245,158,11,0.5)]"
           style="filter: contrast(1.15) saturate(1.2) brightness(1.05);">
-          <source src="https://files.catbox.moe/4pfb7j.mp4" type="video/mp4">
+          <source src="https://files.catbox.moe/933div.mp4" type="video/mp4">
         </video>
         <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-12 bg-amber-500/40 blur-2xl rounded-full"></div>
       </div>
@@ -560,15 +840,15 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         
-        <!-- CARD 1: POULTRY -->
+        <!-- CARD 1: CHICKEN -->
         <div class="pro-glass-card rounded-3xl p-6 group">
           <div class="w-full h-56 rounded-2xl overflow-hidden mb-6 relative border border-amber-500/40 bg-black">
-            <video autoplay muted loop playsinline preload="auto" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <video autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
               <source src="https://files.catbox.moe/wigihg.mp4" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
             <span class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-black text-[10px] tracking-widest uppercase shadow-lg z-10">
-              $850 / KG
+              CHICKEN MEAT
             </span>
           </div>
           
@@ -588,10 +868,10 @@
         <!-- CARD 2: EGGS -->
         <div class="pro-glass-card rounded-3xl p-6 group">
           <div class="w-full h-56 rounded-2xl overflow-hidden mb-6 relative border border-amber-500/40 bg-black">
-            <img src="https://images.unsplash.com/photo-1506976785307-8732e854ad03?q=80&w=1000&auto=format&fit=crop" alt="Imperial Golden Reserve Eggs" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1506976785307-8732e854ad03?q=80&w=1000&auto=format&fit=crop" alt="Imperial Golden Reserve Eggs" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
             <span class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-black text-[10px] tracking-widest uppercase shadow-lg z-10">
-              $450 / 6 PCS
+              PREMIUM / EGGS
             </span>
           </div>
 
@@ -611,12 +891,12 @@
         <!-- CARD 3: PORK -->
         <div class="pro-glass-card rounded-3xl p-6 group">
           <div class="w-full h-56 rounded-2xl overflow-hidden mb-6 relative border border-amber-500/40 bg-black">
-            <video autoplay muted loop playsinline preload="auto" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <video autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
               <source src="https://files.catbox.moe/zbzso2.mp4" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
             <span class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-black text-[10px] tracking-widest uppercase shadow-lg z-10">
-              $1,400 / KG
+              PORK MEAT
             </span>
           </div>
 
@@ -668,7 +948,7 @@
 
         <div class="w-full md:w-1/2">
           <div class="relative w-full h-[360px] rounded-[30px] overflow-hidden border-2 border-amber-500/50 shadow-[0_0_50px_rgba(245,158,11,0.4)] bg-black">
-            <video id="about-video" muted playsinline preload="auto" class="w-full h-full object-cover">
+            <video id="about-video" muted playsinline preload="metadata" class="w-full h-full object-cover">
               <source src="https://files.catbox.moe/9f568d.mp4" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-tr from-black/60 via-transparent to-transparent pointer-events-none"></div>
@@ -701,7 +981,7 @@
           <div class="lg:col-span-5 flex flex-col items-center">
             <div class="relative w-72 h-80 sm:w-80 sm:h-96 rounded-[30px] overflow-hidden border-2 border-amber-500/60 shadow-[0_0_50px_rgba(245,158,11,0.5)] group">
               <!-- Alex Wayne's Photo -->
-              <img src="https://i.ibb.co/XkMr72cd/alex-wayne.jpg" alt="Alex Wayne - CEO & Founder" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <img loading="lazy" decoding="async" src="https://i.ibb.co/XkMr72cd/alex-wayne.jpg" alt="Alex Wayne - CEO & Founder" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
               
               <div class="absolute bottom-4 left-4 right-4 text-center px-4 py-2.5 rounded-2xl bg-black/85 backdrop-blur-md border border-amber-500/40">
@@ -1472,7 +1752,11 @@
   </section>
   <!-- SECTION 3.75: CONTACT / INSTAGRAM -->
   <section id="contact" data-theme-color="0x080306" data-intensity="2.1" class="scroll-section relative py-28 px-4 w-full border-t border-amber-600/20">
-    <div class="max-w-5xl mx-auto text-center">
+    <div class="max-w-5xl mx-auto text-center relative premium-frame">
+      <span class="corner-bracket corner-tl"></span>
+      <span class="corner-bracket corner-tr"></span>
+      <span class="corner-bracket corner-bl"></span>
+      <span class="corner-bracket corner-br"></span>
 
       <div class="inline-block px-5 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 mb-4 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
         <span class="text-xs font-black tracking-[0.3em] text-amber-300 uppercase">📞 GET IN TOUCH</span>
@@ -1487,7 +1771,9 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
 
         <!-- Instagram Card -->
-        <a href="https://instagram.com/ik.aniii" target="_blank" rel="noopener noreferrer" class="pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4 group cursor-pointer">
+        <a href="https://instagram.com/ik.aniii" target="_blank" rel="noopener noreferrer" class="contact-card-pro pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4 group cursor-pointer relative">
+          <span class="contact-card-index">01</span>
+          <span class="contact-status-pill"><span class="contact-status-dot"></span>Active Now</span>
           <div class="ig-glow-icon w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-fuchsia-600 p-[2px] flex items-center justify-center">
             <div class="w-full h-full bg-black rounded-2xl flex items-center justify-center text-3xl">
               📸
@@ -1501,7 +1787,9 @@
         </a>
 
         <!-- Email Card -->
-        <div class="pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4">
+        <div class="contact-card-pro pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4 relative">
+          <span class="contact-card-index">02</span>
+          <span class="contact-status-pill"><span class="contact-status-dot"></span>Response &lt; 2 Hrs</span>
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-200 p-[2px] flex items-center justify-center">
             <div class="w-full h-full bg-black rounded-2xl flex items-center justify-center text-3xl">
               ✉️
@@ -1509,13 +1797,15 @@
           </div>
           <div>
             <span class="block text-white font-black text-sm uppercase tracking-widest mb-1">Email</span>
-            <span class="block text-gray-300 text-xs sm:text-sm font-bold tracking-wide">concierge@theredcocks.com</span>
+            <span id="contact-email-text" class="block text-gray-300 text-xs sm:text-sm font-bold tracking-wide">concierge@theredcocks.com</span>
           </div>
-          <span class="mt-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-[10px] font-black tracking-widest text-amber-300 uppercase">24/7 Response</span>
+          <button type="button" onclick="copyContactEmail(this)" class="mt-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-[10px] font-black tracking-widest text-amber-300 uppercase hover:bg-amber-500/20 transition-colors">Copy Email</button>
         </div>
 
         <!-- WhatsApp / Direct Line Card -->
-        <div class="pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4">
+        <div class="contact-card-pro pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4 relative">
+          <span class="contact-card-index">03</span>
+          <span class="contact-status-pill"><span class="contact-status-dot"></span>By Invitation</span>
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-200 p-[2px] flex items-center justify-center">
             <div class="w-full h-full bg-black rounded-2xl flex items-center justify-center text-3xl">
               🛎️
@@ -1572,58 +1862,58 @@
       <div class="flag-ticker-track">
 
         <!-- SET 1: 25 Flags -->
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/in.png" alt="India" class="flag-img"></div><div class="flag-label">India</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/ae.png" alt="UAE" class="flag-img"></div><div class="flag-label">UAE</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/us.png" alt="USA" class="flag-img"></div><div class="flag-label">USA</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/gb.png" alt="UK" class="flag-img"></div><div class="flag-label">UK</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/fr.png" alt="France" class="flag-img"></div><div class="flag-label">France</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/jp.png" alt="Japan" class="flag-img"></div><div class="flag-label">Japan</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/de.png" alt="Germany" class="flag-img"></div><div class="flag-label">Germany</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/ch.png" alt="Switzerland" class="flag-img"></div><div class="flag-label">Switzerland</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/sa.png" alt="Saudi Arabia" class="flag-img"></div><div class="flag-label">Saudi Arabia</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/qa.png" alt="Qatar" class="flag-img"></div><div class="flag-label">Qatar</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/sg.png" alt="Singapore" class="flag-img"></div><div class="flag-label">Singapore</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/au.png" alt="Australia" class="flag-img"></div><div class="flag-label">Australia</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/ca.png" alt="Canada" class="flag-img"></div><div class="flag-label">Canada</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/it.png" alt="Italy" class="flag-img"></div><div class="flag-label">Italy</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/es.png" alt="Spain" class="flag-img"></div><div class="flag-label">Spain</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/kr.png" alt="South Korea" class="flag-img"></div><div class="flag-label">South Korea</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/mc.png" alt="Monaco" class="flag-img"></div><div class="flag-label">Monaco</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/br.png" alt="Brazil" class="flag-img"></div><div class="flag-label">Brazil</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/se.png" alt="Sweden" class="flag-img"></div><div class="flag-label">Sweden</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/nl.png" alt="Netherlands" class="flag-img"></div><div class="flag-label">Netherlands</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/cn.png" alt="China" class="flag-img"></div><div class="flag-label">China</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/tr.png" alt="Turkey" class="flag-img"></div><div class="flag-label">Turkey</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/kw.png" alt="Kuwait" class="flag-img"></div><div class="flag-label">Kuwait</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/za.png" alt="South Africa" class="flag-img"></div><div class="flag-label">South Africa</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/ru.png" alt="Russia" class="flag-img"></div><div class="flag-label">Russia</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/in.png" alt="India" class="flag-img"></div><div class="flag-label">India</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/ae.png" alt="UAE" class="flag-img"></div><div class="flag-label">UAE</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/us.png" alt="USA" class="flag-img"></div><div class="flag-label">USA</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/gb.png" alt="UK" class="flag-img"></div><div class="flag-label">UK</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/fr.png" alt="France" class="flag-img"></div><div class="flag-label">France</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/jp.png" alt="Japan" class="flag-img"></div><div class="flag-label">Japan</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/de.png" alt="Germany" class="flag-img"></div><div class="flag-label">Germany</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/ch.png" alt="Switzerland" class="flag-img"></div><div class="flag-label">Switzerland</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/sa.png" alt="Saudi Arabia" class="flag-img"></div><div class="flag-label">Saudi Arabia</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/qa.png" alt="Qatar" class="flag-img"></div><div class="flag-label">Qatar</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/sg.png" alt="Singapore" class="flag-img"></div><div class="flag-label">Singapore</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/au.png" alt="Australia" class="flag-img"></div><div class="flag-label">Australia</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/ca.png" alt="Canada" class="flag-img"></div><div class="flag-label">Canada</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/it.png" alt="Italy" class="flag-img"></div><div class="flag-label">Italy</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/es.png" alt="Spain" class="flag-img"></div><div class="flag-label">Spain</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/kr.png" alt="South Korea" class="flag-img"></div><div class="flag-label">South Korea</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/mc.png" alt="Monaco" class="flag-img"></div><div class="flag-label">Monaco</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/br.png" alt="Brazil" class="flag-img"></div><div class="flag-label">Brazil</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/se.png" alt="Sweden" class="flag-img"></div><div class="flag-label">Sweden</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/nl.png" alt="Netherlands" class="flag-img"></div><div class="flag-label">Netherlands</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/cn.png" alt="China" class="flag-img"></div><div class="flag-label">China</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/tr.png" alt="Turkey" class="flag-img"></div><div class="flag-label">Turkey</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/kw.png" alt="Kuwait" class="flag-img"></div><div class="flag-label">Kuwait</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/za.png" alt="South Africa" class="flag-img"></div><div class="flag-label">South Africa</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/ru.png" alt="Russia" class="flag-img"></div><div class="flag-label">Russia</div></div></div>
 
         <!-- SET 2: Duplicate for seamless loop -->
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/in.png" alt="India" class="flag-img"></div><div class="flag-label">India</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/ae.png" alt="UAE" class="flag-img"></div><div class="flag-label">UAE</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/us.png" alt="USA" class="flag-img"></div><div class="flag-label">USA</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/gb.png" alt="UK" class="flag-img"></div><div class="flag-label">UK</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/fr.png" alt="France" class="flag-img"></div><div class="flag-label">France</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/jp.png" alt="Japan" class="flag-img"></div><div class="flag-label">Japan</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/de.png" alt="Germany" class="flag-img"></div><div class="flag-label">Germany</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/ch.png" alt="Switzerland" class="flag-img"></div><div class="flag-label">Switzerland</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/sa.png" alt="Saudi Arabia" class="flag-img"></div><div class="flag-label">Saudi Arabia</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/qa.png" alt="Qatar" class="flag-img"></div><div class="flag-label">Qatar</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/sg.png" alt="Singapore" class="flag-img"></div><div class="flag-label">Singapore</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/au.png" alt="Australia" class="flag-img"></div><div class="flag-label">Australia</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/ca.png" alt="Canada" class="flag-img"></div><div class="flag-label">Canada</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/it.png" alt="Italy" class="flag-img"></div><div class="flag-label">Italy</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/es.png" alt="Spain" class="flag-img"></div><div class="flag-label">Spain</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/kr.png" alt="South Korea" class="flag-img"></div><div class="flag-label">South Korea</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/mc.png" alt="Monaco" class="flag-img"></div><div class="flag-label">Monaco</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/br.png" alt="Brazil" class="flag-img"></div><div class="flag-label">Brazil</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/se.png" alt="Sweden" class="flag-img"></div><div class="flag-label">Sweden</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/nl.png" alt="Netherlands" class="flag-img"></div><div class="flag-label">Netherlands</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/cn.png" alt="China" class="flag-img"></div><div class="flag-label">China</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/tr.png" alt="Turkey" class="flag-img"></div><div class="flag-label">Turkey</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/kw.png" alt="Kuwait" class="flag-img"></div><div class="flag-label">Kuwait</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/za.png" alt="South Africa" class="flag-img"></div><div class="flag-label">South Africa</div></div></div>
-        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img src="https://flagcdn.com/w80/ru.png" alt="Russia" class="flag-img"></div><div class="flag-label">Russia</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/in.png" alt="India" class="flag-img"></div><div class="flag-label">India</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/ae.png" alt="UAE" class="flag-img"></div><div class="flag-label">UAE</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/us.png" alt="USA" class="flag-img"></div><div class="flag-label">USA</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/gb.png" alt="UK" class="flag-img"></div><div class="flag-label">UK</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/fr.png" alt="France" class="flag-img"></div><div class="flag-label">France</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/jp.png" alt="Japan" class="flag-img"></div><div class="flag-label">Japan</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/de.png" alt="Germany" class="flag-img"></div><div class="flag-label">Germany</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/ch.png" alt="Switzerland" class="flag-img"></div><div class="flag-label">Switzerland</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/sa.png" alt="Saudi Arabia" class="flag-img"></div><div class="flag-label">Saudi Arabia</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/qa.png" alt="Qatar" class="flag-img"></div><div class="flag-label">Qatar</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/sg.png" alt="Singapore" class="flag-img"></div><div class="flag-label">Singapore</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/au.png" alt="Australia" class="flag-img"></div><div class="flag-label">Australia</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/ca.png" alt="Canada" class="flag-img"></div><div class="flag-label">Canada</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/it.png" alt="Italy" class="flag-img"></div><div class="flag-label">Italy</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/es.png" alt="Spain" class="flag-img"></div><div class="flag-label">Spain</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/kr.png" alt="South Korea" class="flag-img"></div><div class="flag-label">South Korea</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/mc.png" alt="Monaco" class="flag-img"></div><div class="flag-label">Monaco</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/br.png" alt="Brazil" class="flag-img"></div><div class="flag-label">Brazil</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/se.png" alt="Sweden" class="flag-img"></div><div class="flag-label">Sweden</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/nl.png" alt="Netherlands" class="flag-img"></div><div class="flag-label">Netherlands</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/cn.png" alt="China" class="flag-img"></div><div class="flag-label">China</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/tr.png" alt="Turkey" class="flag-img"></div><div class="flag-label">Turkey</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/kw.png" alt="Kuwait" class="flag-img"></div><div class="flag-label">Kuwait</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/za.png" alt="South Africa" class="flag-img"></div><div class="flag-label">South Africa</div></div></div>
+        <div class="flag-3d-card shrink-0"><div class="flag-inner"><div class="flag-img-wrap"><img loading="lazy" decoding="async" src="https://flagcdn.com/w80/ru.png" alt="Russia" class="flag-img"></div><div class="flag-label">Russia</div></div></div>
 
       </div>
     </div>
@@ -1631,15 +1921,9 @@
     <!-- Video Below Flags -->
     <div class="max-w-5xl mx-auto px-4 mt-16 relative z-10">
       <div class="relative w-full rounded-[30px] overflow-hidden border-2 border-amber-500/50 shadow-[0_0_60px_rgba(245,158,11,0.35)]">
-        <video autoplay muted loop playsinline preload="auto" style="width:100%;height:auto;display:block;vertical-align:bottom;">
+        <video autoplay muted loop playsinline preload="metadata" style="width:100%;height:auto;display:block;vertical-align:bottom;">
           <source src="https://files.catbox.moe/wf82n2.mp4" type="video/mp4">
         </video>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
-        <div class="absolute bottom-8 left-0 right-0 text-center">
-          <span class="inline-block px-6 py-2.5 rounded-full bg-black/80 border border-amber-500/50 backdrop-blur-xl text-xs font-black tracking-[0.3em] text-amber-300 uppercase shadow-[0_0_20px_rgba(245,158,11,0.4)]">
-            👑 Trusted by Royalty Across 25 Nations
-          </span>
-        </div>
       </div>
     </div>
 
@@ -1723,78 +2007,143 @@
     }
   </style>
 
+  <!-- SECTION: CERTIFICATIONS & IMPERIAL COMPLIANCE -->
+  <section id="certifications" data-theme-color="0x040303" data-intensity="1.9" class="scroll-section relative py-28 px-4 w-full border-t border-amber-600/20">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <div class="inline-block px-5 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 mb-4 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+          <span class="text-xs font-black tracking-[0.3em] text-amber-300 uppercase">🛡️ IMPERIAL COMPLIANCE</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase">
+          Certified Beyond Standard
+        </h2>
+        <p class="text-gray-400 text-sm sm:text-base mt-3 max-w-2xl mx-auto tracking-wide">
+          Every reserve, cut, and shipment is verified across the world's most rigorous quality frameworks.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+        <div class="pro-glass-card p-6 rounded-2xl text-center flex flex-col items-center justify-center gap-2">
+          <span class="text-3xl">🌿</span>
+          <span class="text-xs font-black tracking-widest text-white uppercase">100% Organic</span>
+          <span class="text-[10px] text-gray-400 tracking-wide uppercase">Certified Sourcing</span>
+        </div>
+        <div class="pro-glass-card p-6 rounded-2xl text-center flex flex-col items-center justify-center gap-2">
+          <span class="text-3xl">🕌</span>
+          <span class="text-xs font-black tracking-widest text-white uppercase">Halal Verified</span>
+          <span class="text-[10px] text-gray-400 tracking-wide uppercase">Global Standard</span>
+        </div>
+        <div class="pro-glass-card p-6 rounded-2xl text-center flex flex-col items-center justify-center gap-2">
+          <span class="text-3xl">🧬</span>
+          <span class="text-xs font-black tracking-widest text-white uppercase">Biometric Traced</span>
+          <span class="text-[10px] text-gray-400 tracking-wide uppercase">Farm to Table</span>
+        </div>
+        <div class="pro-glass-card p-6 rounded-2xl text-center flex flex-col items-center justify-center gap-2">
+          <span class="text-3xl">❄️</span>
+          <span class="text-xs font-black tracking-widest text-white uppercase">Cold-Chain Secured</span>
+          <span class="text-[10px] text-gray-400 tracking-wide uppercase">ISO Logistics</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: FREQUENTLY ASKED QUESTIONS -->
+  <section id="faq" data-theme-color="0x030204" data-intensity="1.8" class="scroll-section relative py-28 px-4 w-full border-t border-amber-600/20">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-14">
+        <div class="inline-block px-5 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 mb-4 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+          <span class="text-xs font-black tracking-[0.3em] text-amber-300 uppercase">❓ FREQUENTLY ASKED</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase">
+          Common Inquiries
+        </h2>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <details class="pro-glass-card rounded-2xl p-6 group">
+          <summary class="cursor-pointer list-none flex items-center justify-between text-white font-bold text-sm sm:text-base tracking-wide">
+            What is the minimum order for private allocations?
+            <span class="text-amber-400 text-xl group-open:rotate-45 transition-transform duration-300">+</span>
+          </summary>
+          <p class="text-gray-400 text-xs sm:text-sm leading-relaxed mt-4">
+            Private allocations begin at 5kg per reserve category. Estate and yacht-scale orders are arranged directly through your VIP concierge.
+          </p>
+        </details>
+
+        <details class="pro-glass-card rounded-2xl p-6 group">
+          <summary class="cursor-pointer list-none flex items-center justify-between text-white font-bold text-sm sm:text-base tracking-wide">
+            How fast is global delivery?
+            <span class="text-amber-400 text-xl group-open:rotate-45 transition-transform duration-300">+</span>
+          </summary>
+          <p class="text-gray-400 text-xs sm:text-sm leading-relaxed mt-4">
+            Most of our 25 export nations receive cold-chain delivery within 48–72 hours, backed by dedicated air-freight partners for time-sensitive reserves.
+          </p>
+        </details>
+
+        <details class="pro-glass-card rounded-2xl p-6 group">
+          <summary class="cursor-pointer list-none flex items-center justify-between text-white font-bold text-sm sm:text-base tracking-wide">
+            Is packaging discreet for private residences?
+            <span class="text-amber-400 text-xl group-open:rotate-45 transition-transform duration-300">+</span>
+          </summary>
+          <p class="text-gray-400 text-xs sm:text-sm leading-relaxed mt-4">
+            Yes. All shipments arrive in unbranded, temperature-controlled crates with signature-only, biometric-verified handoff.
+          </p>
+        </details>
+
+        <details class="pro-glass-card rounded-2xl p-6 group">
+          <summary class="cursor-pointer list-none flex items-center justify-between text-white font-bold text-sm sm:text-base tracking-wide">
+            Can I request custom aging or cuts?
+            <span class="text-amber-400 text-xl group-open:rotate-45 transition-transform duration-300">+</span>
+          </summary>
+          <p class="text-gray-400 text-xs sm:text-sm leading-relaxed mt-4">
+            Absolutely — our master artisans accommodate bespoke aging duration, cut specifications, and portioning for recurring VIP clients.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer class="scroll-section py-12 border-t border-amber-600/20 text-center text-xs text-gray-500 tracking-[0.2em] uppercase relative z-10 bg-black">
     &copy; 2026 THE RED COCKS BILLIONAIRE EMPIRE. ALL RIGHTS RESERVED.
   </footer>
 
-  <!-- PRO THREE.JS 3D PARTICLE ATMOSPHERE & INTERACTION ENGINE -->
+  <!-- LIGHTWEIGHT SCROLL ENGINE: section reveal + video handling + color tint -->
+  <!-- Replaces the old WebGL particle canvas, which was the main cause of lag
+       on phones. The 3D "scroll-section" reveal is pure CSS (compositor-driven,
+       already smooth everywhere) — this script just toggles the .active class,
+       manages section videos, and drifts the background tint color on scroll. -->
   <script>
-    const container = document.getElementById('canvas3d-container');
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x010101, 0.002);
-
     const isMobilePerf = window.innerWidth <= 768;
-
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 400;
-
-    const renderer = new THREE.WebGLRenderer({ antialias: !isMobilePerf, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(isMobilePerf ? 1 : Math.min(window.devicePixelRatio, 2));
-    // On mobile we never render the WebGL scene (it's the biggest scroll-jank source),
-    // so don't even attach the canvas.
-    if (!isMobilePerf) {
-      container.appendChild(renderer.domElement);
-    }
-
-    // Quantum Gold Particle Cloud
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = isMobilePerf ? 250 : 1000;
-    const posArray = new Float32Array(particlesCount * 3);
-
-    for(let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 1500;
-    }
-
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 3.2,
-      color: 0xfde047,
-      transparent: true,
-      opacity: 0.8,
-      blending: THREE.AdditiveBlending
-    });
-
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particlesMesh);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
-    scene.add(ambientLight);
-
-    const pointLight = new THREE.PointLight(0xf59e0b, 2.5, 700);
-    pointLight.position.set(0, 0, 300);
-    scene.add(pointLight);
-
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = (e.clientX - window.innerWidth / 2) * 0.002;
-      mouseY = (e.clientY - window.innerHeight / 2) * 0.002;
-    }, { passive: true });
-
-    let scrollProgress = 0;
+    const tintLayer = document.getElementById('canvas3d-container');
     const sections = document.querySelectorAll('.scroll-section');
     const aboutVideo = document.getElementById('about-video');
 
-    // Force autoplay all video elements programmatically as fallback
-    document.querySelectorAll('video').forEach(vid => {
-      vid.play().catch(() => {});
-    });
+    // SCROLL COLOR JOURNEY: background tint drifts smoothly through this
+    // sequence as you scroll down — gold -> rose/red -> purple -> blue -> gold.
+    const scrollColorStops = [
+      [253, 224, 71],  // gold
+      [244, 63, 94],   // rose / red
+      [168, 85, 247],  // purple
+      [59, 130, 246],  // blue
+      [253, 224, 71]   // back to gold
+    ];
+    function getScrollColor(t) {
+      const clamped = Math.min(Math.max(t, 0), 1);
+      const segments = scrollColorStops.length - 1;
+      const scaled = clamped * segments;
+      const idx = Math.min(Math.floor(scaled), segments - 1);
+      const localT = scaled - idx;
+      const a = scrollColorStops[idx], b = scrollColorStops[idx + 1];
+      const r = Math.round(a[0] + (b[0] - a[0]) * localT);
+      const g = Math.round(a[1] + (b[1] - a[1]) * localT);
+      const bl = Math.round(a[2] + (b[2] - a[2]) * localT);
+      return 'rgb(' + r + ',' + g + ',' + bl + ')';
+    }
+
+    // Videos only start decoding/playing once their section actually scrolls
+    // into view (below), instead of every video on the page starting to
+    // buffer at once on load — this keeps initial page load fast and light.
 
     const observerOptions = {
       root: null,
@@ -1804,30 +2153,18 @@
 
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        const themeColorHex = entry.target.getAttribute('data-theme-color');
-        const intensity = parseFloat(entry.target.getAttribute('data-intensity'));
         const sectionVideos = entry.target.querySelectorAll('video');
 
         if(entry.isIntersecting) {
           entry.target.classList.add('active');
-
-          if(themeColorHex) {
-            scene.background = new THREE.Color(parseInt(themeColorHex));
-            scene.fog.color = new THREE.Color(parseInt(themeColorHex));
-          }
-          if(!isNaN(intensity)) {
-            pointLight.intensity = intensity * 1.8;
-          }
 
           if(entry.target.id === 'about' && aboutVideo) {
             aboutVideo.currentTime = 0;
             aboutVideo.play().catch(() => {});
           }
 
-          // Only decode/play videos for sections actually on screen (mobile: big perf win)
-          if(isMobilePerf) {
-            sectionVideos.forEach(v => v.play().catch(() => {}));
-          }
+          // Only decode/play videos for sections actually on screen
+          sectionVideos.forEach(v => v.play().catch(() => {}));
         } else {
           entry.target.classList.remove('active');
 
@@ -1836,48 +2173,30 @@
             aboutVideo.currentTime = 0;
           }
 
-          if(isMobilePerf) {
-            sectionVideos.forEach(v => v.pause());
-          }
+          sectionVideos.forEach(v => v.pause());
         }
       });
     }, observerOptions);
 
     sections.forEach(sec => sectionObserver.observe(sec));
 
+    // Scroll tint is throttled to one write per animation frame (rAF), so it
+    // never runs more than the browser's own paint rate — cheap on any device.
+    let tintTicking = false;
+    function updateScrollTint() {
+      tintTicking = false;
+      const scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      if (tintLayer) {
+        tintLayer.style.setProperty('--scroll-tint', getScrollColor(scrollProgress));
+      }
+    }
     window.addEventListener('scroll', () => {
-      scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      if (!tintTicking) {
+        tintTicking = true;
+        requestAnimationFrame(updateScrollTint);
+      }
     }, { passive: true });
-
-    const clock = new THREE.Clock();
-
-    function animate() {
-      requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
-
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
-
-      particlesMesh.rotation.y = elapsedTime * 0.03 + targetX * 0.5;
-      particlesMesh.rotation.x = elapsedTime * 0.015 + targetY * 0.5;
-
-      camera.position.z = 400 - (scrollProgress * 150);
-
-      renderer.render(scene, camera);
-    }
-    // Only run the continuous render loop on desktop. Mobile keeps the static
-    // dark background, so scrolling stays smooth. Section reveal still works
-    // because the IntersectionObserver above runs on all devices.
-    if (!isMobilePerf) {
-      animate();
-    }
-
-    window.addEventListener('resize', () => {
-      if (isMobilePerf) return;
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+    updateScrollTint();
   </script>
 
 
@@ -1923,25 +2242,18 @@
 
   <script>
   (function(){
-    // On phones the per-frame getImageData/putImageData chroma-key is a major
-    // main-thread cost that stutters scrolling. Skip the widget entirely on mobile.
-    if (window.innerWidth <= 768) {
-      const w = document.getElementById('chick-widget');
-      if (w) w.style.display = 'none';
-      const v = document.getElementById('chick-video');
-      if (v) { try { v.pause(); } catch(e){} }
-      return;
-    }
+    const isMobile = window.innerWidth <= 768;
 
     const video  = document.getElementById('chick-video');
     const canvas = document.getElementById('chick-canvas');
     const ctx    = canvas.getContext('2d',{willReadFrequently:true});
     const W = canvas.width, H = canvas.height;
 
-    /* Run chroma-key at 20 fps (every 50ms) — smooth & light on CPU */
+    /* Run chroma-key at 20fps on desktop, a lighter 12fps on mobile — smooth
+       and light on CPU either way now that the heavy WebGL layer is gone. */
     let rafId = null;
     let lastTime = 0;
-    const FPS_INTERVAL = 50; // 20 fps
+    const FPS_INTERVAL = isMobile ? 1000 / 12 : 50;
 
     function processFrame(now){
       rafId = requestAnimationFrame(processFrame);
@@ -2007,6 +2319,73 @@
   })();
   </script>
   <!-- END CHICK WIDGET -->
+
+  <!-- SCROLL PROGRESS BAR -->
+  <script>
+  (function(){
+    const bar = document.getElementById('scroll-progress');
+    if (!bar) return;
+    function update(){
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+      bar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+  </script>
+
+  <!-- CONTACT: copy email to clipboard -->
+  <script>
+  function copyContactEmail(btn) {
+    const emailEl = document.getElementById('contact-email-text');
+    if (!emailEl) return;
+    const email = emailEl.textContent.trim();
+    const restoreLabel = btn.textContent;
+    function showCopied() {
+      btn.textContent = 'Copied ✓';
+      setTimeout(() => { btn.textContent = restoreLabel; }, 1800);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email).then(showCopied).catch(showCopied);
+    } else {
+      showCopied();
+    }
+  }
+  </script>
+
+  <!-- MOBILE NAV MENU: behaviour -->
+  <script>
+  (function(){
+    const btn = document.getElementById('mobile-menu-btn');
+    const panel = document.getElementById('mobile-menu-panel');
+    if (!btn || !panel) return;
+
+    function closeMenu(){
+      panel.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    function openMenu(){
+      panel.classList.add('open');
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+
+    btn.addEventListener('click', function(){
+      if (panel.classList.contains('open')) closeMenu(); else openMenu();
+    });
+
+    panel.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('click', function(e){
+      if (!panel.contains(e.target) && !btn.contains(e.target)) closeMenu();
+    });
+  })();
+  </script>
 
 </body>
 </html>
