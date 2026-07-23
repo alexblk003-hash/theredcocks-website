@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>THE RED COCKS | Ultra-Elite Billionaire Sanctuary & Masterpiece Provision</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,12 @@
     *, *::before, *::after {
       box-sizing: border-box;
     }
+    /* True full-screen fit on every device: mobile browser address bars change
+       100vh mid-scroll, causing content to jump / not fit. --vh is set by JS
+       to the REAL visible pixel height, so `calc(var(--vh, 1vh) * 100)` always
+       equals the actual usable screen — identical behaviour on phone & desktop. */
+    :root{ --vh: 1vh; }
+    html, body { height: 100%; }
     body{
       background:#010101;
       color:#ffffff;
@@ -38,6 +44,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
+      height: calc(var(--vh, 1vh) * 100);
       z-index: -1;
       pointer-events: none;
       --scroll-tint: #d97706;
@@ -127,6 +134,46 @@
     }
     /* Rotating hue keyframe — used by the small circular AI halo ring around the emblem */
     @keyframes eliteNavRotateGlow { to { transform: rotate(360deg); } }
+
+    /* PRO-LEVEL NAVBAR: smoothly compacts + intensifies once the page is
+       scrolled, on top of the existing continuous glow/sheen animation. */
+    nav > div:first-child {
+      transition: padding 0.45s cubic-bezier(0.16,1,0.3,1),
+                  background-color 0.45s ease,
+                  box-shadow 0.45s ease,
+                  transform 0.45s cubic-bezier(0.16,1,0.3,1);
+    }
+    nav.nav-scrolled > div:first-child {
+      padding-top: 0.6rem !important;
+      padding-bottom: 0.6rem !important;
+      background-color: rgba(0,0,0,0.95) !important;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+
+    /* Continuous ambient background drift — always subtly alive, even before
+       any scroll happens, layered underneath the scroll-tint color shift. */
+    @keyframes ambientDrift {
+      0%   { background-position: 0% 0%, 100% 100%; }
+      50%  { background-position: 100% 100%, 0% 0%; }
+      100% { background-position: 0% 0%, 100% 100%; }
+    }
+    #canvas3d-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(217,119,6,0.10), transparent 55%),
+        radial-gradient(circle at 80% 70%, rgba(168,85,247,0.08), transparent 55%);
+      background-size: 180% 180%, 180% 180%;
+      animation: ambientDrift 22s ease-in-out infinite;
+      will-change: background-position;
+    }
+    @media (max-width: 768px) {
+      #canvas3d-container::before { animation-duration: 30s; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #canvas3d-container::before { animation: none; }
+    }
 
     /* AI emblem: subtle continuous 3D breathing tilt (transform-only, so it
        stays smooth on phones) + a blinking "AI active" status dot. */
@@ -252,6 +299,19 @@
     .scroll-section.active {
       opacity: 1;
       transform: perspective(1200px) translateY(0px) rotateX(0deg) scale(1);
+    }
+
+    /* ─── REAL LAG FIX: skip rendering cost of offscreen sections ───
+       Biggest performance win on a long, heavy page like this: sections
+       far from the viewport (all their videos, blurs, glows, shadows)
+       are skipped by the browser's own rendering engine until they're
+       about to scroll into view, then rendered natively again. Nothing
+       is removed or hidden from the DOM and nothing changes visually —
+       the browser just stops spending CPU/GPU on parts of the page you
+       can't currently see. */
+    .scroll-section:not(#home) {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 900px;
     }
 
     /* RIGHT TO LEFT INFINITE AUTO SCROLL TICKER & CENTER POP-UP ANIMATION */
@@ -645,6 +705,22 @@
     /* Smoother native scrolling on iOS Safari */
     html, body { -webkit-overflow-scrolling: touch; }
 
+    /* PREMIUM CTA SHINE SWEEP: a light diagonal glint crosses every gold
+       gradient button on hover — a small, expensive-feeling detail seen on
+       high-end product sites. Pure transform, compositor-only, no repaint. */
+    button[class*="from-amber-500"] { position: relative; overflow: hidden; }
+    button[class*="from-amber-500"]::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -60%;
+      width: 40%; height: 100%;
+      background: linear-gradient(115deg, transparent, rgba(255,255,255,0.65), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.65s cubic-bezier(0.19,1,0.22,1);
+      pointer-events: none;
+    }
+    button[class*="from-amber-500"]:hover::after { left: 140%; }
+
     /* Respect users who prefer reduced motion — calmer, more professional by default */
     @media (prefers-reduced-motion: reduce) {
       .gold-shimmer-text, .elite-nav-box, .flag-badge, .pro-glass-card,
@@ -655,6 +731,53 @@
 </head>
 <body class="selection:bg-rose-500 selection:text-black">
 
+  <!-- ─── CINEMATIC ENTRANCE PRELOADER ───
+       A brief, premium loading moment instead of the page popping in raw —
+       masks the first instant of font/video loading and sets a futuristic,
+       expensive first impression. Fully additive: it removes itself from
+       the DOM after the reveal, touching nothing else on the page. -->
+  <div id="site-preloader" style="position:fixed;inset:0;z-index:100000;background:#010101;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),visibility 0.8s;">
+    <div style="width:64px;height:64px;border-radius:50%;border:2px solid rgba(253,224,71,0.15);border-top-color:#fde047;border-right-color:#d97706;animation:preloaderSpin 1s linear infinite;"></div>
+    <div style="font-family:'Playfair Display',serif;font-weight:900;letter-spacing:0.3em;font-size:11px;text-transform:uppercase;background:linear-gradient(90deg,#fffbeb,#d97706,#fde047,#b45309,#fffbeb);background-size:250% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:goldShimmer 3s linear infinite;">The Red Cocks</div>
+  </div>
+  <style>
+    @keyframes preloaderSpin { to { transform: rotate(360deg); } }
+    #site-preloader.preloader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  </style>
+  <script>
+    (function(){
+      const pre = document.getElementById('site-preloader');
+      if(!pre) return;
+      function hidePreloader(){
+        pre.classList.add('preloader-hidden');
+        setTimeout(function(){ pre.remove(); }, 850);
+      }
+      // Hide as soon as the page is interactive, with a small minimum so the
+      // entrance never feels like a flash — but never blocks the site long.
+      const minTimer = new Promise(res => setTimeout(res, 500));
+      const ready = new Promise(res => {
+        if (document.readyState === 'complete') res();
+        else window.addEventListener('load', res, { once: true });
+      });
+      Promise.all([minTimer, ready]).then(hidePreloader);
+      // Safety net: never let the preloader block the site for more than 3s.
+      setTimeout(hidePreloader, 3000);
+    })();
+  </script>
+
+  <!-- TRUE FULL-SCREEN FIT: keep --vh locked to the real visible viewport on
+       every device (phone browser bars, split-screen, desktop resize, etc.) -->
+  <script>
+    (function(){
+      function setVH(){
+        document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+      }
+      setVH();
+      window.addEventListener('resize', setVH);
+      window.addEventListener('orientationchange', setVH);
+    })();
+  </script>
+
   <!-- Interactive 3D WebGL Background Container -->
   <div id="canvas3d-container"></div>
   <div id="grain-overlay"></div>
@@ -662,7 +785,7 @@
   <div id="scroll-progress"></div>
 
   <!-- ULTRA LUXURY FLOATING NAVBAR -->
-  <nav class="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-7xl" style="position:fixed;">
+  <nav class="fixed left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-7xl" style="position:fixed; top:calc(1.25rem + env(safe-area-inset-top));">
     <div class="relative flex items-center justify-between px-6 py-3.5 rounded-full bg-black/85 backdrop-blur-3xl border border-amber-600/50 elite-nav-box shadow-2xl">
       
       <!-- Brand Logo / Identity -->
@@ -727,7 +850,7 @@
   </nav>
 
   <!-- SECTION 1: HERO SANCTUARY -->
-  <section id="home" data-theme-color="0x010101" data-intensity="1.5" class="scroll-section active relative min-h-screen flex flex-col items-center justify-between pt-36 pb-12 w-full px-4">
+  <section id="home" data-theme-color="0x010101" data-intensity="1.5" class="scroll-section active relative flex flex-col items-center justify-between pt-36 pb-12 w-full px-4" style="min-height: calc(var(--vh, 1vh) * 100);">
 
     <!-- Atmospheric Glows -->
     <div class="absolute inset-0 pointer-events-none">
@@ -843,7 +966,7 @@
         <!-- CARD 1: CHICKEN -->
         <div class="pro-glass-card rounded-3xl p-6 group">
           <div class="w-full h-56 rounded-2xl overflow-hidden mb-6 relative border border-amber-500/40 bg-black">
-            <video autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <video muted loop playsinline preload="none" class="lazy-below-video w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
               <source src="https://files.catbox.moe/wigihg.mp4" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
@@ -891,7 +1014,7 @@
         <!-- CARD 3: PORK -->
         <div class="pro-glass-card rounded-3xl p-6 group">
           <div class="w-full h-56 rounded-2xl overflow-hidden mb-6 relative border border-amber-500/40 bg-black">
-            <video autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <video muted loop playsinline preload="none" class="lazy-below-video w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
               <source src="https://files.catbox.moe/zbzso2.mp4" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
@@ -948,7 +1071,7 @@
 
         <div class="w-full md:w-1/2">
           <div class="relative w-full h-[360px] rounded-[30px] overflow-hidden border-2 border-amber-500/50 shadow-[0_0_50px_rgba(245,158,11,0.4)] bg-black">
-            <video id="about-video" muted playsinline preload="metadata" class="w-full h-full object-cover">
+            <video id="about-video" muted playsinline preload="none" class="lazy-below-video w-full h-full object-cover">
               <source src="https://files.catbox.moe/9f568d.mp4" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-tr from-black/60 via-transparent to-transparent pointer-events-none"></div>
@@ -1921,7 +2044,7 @@
     <!-- Video Below Flags -->
     <div class="max-w-5xl mx-auto px-4 mt-16 relative z-10">
       <div class="relative w-full rounded-[30px] overflow-hidden border-2 border-amber-500/50 shadow-[0_0_60px_rgba(245,158,11,0.35)]">
-        <video autoplay muted loop playsinline preload="metadata" style="width:100%;height:auto;display:block;vertical-align:bottom;">
+        <video muted loop playsinline preload="none" class="lazy-below-video" style="width:100%;height:auto;display:block;vertical-align:bottom;">
           <source src="https://files.catbox.moe/wf82n2.mp4" type="video/mp4">
         </video>
       </div>
@@ -2046,6 +2169,90 @@
       </div>
     </div>
   </section>
+
+  <!-- SECTION: SIGNATURE FILM — FULL VIDEO FRAME + ANIMATED FEATURE BOXES -->
+  <section id="signature-film" data-theme-color="0x010102" data-intensity="2.3" class="scroll-section relative py-28 px-4 w-full border-t border-amber-600/20 overflow-hidden">
+
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-0 left-1/4 w-[500px] h-[300px] bg-amber-600/10 rounded-full blur-[160px]"></div>
+      <div class="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-yellow-500/10 rounded-full blur-[140px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-6xl mx-auto">
+
+      <!-- Header -->
+      <div class="text-center mb-14">
+        <div class="inline-block px-5 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 mb-4 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+          <span class="text-xs font-black tracking-[0.3em] text-amber-300 uppercase">🎬 THE SIGNATURE EXPERIENCE</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase">
+          Watch The Craft Unfold
+        </h2>
+      </div>
+
+      <!-- Video: shown fully inside its own frame, nothing cropped -->
+      <div class="relative w-full max-w-3xl mx-auto rounded-[28px] overflow-hidden border-2 border-amber-500/50 shadow-[0_0_60px_rgba(245,158,11,0.35)] bg-black mb-16" style="aspect-ratio: 16 / 9;">
+        <iframe
+          src="https://player.cloudinary.com/embed/?cloud_name=pca4yzim&public_id=Make_video_show_first_end_202607232016_ifrd5a"
+          class="absolute inset-0 w-full h-full"
+          style="border:0;"
+          allow="autoplay; fullscreen; encrypted-media"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+
+      <!-- Small continuously-animated feature boxes -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="feature-mini-box"><span class="text-2xl">👑</span><span class="feature-mini-label">Billionaire Grade</span></div>
+        <div class="feature-mini-box" style="animation-delay:-2s;"><span class="text-2xl">🌍</span><span class="feature-mini-label">25 Nations Served</span></div>
+        <div class="feature-mini-box" style="animation-delay:-4s;"><span class="text-2xl">🛡️</span><span class="feature-mini-label">Fully Certified</span></div>
+        <div class="feature-mini-box" style="animation-delay:-6s;"><span class="text-2xl">❄️</span><span class="feature-mini-label">Cold-Chain Secured</span></div>
+        <div class="feature-mini-box" style="animation-delay:-1s;"><span class="text-2xl">🕌</span><span class="feature-mini-label">Halal Verified</span></div>
+        <div class="feature-mini-box" style="animation-delay:-3s;"><span class="text-2xl">🧬</span><span class="feature-mini-label">Farm-to-Table Traced</span></div>
+        <div class="feature-mini-box" style="animation-delay:-5s;"><span class="text-2xl">⏱️</span><span class="feature-mini-label">24/7 Concierge</span></div>
+        <div class="feature-mini-box" style="animation-delay:-7s;"><span class="text-2xl">✦</span><span class="feature-mini-label">Zero Compromise</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CSS for Signature Film Section -->
+  <style>
+    @keyframes featureMiniFloat {
+      0%, 100% { transform: translateY(0px); box-shadow: 0 4px 20px rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.3); }
+      50%      { transform: translateY(-8px); box-shadow: 0 10px 30px rgba(253,224,71,0.3); border-color: rgba(253,224,71,0.7); }
+    }
+    .feature-mini-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 18px 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(245,158,11,0.3);
+      backdrop-filter: blur(6px);
+      animation: featureMiniFloat 6s ease-in-out infinite;
+      will-change: transform;
+    }
+    .feature-mini-label {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fde68a;
+      text-align: center;
+      line-height: 1.3;
+    }
+    @media (max-width: 768px) {
+      .feature-mini-box { animation-duration: 8s; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .feature-mini-box { animation: none; }
+    }
+  </style>
 
   <!-- SECTION: FREQUENTLY ASKED QUESTIONS -->
   <section id="faq" data-theme-color="0x030204" data-intensity="1.8" class="scroll-section relative py-28 px-4 w-full border-t border-amber-600/20">
@@ -2180,6 +2387,42 @@
 
     sections.forEach(sec => sectionObserver.observe(sec));
 
+    // Pause every video the instant the tab is backgrounded (switching apps,
+    // minimizing, changing browser tabs) — decoding keeps costing CPU/battery
+    // otherwise. On return, only videos in currently-active sections resume,
+    // so nothing plays that shouldn't be visible yet.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        document.querySelectorAll('video:not(#chick-video)').forEach(v => { if (!v.paused) v.dataset.wasPlaying = '1'; v.pause(); });
+      } else {
+        document.querySelectorAll('.scroll-section.active video').forEach(v => {
+          if (v.dataset.wasPlaying) { v.play().catch(() => {}); delete v.dataset.wasPlaying; }
+        });
+      }
+    });
+
+    // EARLY VIDEO BUFFERING: give each below-fold video a generous head start
+    // — start it decoding while it's still well below the visible screen, so
+    // by the time the user actually scrolls to it, it's already smoothly
+    // playing instead of looking frozen/late. Independent of the section
+    // reveal-animation observer above, so that animation's timing is untouched.
+    const bufferMargin = isMobilePerf ? '0px 0px 60% 0px' : '0px 0px 40% 0px';
+    const videoBufferObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const v = entry.target;
+        if (entry.isIntersecting) {
+          if (v.preload !== 'auto') v.preload = 'auto';
+          v.play().catch(() => {});
+        } else if (entry.boundingClientRect.top > 0) {
+          // Only pause videos we've scrolled PAST upward-off-screen content
+          // stays paused via the section observer above; this just avoids
+          // fighting that logic for videos far below the fold.
+        }
+      });
+    }, { root: null, rootMargin: bufferMargin, threshold: 0 });
+
+    document.querySelectorAll('video.lazy-below-video').forEach(v => videoBufferObserver.observe(v));
+
     // Scroll tint is throttled to one write per animation frame (rAF), so it
     // never runs more than the browser's own paint rate — cheap on any device.
     let tintTicking = false;
@@ -2197,6 +2440,21 @@
       }
     }, { passive: true });
     updateScrollTint();
+
+    // PRO-LEVEL NAVBAR: compact + intensify once scrolled past the hero area.
+    const navEl = document.querySelector('nav');
+    let navTicking = false;
+    function updateNavState() {
+      navTicking = false;
+      if (navEl) navEl.classList.toggle('nav-scrolled', window.scrollY > 60);
+    }
+    window.addEventListener('scroll', () => {
+      if (!navTicking) {
+        navTicking = true;
+        requestAnimationFrame(updateNavState);
+      }
+    }, { passive: true });
+    updateNavState();
   </script>
 
 
@@ -2250,12 +2508,19 @@
     const W = canvas.width, H = canvas.height;
 
     /* Run chroma-key at 20fps on desktop, a lighter 12fps on mobile — smooth
-       and light on CPU either way now that the heavy WebGL layer is gone. */
+       and light on CPU either way now that the heavy WebGL layer is gone.
+       It only actually runs while the widget bubble is visible on screen
+       AND the tab is in the foreground — previously this loop ran forever,
+       every second of every visit, even while the widget was slid fully
+       off-screen or the tab was in the background. That was pure wasted
+       CPU and a real, constant source of lag; this fixes it for good. */
     let rafId = null;
     let lastTime = 0;
+    let widgetVisible = false;
     const FPS_INTERVAL = isMobile ? 1000 / 12 : 50;
 
     function processFrame(now){
+      if(!widgetVisible || document.hidden){ rafId = null; return; }
       rafId = requestAnimationFrame(processFrame);
       if(now - lastTime < FPS_INTERVAL) return;
       lastTime = now;
@@ -2275,11 +2540,17 @@
       }catch(e){}
     }
 
-    video.addEventListener('play', ()=>{
+    function startProcessing(){
       if(rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(processFrame);
-    });
+    }
+
+    video.addEventListener('play', startProcessing);
     video.play().catch(()=>{});
+
+    document.addEventListener('visibilitychange', function(){
+      if(!document.hidden && widgetVisible) startProcessing();
+    });
 
     /* Compliments */
     const compliments=[
@@ -2301,9 +2572,12 @@
       idx++;
       widget.style.right='0px';
       visible=true;
+      widgetVisible=true;
+      startProcessing();
       setTimeout(function(){
         widget.style.right='-120px';
         visible=false;
+        widgetVisible=false;
         setTimeout(showChick,3000);
       },2800);
     }
@@ -2313,6 +2587,7 @@
       if(visible){
         widget.style.right='-120px';
         visible=false;
+        widgetVisible=false;
         setTimeout(showChick,2000);
       }
     });
@@ -2333,6 +2608,55 @@
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
+  })();
+  </script>
+
+  <!-- PREMIUM CURSOR GLOW: subtle futuristic pointer trail (desktop only) -->
+  <style>
+    #cursor-glow {
+      position: fixed;
+      top: 0; left: 0;
+      width: 380px; height: 380px;
+      margin-left: -190px; margin-top: -190px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(253,224,71,0.06) 0%, rgba(217,119,6,0.03) 45%, transparent 70%);
+      pointer-events: none;
+      z-index: 5;
+      will-change: transform;
+      transition: opacity 0.4s ease;
+      opacity: 0;
+    }
+  </style>
+  <script>
+  (function(){
+    const isTouch = matchMedia('(pointer: coarse)').matches;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isTouch || reduceMotion) return;
+
+    const glow = document.createElement('div');
+    glow.id = 'cursor-glow';
+    document.body.appendChild(glow);
+
+    let targetX = window.innerWidth / 2, targetY = window.innerHeight / 2;
+    let curX = targetX, curY = targetY;
+    let shown = false;
+
+    window.addEventListener('pointermove', (e) => {
+      targetX = e.clientX; targetY = e.clientY;
+      if (!shown) { glow.style.opacity = '1'; shown = true; }
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+
+    // Lightly eased follow (compositor-only transform) so the glow drifts
+    // smoothly behind the pointer instead of snapping — cheap on any GPU.
+    function raf(){
+      curX += (targetX - curX) * 0.12;
+      curY += (targetY - curY) * 0.12;
+      glow.style.transform = 'translate3d(' + curX + 'px,' + curY + 'px,0)';
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
   })();
   </script>
 
