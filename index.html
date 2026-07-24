@@ -783,6 +783,45 @@
 
   </style>
 
+  <!-- HEAVY-ANIMATION KILL-SWITCH
+       Turns off every continuous/looping decorative CSS animation
+       (glow pulses, shimmer sweeps, floating cards, spinning rings,
+       flag-card float+glow, badge auras, preloader FX, chat-bubble glow).
+       Kept ON: the marquee/ticker scroll (functional content, cheap
+       transform-only loop), one-shot load-in reveals, and ordinary
+       hover/click transitions — none of those are "heavy". -->
+  <style>
+    .elite-nav-box,
+    .elite-nav-box::after,
+    #canvas3d-tint::before,
+    .corner-bracket,
+    .contact-status-dot,
+    .gold-shimmer-text,
+    .floating-card-1,
+    .floating-card-2,
+    .video-perspective-box,
+    #centerPopup, .center-popup, [class*="centerPopupPulse"],
+    .ig-glow-icon,
+    #site-preloader::before,
+    #site-preloader::after,
+    .hud-corner,
+    #preloader-video-ring,
+    #preloader-video-frame .scan-line,
+    .flag-3d-card,
+    .feature-mini-box,
+    .feature-mini-box::before,
+    .feature-mini-icon,
+    .feature-mini-label,
+    #chick-bubble {
+      animation: none !important;
+    }
+    [style*="eliteNavRotateGlow"],
+    [style*="aiOrbBreathe"],
+    [style*="aiStatusBlink"] {
+      animation: none !important;
+    }
+  </style>
+
   <!-- ═══════════════ SIGNATURE PREMIUM LAYER ═══════════════
        Preloader, custom cursor, magnetic buttons, 3D card tilt,
        hero letter reveal, ambient cursor glow. All desktop-enhanced,
@@ -846,34 +885,62 @@
       0%, 100% { opacity: 0.45; }
       50% { opacity: 1; box-shadow: 0 0 10px rgba(139,92,246,0.6); }
     }
-    #preloader-ring-wrap {
+    /* ── Video loader — replaces the old bare progress ring. A circular,
+       framed cinematic viewport plays the brand clip while the site boots,
+       wrapped in the same "reactor core" premium-tech language (rotating
+       gradient ring, HUD scan-line, glass percentage badge) so it still
+       reads as a loading system, not just an autoplaying video. ── */
+    #preloader-video-wrap {
       position: relative;
-      width: 108px; height: 108px;
+      width: clamp(148px, 34vw, 220px);
+      height: clamp(148px, 34vw, 220px);
       display: flex; align-items: center; justify-content: center;
     }
-    /* Outer rotating dashed scan ring — decorative, independent of real
-       progress, purely there to read as an "active system" indicator like
-       a reactor core / radar sweep */
-    #preloader-scan-ring {
-      position: absolute; inset: -14px;
+    /* Rotating conic-gradient ring — the "system active" indicator that
+       used to be the dashed scan ring, now a soft continuous halo instead
+       of a static SVG progress arc since progress now lives in the badge */
+    #preloader-video-ring {
+      position: absolute; inset: -12px;
       border-radius: 50%;
-      border: 1px dashed rgba(96,165,250,0.35);
-      animation: preloaderScanSpin 7s linear infinite;
+      background: conic-gradient(from 0deg, #7c3aed, #60a5fa, #f0d9a8, #7c3aed);
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+      filter: drop-shadow(0 0 10px rgba(139,92,246,0.55));
+      animation: preloaderRingSpin 5s linear infinite;
     }
-    #preloader-scan-ring::before {
-      content: '';
-      position: absolute; top: -2px; left: 50%;
-      width: 5px; height: 5px; margin-left: -2.5px;
+    @keyframes preloaderRingSpin { to { transform: rotate(360deg); } }
+    /* The circular video viewport itself */
+    #preloader-video-frame {
+      position: relative;
+      width: 100%; height: 100%;
       border-radius: 50%;
-      background: #60a5fa;
-      box-shadow: 0 0 8px 2px rgba(96,165,250,0.9);
+      overflow: hidden;
+      background: #050310;
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 0 0 1px rgba(139,92,246,0.28), 0 0 46px rgba(124,58,237,0.4), inset 0 0 32px rgba(0,0,0,0.65);
     }
-    @keyframes preloaderScanSpin { to { transform: rotate(360deg); } }
-    /* Thin light sweeping vertically through the ring — a "scanning" cue */
-    #preloader-ring-wrap .scan-line {
-      position: absolute; left: 6px; right: 6px; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    #preloader-video-frame iframe {
+      position: absolute; top: 50%; left: 50%;
+      width: 160%; height: 160%;
+      min-width: 160%; min-height: 160%;
+      transform: translate(-50%, -50%);
+      border: 0;
+      pointer-events: none;
+    }
+    /* Soft vignette so the rectangular video reads as seamlessly circular
+       and stays legible under the HUD chrome sitting on top of it */
+    #preloader-video-vignette {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: radial-gradient(circle, transparent 52%, rgba(5,3,16,0.75) 100%);
+      pointer-events: none;
+    }
+    /* Thin light sweeping vertically across the video — the same
+       "scanning" cue the old ring used, now layered over the footage */
+    #preloader-video-frame .scan-line {
+      position: absolute; left: 10%; right: 10%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
       animation: preloaderScanLine 2.4s ease-in-out infinite;
+      z-index: 2; pointer-events: none;
     }
     @keyframes preloaderScanLine {
       0%, 100% { top: 12%; opacity: 0; }
@@ -881,22 +948,22 @@
       50% { top: 88%; opacity: 1; }
       60% { opacity: 0; }
     }
-    #preloader-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
-    #preloader-ring .ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 1.5; }
-    #preloader-ring .ring-fg {
-      fill: none; stroke: url(#preloader-ring-gradient); stroke-width: 2;
-      stroke-linecap: round;
-      stroke-dasharray: 339.3;
-      stroke-dashoffset: 339.3;
-      transition: stroke-dashoffset 0.3s ease-out;
-      filter: drop-shadow(0 0 6px rgba(139,92,246,0.7));
+    /* Glass percentage badge, docked on the ring instead of centered over
+       the video so the footage stays unobstructed */
+    #preloader-pct-badge {
+      position: absolute; right: -4px; bottom: -4px; z-index: 3;
+      min-width: 44px; height: 44px; padding: 0 12px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 999px;
+      background: rgba(10,8,23,0.85);
+      border: 1px solid rgba(139,92,246,0.5);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 0 18px rgba(96,165,250,0.4);
     }
     #preloader-pct-center {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
       font-family: 'JetBrains Mono', 'Courier New', ui-monospace, monospace;
       font-weight: 600;
-      font-size: 1.4rem;
+      font-size: 1rem;
       color: #fff;
       letter-spacing: 0.02em;
       text-shadow: 0 0 12px rgba(139,92,246,0.5);
@@ -908,11 +975,9 @@
     }
     #preloader-pct-center::after {
       content: '%';
-      font-size: 0.8rem;
-      margin-left: 2px;
+      font-size: 0.65rem;
+      margin-left: 1px;
       color: rgba(255,255,255,0.5);
-      align-self: flex-start;
-      margin-top: 4px;
     }
     #preloader-word {
       font-family: 'Playfair Display', serif;
@@ -1078,21 +1143,20 @@
       <span class="hud-corner tr"></span>
       <span class="hud-corner bl"></span>
       <span class="hud-corner br"></span>
-      <div id="preloader-ring-wrap">
-        <div id="preloader-scan-ring"></div>
-        <svg id="preloader-ring" viewBox="0 0 120 120">
-          <defs>
-            <linearGradient id="preloader-ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#7c3aed"/>
-              <stop offset="55%" stop-color="#60a5fa"/>
-              <stop offset="100%" stop-color="#f0d9a8"/>
-            </linearGradient>
-          </defs>
-          <circle class="ring-track" cx="60" cy="60" r="54"></circle>
-          <circle id="preloader-ring-fg" class="ring-fg" cx="60" cy="60" r="54"></circle>
-        </svg>
-        <div class="scan-line"></div>
-        <div id="preloader-pct-center">0</div>
+      <div id="preloader-video-wrap">
+        <div id="preloader-video-ring"></div>
+        <div id="preloader-video-frame">
+          <iframe
+            id="preloader-video"
+            src="https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=Animate_photo_character_movement_202607242156_dohir0&controls=false&autoplay=true&muted=true&loop=true&fluid=true"
+            title="Loading preview"
+            allow="autoplay; encrypted-media"
+            loading="eager"
+          ></iframe>
+          <div class="scan-line"></div>
+          <div id="preloader-video-vignette"></div>
+        </div>
+        <div id="preloader-pct-badge"><span id="preloader-pct-center">0</span></div>
       </div>
       <div id="preloader-word"></div>
       <div id="preloader-status">
@@ -2790,10 +2854,9 @@
     &copy; 2026 THE RED COCKS BILLIONAIRE EMPIRE. ALL RIGHTS RESERVED.
   </footer>
 
-  <!-- ✨ PREMIUM STACK: GSAP + ScrollTrigger + Three.js (native scroll — no smooth-scroll hijacking) -->
+  <!-- ✨ PREMIUM STACK: GSAP + ScrollTrigger (native scroll — no smooth-scroll hijacking) -->
   <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 
   <script>
   (function(){
@@ -2843,96 +2906,74 @@
       }
     }
 
-    /* ---------- THREE.JS: lightweight hero particle field ---------- */
-    (function initHeroThree() {
+    /* ---------- LIGHTWEIGHT CSS HERO PARTICLE FIELD (no WebGL) ----------
+       Replaces the old Three.js WebGL particle renderer. Pure CSS
+       transform + opacity animations (compositor-only, GPU-cheap),
+       so it costs almost nothing even on low-end phones. A light
+       cursor-parallax on the whole layer gives the same "living 3D"
+       feel without ever touching WebGL. */
+    (function initHeroParticles() {
       const canvas = document.getElementById('hero-three-canvas');
       const heroSection = document.getElementById('home');
-      if (!canvas || !heroSection || !window.THREE || reduceMotion) return;
+      if (!canvas || !heroSection) return;
 
-      const PARTICLE_COUNT = isMobile3D ? 50 : 150;
-      let renderer;
-      try {
-        renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: 'low-power' });
-      } catch (e) { return; }
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile3D ? 1.25 : 1.75));
+      const layer = document.createElement('div');
+      layer.id = 'hero-particle-layer';
+      layer.style.cssText = 'position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;will-change:transform;';
+      canvas.replaceWith(layer);
 
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
-      camera.position.z = 18;
+      if (reduceMotion) return;
 
-      function sizeRenderer() {
-        const w = heroSection.clientWidth || window.innerWidth;
-        const h = heroSection.clientHeight || window.innerHeight;
-        renderer.setSize(w, h, false);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
+      const COUNT = isMobile3D ? 22 : 55;
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < COUNT; i++) {
+        const p = document.createElement('span');
+        const size = (Math.random() * 2.2 + 1).toFixed(1);
+        const left = (Math.random() * 100).toFixed(2);
+        const top = (Math.random() * 100).toFixed(2);
+        const dur = (Math.random() * 10 + 9).toFixed(1);
+        const delay = (Math.random() * -20).toFixed(1);
+        const depth = (Math.random() * 0.7 + 0.3).toFixed(2); // parallax strength
+        p.dataset.depth = depth;
+        p.style.cssText = `position:absolute;left:${left}%;top:${top}%;width:${size}px;height:${size}px;border-radius:50%;background:#a78bfa;opacity:.55;box-shadow:0 0 6px 1px rgba(167,139,250,.5);animation:heroParticleFloat ${dur}s ease-in-out ${delay}s infinite;`;
+        frag.appendChild(p);
+      }
+      layer.appendChild(frag);
+
+      if (!document.getElementById('hero-particle-kf')) {
+        const style = document.createElement('style');
+        style.id = 'hero-particle-kf';
+        style.textContent = '@keyframes heroParticleFloat{0%,100%{transform:translateY(0) translateX(0);opacity:.35}50%{transform:translateY(-18px) translateX(6px);opacity:.75}}';
+        document.head.appendChild(style);
       }
 
-      const positions = new Float32Array(PARTICLE_COUNT * 3);
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        positions[i * 3]     = (Math.random() - 0.5) * 32;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 22;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
-      }
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      const mat = new THREE.PointsMaterial({ color: 0xa78bfa, size: 0.085, transparent: true, opacity: 0.7, sizeAttenuation: true });
-      const points = new THREE.Points(geo, mat);
-      scene.add(points);
-
-      // Faint rotating wireframe centerpiece — quiet 3D depth cue, not a distraction
-      const ico = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(6.2, 1),
-        new THREE.MeshBasicMaterial({ color: 0x7c3aed, wireframe: true, transparent: true, opacity: 0.1 })
-      );
-      scene.add(ico);
-
-      sizeRenderer();
-      window.addEventListener('resize', sizeRenderer, { passive: true });
-
-      // Only render while the hero is actually on screen — zero cost once scrolled past.
+      // Only animate/parallax while hero is on screen.
       let heroVisible = true;
       new IntersectionObserver((entries) => {
         entries.forEach(e => { heroVisible = e.isIntersecting; });
+        layer.style.animationPlayState = heroVisible ? 'running' : 'paused';
       }, { threshold: 0 }).observe(heroSection);
 
-      function animate() {
-        requestAnimationFrame(animate);
-        if (document.hidden || !heroVisible) return;
-        points.rotation.y += 0.0009;
-        points.rotation.x += 0.00025;
-        ico.rotation.y += 0.0015;
-        ico.rotation.x += 0.0007;
-        renderer.render(scene, camera);
-      }
-      // Subtle mouse-parallax: the whole hero 3D scene gently tilts toward
-      // the cursor for a "living" 3D feel. Disabled on touch devices (no
-      // mouse) and respects prefers-reduced-motion like everything else here.
-      let targetRotX = 0, targetRotY = 0;
-      if (!isTouch && !reduceMotion) {
+      // Cheap cursor-parallax: one transform write per frame, desktop only.
+      if (!isTouch) {
+        let targetX = 0, targetY = 0, curX = 0, curY = 0, raf = null;
         heroSection.addEventListener('mousemove', (e) => {
           const rect = heroSection.getBoundingClientRect();
-          const nx = ((e.clientX - rect.left) / rect.width) - 0.5;
-          const ny = ((e.clientY - rect.top) / rect.height) - 0.5;
-          targetRotY = nx * 0.35;
-          targetRotX = ny * -0.25;
+          targetX = (((e.clientX - rect.left) / rect.width) - 0.5) * 14;
+          targetY = (((e.clientY - rect.top) / rect.height) - 0.5) * 10;
+          if (!raf) raf = requestAnimationFrame(tick);
         });
+        function tick() {
+          raf = null;
+          if (!heroVisible) return;
+          curX += (targetX - curX) * 0.06;
+          curY += (targetY - curY) * 0.06;
+          layer.style.transform = `translate(${curX.toFixed(2)}px, ${curY.toFixed(2)}px)`;
+          if (Math.abs(targetX - curX) > 0.05 || Math.abs(targetY - curY) > 0.05) {
+            raf = requestAnimationFrame(tick);
+          }
+        }
       }
-
-      function animate() {
-        requestAnimationFrame(animate);
-        if (document.hidden || !heroVisible) return;
-        points.rotation.y += 0.0009;
-        points.rotation.x += 0.00025;
-        ico.rotation.y += 0.0015;
-        ico.rotation.x += 0.0007;
-        // Ease the scene's group tilt toward the cursor target (lerp), so it
-        // glides rather than snaps.
-        scene.rotation.y += (targetRotY - scene.rotation.y) * 0.04;
-        scene.rotation.x += (targetRotX - scene.rotation.x) * 0.04;
-        renderer.render(scene, camera);
-      }
-      animate();
     })();
 
     /* ---------- 3D TILT-ON-HOVER: glass cards react to cursor position ---------- */
@@ -3448,15 +3489,12 @@
     const preloader = document.getElementById('site-preloader');
     const wordEl = document.getElementById('preloader-word');
     const barFill = document.getElementById('preloader-bar-fill');
-    const ringFg = document.getElementById('preloader-ring-fg');
     const pctCenter = document.getElementById('preloader-pct-center');
     const statusSpans = preloader ? preloader.querySelectorAll('#preloader-status span') : [];
-    const RING_CIRCUMFERENCE = 339.3;
     const BRAND = 'THE RED COCKS';
 
     function setProgress(pct){
       if (barFill) barFill.style.width = pct.toFixed(0) + '%';
-      if (ringFg) ringFg.style.strokeDashoffset = (RING_CIRCUMFERENCE * (1 - pct / 100)).toFixed(1);
       if (pctCenter) {
         pctCenter.textContent = pct.toFixed(0);
         pctCenter.classList.remove('tick');
