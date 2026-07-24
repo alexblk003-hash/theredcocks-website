@@ -35,9 +35,11 @@
       font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
     }
 
-    /* Lightweight scroll-tinted background layer (replaces the old WebGL canvas).
-       Pure CSS + a couple of CSS-variable writes on scroll — no per-frame canvas
-       rendering, so it stays smooth on every device including phones. */
+    /* Real video background with a subtle 3D tilt/perspective as you scroll.
+       The container just holds/crops the video + tint layer; the tilt itself
+       is a single GPU-only `transform` write on the video element per frame
+       (rAF-throttled, capped at 30fps on phones), so it costs almost nothing
+       even on low-end mobile. */
     #canvas3d-container {
       position: fixed;
       top: 0;
@@ -47,12 +49,39 @@
       height: calc(var(--vh, 1vh) * 100);
       z-index: -1;
       pointer-events: none;
+      overflow: hidden;
+      perspective: 1400px;
+      background: #0a0817;
       --scroll-tint: #7c3aed;
+    }
+    #canvas3d-container video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      transform: translate(-50%, -50%) scale(1.15) rotateX(0deg);
+      transform-origin: center center;
+      will-change: transform;
+      filter: brightness(0.5) saturate(1.15);
+    }
+    /* Tint + darken layers sit on top of the video, inside the same fixed
+       container, so nothing else on the page needs to change. */
+    #canvas3d-tint {
+      position: absolute;
+      inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 50% 15%, color-mix(in srgb, var(--scroll-tint) 22%, transparent), transparent 70%),
-        #0a0817;
+        radial-gradient(ellipse 80% 60% at 50% 15%, color-mix(in srgb, var(--scroll-tint) 22%, transparent), transparent 70%);
       transition: background 0.5s ease-out;
       will-change: background;
+    }
+    #canvas3d-dark {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 8, 23, 0.5);
     }
 
     /* Custom Scrollbar for Ultra High-End Feel */
@@ -197,7 +226,7 @@
       50%  { background-position: 100% 100%, 0% 0%; }
       100% { background-position: 0% 0%, 100% 100%; }
     }
-    #canvas3d-container::before {
+    #canvas3d-tint::before {
       content: '';
       position: absolute;
       inset: 0;
@@ -209,10 +238,12 @@
       will-change: background-position;
     }
     @media (max-width: 768px) {
-      #canvas3d-container::before { animation-duration: 30s; }
+      #canvas3d-tint::before { animation-duration: 30s; }
     }
     @media (prefers-reduced-motion: reduce) {
-      #canvas3d-container::before { animation: none; }
+      #canvas3d-tint::before { animation: none; }
+      #canvas3d-container video { display: none; }
+      #canvas3d-container { background: radial-gradient(ellipse 80% 60% at 50% 15%, #7c3aed33, transparent 70%), #0a0817; }
     }
 
     /* AI emblem: subtle continuous 3D breathing tilt (transform-only, so it
@@ -742,15 +773,158 @@
     /* Smoother native scrolling on iOS Safari */
     html, body { -webkit-overflow-scrolling: touch; }
 
-    /* Respect users who prefer reduced motion — calmer, more professional by default */
+  </style>
+
+  <!-- ═══════════════ SIGNATURE PREMIUM LAYER ═══════════════
+       Preloader, custom cursor, magnetic buttons, 3D card tilt,
+       hero letter reveal, ambient cursor glow. All desktop-enhanced,
+       degrade gracefully to nothing extra on touch / reduced-motion. -->
+  <style>
+    /* ── Preloader ── */
+    #site-preloader {
+      position: fixed; inset: 0; z-index: 100000;
+      background: #08060f;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 22px;
+      transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), visibility 0.8s;
+    }
+    #site-preloader.pre-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    #preloader-word {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      letter-spacing: 0.35em;
+      font-size: clamp(1.4rem, 6vw, 2.6rem);
+      color: #fff;
+      text-transform: uppercase;
+      display: flex;
+    }
+    #preloader-word span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(28px) rotateX(-60deg);
+      animation: preloaderLetterIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    @keyframes preloaderLetterIn { to { opacity: 1; transform: translateY(0) rotateX(0deg); } }
+    #preloader-bar-track {
+      width: 200px; height: 2px; border-radius: 2px;
+      background: rgba(255,255,255,0.12); overflow: hidden;
+    }
+    #preloader-bar-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #7c3aed, #60a5fa);
+      box-shadow: 0 0 12px rgba(96,165,250,0.8);
+      transition: width 0.25s ease-out;
+    }
+    #preloader-pct {
+      font-size: 10px; letter-spacing: 0.3em; color: rgba(255,255,255,0.45);
+      font-weight: 700; text-transform: uppercase;
+    }
+
+    /* ── Custom cursor (desktop, fine pointer only — enabled via JS by adding
+         .has-custom-cursor to <html>) ── */
+    html.has-custom-cursor, html.has-custom-cursor * { cursor: none !important; }
+    #cursor-dot, #cursor-ring {
+      position: fixed; top: 0; left: 0; z-index: 99998;
+      pointer-events: none; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      will-change: transform;
+    }
+    #cursor-dot {
+      width: 6px; height: 6px; background: #fff;
+      box-shadow: 0 0 8px rgba(255,255,255,0.9);
+    }
+    #cursor-ring {
+      width: 34px; height: 34px;
+      border: 1.5px solid rgba(139,92,246,0.75);
+      box-shadow: 0 0 18px rgba(139,92,246,0.35);
+      transition: width 0.28s cubic-bezier(0.16,1,0.3,1), height 0.28s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.28s ease, background 0.28s ease;
+    }
+    #cursor-ring.cursor-hover {
+      width: 58px; height: 58px;
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(96,165,250,0.9);
+    }
+    @media (hover: none), (pointer: coarse) {
+      #cursor-dot, #cursor-ring { display: none !important; }
+    }
+
+    /* ── Ambient cursor glow — a soft light that drifts toward the pointer,
+         sits just above the video background for extra depth ── */
+    #cursor-glow {
+      position: fixed; top: 0; left: 0; z-index: 0;
+      width: 480px; height: 480px; margin: -240px 0 0 -240px;
+      border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle, rgba(139,92,246,0.16), transparent 70%);
+      filter: blur(10px);
+      will-change: transform;
+    }
+    @media (hover: none), (pointer: coarse) { #cursor-glow { display: none !important; } }
+
+    /* ── Magnetic buttons ── */
+    .magnetic { will-change: transform; transition: transform 0.25s cubic-bezier(0.16,1,0.3,1); }
+
+    /* ── 3D tilt on premium cards ── */
+    .pro-glass-card { transform-style: preserve-3d; }
+    .pro-glass-card[data-tilt] { transition: transform 0.18s cubic-bezier(0.16,1,0.3,1), border-color 0.6s ease, box-shadow 0.6s ease; }
+
+    /* ── Hero letter reveal ── */
+    .hero-letters { display: inline-block; }
+    .hero-letters span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(40px) rotateX(-70deg);
+      animation: heroLetterIn 0.85s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    @keyframes heroLetterIn { to { opacity: 1; transform: translateY(0) rotateX(0deg); } }
+
+    /* ── Generic scroll-word-reveal for section headings ── */
+    .reveal-words span {
+      display: inline-block; opacity: 0; transform: translateY(0.5em);
+      filter: blur(4px);
+      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.6s ease;
+    }
+    .reveal-words.in-view span { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+    /* ── Generic staggered "rise + fade in" for cards, badges, grid items,
+         FAQ rows, footer columns — applied broadly so every section has
+         scroll-driven motion, not just the section container itself. ── */
+    .reveal-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+      transition-delay: calc(var(--d, 0) * 0.09s);
+      will-change: opacity, transform;
+    }
+    .reveal-up.in-view { opacity: 1; transform: translateY(0); }
+
     @media (prefers-reduced-motion: reduce) {
-      .gold-shimmer-text, .elite-nav-box, .flag-badge, .pro-glass-card,
-      .featured-pop-card, .ig-glow-icon, .floating-card-1, .floating-card-2,
-      .video-perspective-box, #chick-bubble { animation: none !important; }
+      #site-preloader { display: none !important; }
+      #cursor-dot, #cursor-ring, #cursor-glow { display: none !important; }
+      html.has-custom-cursor, html.has-custom-cursor * { cursor: auto !important; }
+      .hero-letters span, #preloader-word span { opacity: 1 !important; transform: none !important; animation: none !important; }
+      .reveal-words span { opacity: 1 !important; transform: none !important; filter: none !important; }
+      .reveal-up { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
   </style>
 </head>
+
 <body class="selection:bg-purple-500 selection:text-black">
+
+  <!-- Cinematic preloader — letter-by-letter wordmark reveal + progress line.
+       Removed from the DOM automatically after load (see script near the
+       end of body). Skips entirely for prefers-reduced-motion. -->
+  <div id="site-preloader">
+    <div id="preloader-word"></div>
+    <div id="preloader-bar-track"><div id="preloader-bar-fill"></div></div>
+    <div id="preloader-pct">Loading 0%</div>
+  </div>
+
+  <!-- Custom cursor (desktop only) + ambient cursor glow -->
+  <div id="cursor-glow"></div>
+  <div id="cursor-ring"></div>
+  <div id="cursor-dot"></div>
+
 
   <!-- TRUE FULL-SCREEN FIT: keep --vh locked to the real visible viewport on
        every device (phone browser bars, split-screen, desktop resize, etc.) -->
@@ -765,8 +939,21 @@
     })();
   </script>
 
-  <!-- Interactive 3D WebGL Background Container -->
-  <div id="canvas3d-container"></div>
+  <!-- Real video background with a 3D tilt/perspective effect on scroll.
+       ⚠️ REPLACE the src below with your own video file(s):
+       - bg-video-desktop: full quality (1080p is plenty, keep it under ~8MB, .mp4 H.264)
+       - bg-video-mobile: a smaller/shorter version for phones (720p or lower, under ~3MB)
+         is strongly recommended so the "silky smooth on phones" goal actually holds —
+         a heavy 1080p video decoding full-screen on a phone is the #1 cause of scroll jank.
+       If you only have one file, just point both sources at it. -->
+  <div id="canvas3d-container">
+    <video id="bg-3d-video" autoplay muted loop playsinline preload="auto" poster="">
+      <source id="bg-3d-video-mobile-src" media="(max-width: 768px)" src="YOUR-MOBILE-BACKGROUND-VIDEO.mp4" type="video/mp4">
+      <source src="YOUR-DESKTOP-BACKGROUND-VIDEO.mp4" type="video/mp4">
+    </video>
+    <div id="canvas3d-tint"></div>
+    <div id="canvas3d-dark"></div>
+  </div>
   <div id="grain-overlay"></div>
   <div id="vignette-overlay"></div>
   <div id="scroll-progress"></div>
@@ -916,8 +1103,8 @@
       </div>
 
       <!-- Hero Typography -->
-      <h1 class="text-4xl sm:text-6xl md:text-8xl font-black tracking-[0.15em] gold-shimmer-text uppercase drop-shadow-[0_0_40px_rgba(139,92,246,0.7)] mb-4">
-        THE RED COCKS
+      <h1 class="text-4xl sm:text-6xl md:text-8xl font-black tracking-[0.15em] gold-shimmer-text uppercase drop-shadow-[0_0_40px_rgba(139,92,246,0.7)] mb-4" aria-label="THE RED COCKS">
+        <span id="hero-letters-target" class="hero-letters" aria-hidden="true">THE RED COCKS</span>
       </h1>
       
       <div class="inline-block px-6 py-2.5 rounded-full bg-indigo-950/40 border border-violet-500/50 backdrop-blur-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] mb-8">
@@ -933,22 +1120,22 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         
         <div class="pro-glass-card p-5 rounded-2xl text-center flex flex-col items-center justify-center">
-          <span class="text-3xl sm:text-4xl font-black gold-shimmer-text">25+</span>
+          <span class="text-3xl sm:text-4xl font-black gold-shimmer-text" data-count-to="25" data-count-suffix="+">0+</span>
           <span class="mt-1 text-[10px] font-black tracking-[0.2em] text-gray-300 uppercase">Global Empires</span>
         </div>
 
         <div class="pro-glass-card p-5 rounded-2xl text-center flex flex-col items-center justify-center">
-          <span class="text-3xl sm:text-4xl font-black gold-shimmer-text">14K</span>
+          <span class="text-3xl sm:text-4xl font-black gold-shimmer-text" data-count-to="14" data-count-suffix="K">0K</span>
           <span class="mt-1 text-[10px] font-black tracking-[0.2em] text-gray-300 uppercase">Elite Partners</span>
         </div>
 
         <div class="pro-glass-card p-5 rounded-2xl text-center flex flex-col items-center justify-center">
-          <span class="text-3xl sm:text-4xl font-black gold-shimmer-text">9M</span>
+          <span class="text-3xl sm:text-4xl font-black gold-shimmer-text" data-count-to="9" data-count-suffix="M">0M</span>
           <span class="mt-1 text-[10px] font-black tracking-[0.2em] text-gray-300 uppercase">Royalty Clients</span>
         </div>
 
         <div class="pro-glass-card p-5 rounded-2xl text-center flex flex-col items-center justify-center">
-          <span class="text-3xl sm:text-4xl font-black gold-shimmer-text">24/7</span>
+          <span class="text-3xl sm:text-4xl font-black gold-shimmer-text" data-count-to="24" data-count-suffix="/7">0/7</span>
           <span class="mt-1 text-[10px] font-black tracking-[0.2em] text-gray-300 uppercase">Private Concierge</span>
         </div>
 
@@ -1087,11 +1274,11 @@
           </p>
           <div class="grid grid-cols-2 gap-4">
             <div class="pro-glass-card p-4 rounded-2xl text-center">
-              <span class="block text-2xl font-black gold-shimmer-text">100%</span>
+              <span class="block text-2xl font-black gold-shimmer-text" data-count-to="100" data-count-suffix="%">0%</span>
               <span class="text-xs text-gray-400 tracking-wider uppercase">Biometric Verified</span>
             </div>
             <div class="pro-glass-card p-4 rounded-2xl text-center">
-              <span class="block text-2xl font-black gold-shimmer-text">0.01%</span>
+              <span class="block text-2xl font-black gold-shimmer-text" data-count-to="0.01" data-count-suffix="%" data-count-decimals="2">0.00%</span>
               <span class="text-xs text-gray-400 tracking-wider uppercase">Exclusive Clientele</span>
             </div>
           </div>
@@ -2601,6 +2788,54 @@
     const sections = document.querySelectorAll('.scroll-section');
     const aboutVideo = document.getElementById('about-video');
 
+    // 3D TILT BACKGROUND VIDEO: a small, continuous rAF loop reads how far
+    // the page moved since the last frame and eases the video's rotateX
+    // toward a proportional tilt, then eases back to flat when scrolling
+    // stops — that's the whole "3D depth" effect, and it only ever writes
+    // one `transform` (a compositor-only property), so it's cheap even on
+    // low-end phones. Capped to 30fps on mobile to save battery.
+    (function () {
+      const bgVideo = document.getElementById('bg-3d-video');
+      if (!bgVideo) return;
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) return;
+
+      // Pause decoding entirely when the tab isn't visible.
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) bgVideo.pause();
+        else bgVideo.play().catch(() => {});
+      });
+      bgVideo.play().catch(() => {});
+
+      const maxTilt = isMobilePerf ? 3 : 6;      // degrees — smaller throw on phones
+      const sensitivity = isMobilePerf ? 0.08 : 0.15;
+      const ease = 0.12;
+      const frameInterval = isMobilePerf ? 1000 / 30 : 0; // uncapped (rAF ~60fps) on desktop
+
+      let lastScrollY = window.scrollY;
+      let currentTilt = 0;
+      let lastFrameTime = 0;
+
+      function tiltLoop(now) {
+        requestAnimationFrame(tiltLoop);
+        if (frameInterval && now - lastFrameTime < frameInterval) return;
+        lastFrameTime = now;
+
+        const scrollY = window.scrollY;
+        const delta = scrollY - lastScrollY;
+        lastScrollY = scrollY;
+
+        const targetTilt = Math.max(-maxTilt, Math.min(maxTilt, delta * sensitivity));
+        currentTilt += (targetTilt - currentTilt) * ease;
+        if (Math.abs(currentTilt) < 0.01) currentTilt = 0;
+
+        bgVideo.style.transform =
+          'translate(-50%, -50%) scale(1.15) rotateX(' + currentTilt.toFixed(2) + 'deg)';
+      }
+      requestAnimationFrame(tiltLoop);
+    })();
+
     // SCROLL COLOR JOURNEY: background tint drifts smoothly through this
     // sequence as you scroll down — gold -> rose/red -> purple -> blue -> gold.
     const scrollColorStops = [
@@ -2997,6 +3232,245 @@
     document.addEventListener('click', function(e){
       if (!panel.contains(e.target) && !btn.contains(e.target)) closeMenu();
     });
+  })();
+  </script>
+  <!-- ═══════════════ SIGNATURE PREMIUM LAYER: behaviour ═══════════════ -->
+  <script>
+  (function(){
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    /* ---------- 1. PRELOADER ---------- */
+    const preloader = document.getElementById('site-preloader');
+    const wordEl = document.getElementById('preloader-word');
+    const barFill = document.getElementById('preloader-bar-fill');
+    const pctEl = document.getElementById('preloader-pct');
+    const BRAND = 'THE RED COCKS';
+
+    function revealHeroLetters(){
+      const target = document.getElementById('hero-letters-target');
+      if (!target || target.dataset.split) return;
+      target.dataset.split = '1';
+      const text = target.textContent;
+      target.textContent = '';
+      [...text].forEach((ch, i) => {
+        const span = document.createElement('span');
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        span.style.animationDelay = (i * 0.045) + 's';
+        target.appendChild(span);
+      });
+    }
+
+    if (reduceMotion || !preloader) {
+      if (preloader) preloader.remove();
+      revealHeroLetters();
+    } else {
+      [...BRAND].forEach((ch, i) => {
+        const span = document.createElement('span');
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        span.style.animationDelay = (i * 0.04) + 's';
+        wordEl.appendChild(span);
+      });
+
+      let pct = 0;
+      const tick = setInterval(() => {
+        pct = Math.min(pct + Math.random() * 18, 96);
+        barFill.style.width = pct.toFixed(0) + '%';
+        pctEl.textContent = 'Loading ' + pct.toFixed(0) + '%';
+      }, 150);
+
+      function finishLoad(){
+        clearInterval(tick);
+        barFill.style.width = '100%';
+        pctEl.textContent = 'Loading 100%';
+        setTimeout(() => {
+          preloader.classList.add('pre-hidden');
+          revealHeroLetters();
+          setTimeout(() => preloader.remove(), 900);
+        }, 250);
+      }
+      if (document.readyState === 'complete') setTimeout(finishLoad, 900);
+      else window.addEventListener('load', () => setTimeout(finishLoad, 900));
+      // Safety net: never let the preloader trap a visitor for more than 4s.
+      setTimeout(finishLoad, 4000);
+    }
+
+    /* ---------- 2. CUSTOM CURSOR + AMBIENT GLOW (desktop only) ---------- */
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    const cursorGlow = document.getElementById('cursor-glow');
+
+    if (canHover && !reduceMotion && cursorDot && cursorRing && cursorGlow) {
+      document.documentElement.classList.add('has-custom-cursor');
+      let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+      let ringX = mouseX, ringY = mouseY;
+      let glowX = mouseX, glowY = mouseY;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%,-50%)`;
+      });
+
+      function cursorLoop(){
+        requestAnimationFrame(cursorLoop);
+        ringX += (mouseX - ringX) * 0.2;
+        ringY += (mouseY - ringY) * 0.2;
+        cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%,-50%)`;
+        glowX += (mouseX - glowX) * 0.07;
+        glowY += (mouseY - glowY) * 0.07;
+        cursorGlow.style.transform = `translate(${glowX}px, ${glowY}px)`;
+      }
+      requestAnimationFrame(cursorLoop);
+
+      document.addEventListener('mouseover', (e) => {
+        if (e.target.closest('a, button, .pro-glass-card, [data-cursor-hover]')) {
+          cursorRing.classList.add('cursor-hover');
+        }
+      });
+      document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('a, button, .pro-glass-card, [data-cursor-hover]')) {
+          cursorRing.classList.remove('cursor-hover');
+        }
+      });
+      document.addEventListener('mouseleave', () => {
+        cursorDot.style.opacity = '0'; cursorRing.style.opacity = '0';
+      });
+      document.addEventListener('mouseenter', () => {
+        cursorDot.style.opacity = '1'; cursorRing.style.opacity = '1';
+      });
+    } else {
+      if (cursorDot) cursorDot.remove();
+      if (cursorRing) cursorRing.remove();
+      if (cursorGlow) cursorGlow.remove();
+    }
+
+    /* ---------- 3. MAGNETIC BUTTONS ---------- */
+    if (canHover && !reduceMotion) {
+      document.querySelectorAll('button, .magnetic').forEach((el) => {
+        el.classList.add('magnetic');
+        el.addEventListener('mousemove', (e) => {
+          const r = el.getBoundingClientRect();
+          const dx = (e.clientX - (r.left + r.width / 2)) * 0.3;
+          const dy = (e.clientY - (r.top + r.height / 2)) * 0.3;
+          el.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+        });
+        el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+      });
+    }
+
+    /* ---------- 4. (3D tilt on .pro-glass-card is already handled by the
+         existing initCardTilt() further down the page — intentionally not
+         duplicated here to avoid two mousemove listeners fighting over the
+         same transform.) ---------- */
+
+    /* ---------- 5. SCROLL WORD-REVEAL FOR SECTION HEADINGS ---------- */
+    function splitWords(el){
+      if (el.dataset.wordsSplit) return;
+      el.dataset.wordsSplit = '1';
+      const words = el.textContent.trim().split(/\s+/);
+      el.textContent = '';
+      words.forEach((w, i) => {
+        const span = document.createElement('span');
+        span.textContent = w;
+        span.style.transitionDelay = (i * 0.05) + 's';
+        el.appendChild(span);
+        el.appendChild(document.createTextNode(' '));
+      });
+    }
+    const headings = document.querySelectorAll('main h2, section h2');
+    headings.forEach((h) => { h.classList.add('reveal-words'); splitWords(h); });
+
+    if ('IntersectionObserver' in window) {
+      const headingObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            headingObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      headings.forEach((h) => headingObserver.observe(h));
+    } else {
+      headings.forEach((h) => h.classList.add('in-view'));
+    }
+
+    /* ---------- 6. STAGGERED SCROLL REVEAL — every section, not just headings ---------- */
+    (function(){
+      const groupSelectors = [
+        '#home .grid > div',
+        '#global-export .flag-badge'
+      ];
+      const seenGroups = new Map();
+      groupSelectors.forEach((sel) => {
+        document.querySelectorAll(sel).forEach((el) => {
+          if (el.dataset.revealApplied) return;
+          el.dataset.revealApplied = '1';
+          el.classList.add('reveal-up');
+          const parent = el.parentElement;
+          const count = seenGroups.get(parent) || 0;
+          el.style.setProperty('--d', count % 8);
+          seenGroups.set(parent, count + 1);
+        });
+      });
+
+      const revealItems = document.querySelectorAll('.reveal-up');
+      if (reduceMotion) {
+        revealItems.forEach((el) => el.classList.add('in-view'));
+      } else if ('IntersectionObserver' in window) {
+        const itemObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              itemObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        revealItems.forEach((el) => itemObserver.observe(el));
+      } else {
+        revealItems.forEach((el) => el.classList.add('in-view'));
+      }
+    })();
+
+    /* ---------- 7. NUMBER COUNT-UP ON SCROLL (hero + about stat badges) ---------- */
+    (function(){
+      const counters = document.querySelectorAll('[data-count-to]');
+      if (!counters.length) return;
+
+      function animateCounter(el){
+        const target = parseFloat(el.getAttribute('data-count-to'));
+        const suffix = el.getAttribute('data-count-suffix') || '';
+        const decimals = parseInt(el.getAttribute('data-count-decimals') || '0', 10);
+        const duration = reduceMotion ? 0 : 1400;
+        if (duration === 0) {
+          el.textContent = target.toFixed(decimals) + suffix;
+          return;
+        }
+        const start = performance.now();
+        function tick(now){
+          const p = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const val = target * eased;
+          el.textContent = val.toFixed(decimals) + suffix;
+          if (p < 1) requestAnimationFrame(tick);
+          else el.textContent = target.toFixed(decimals) + suffix;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      if ('IntersectionObserver' in window) {
+        const countObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              animateCounter(entry.target);
+              countObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        counters.forEach((el) => countObserver.observe(el));
+      } else {
+        counters.forEach(animateCounter);
+      }
+    })();
   })();
   </script>
 
