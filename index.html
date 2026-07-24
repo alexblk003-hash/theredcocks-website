@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -31,7 +31,7 @@
 
     /* Premium editorial display typeface for headings — pairs a serif
        masthead feel with the clean Inter body copy underneath it. */
-    h1, h2, h3, .font-display {
+    h1, h2, h3 {
       font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
     }
 
@@ -83,6 +83,13 @@
       inset: 0;
       background: rgba(10, 8, 23, 0.5);
     }
+
+    /* Tailwind's backdrop-blur-3xl/xl default to 64px/24px of blur — gorgeous,
+       but very expensive to recomposite every frame on a fixed navbar that's
+       always on screen. Dialed back site-wide; still reads as premium glass,
+       costs much less. (Mobile has its own, even lighter values below.) */
+    .backdrop-blur-3xl { backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; }
+    .backdrop-blur-xl { backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; }
 
     /* Custom Scrollbar for Ultra High-End Feel */
     ::-webkit-scrollbar { width: 6px; }
@@ -338,12 +345,29 @@
     .pro-glass-card {
       background: linear-gradient(145deg, rgba(16,13,28,0.55) 0%, rgba(8,6,20,0.65) 100%);
       border: 1px solid rgba(168, 85, 247, 0.35); /* Premium Rose-Gold / Diamond Ruby Glow */
-      box-shadow: 0 25px 50px rgba(0,0,0,0.9), inset 0 0 25px rgba(168, 85, 247, 0.08);
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      /* Layered shadow: soft far ambient glow + tight contact shadow + a
+         faint inner glow — the depth recipe behind most high-end product
+         cards, instead of one flat drop-shadow. */
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.4),
+        0 25px 50px rgba(0,0,0,0.85),
+        0 0 0 1px rgba(255,255,255,0.03) inset,
+        inset 0 0 25px rgba(168, 85, 247, 0.08);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease;
       position: relative;
       overflow: hidden;
-      backdrop-filter: blur(22px) saturate(160%);
-      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      backdrop-filter: blur(14px) saturate(160%);
+      -webkit-backdrop-filter: blur(14px) saturate(160%);
+    }
+    /* Thin light catching the top edge of the glass — the detail that sells
+       "physical material" instead of "flat panel with a border". */
+    .pro-glass-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 8%; right: 8%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      pointer-events: none;
     }
     .pro-glass-card::before {
       content: '';
@@ -356,9 +380,13 @@
       transition: opacity 0.5s ease;
     }
     .pro-glass-card:hover {
-      transform: translateY(-10px) scale(1.02);
+      transform: translateY(-8px) scale(1.015);
       border-color: rgba(192, 132, 252, 0.9);
-      box-shadow: 0 40px 80px rgba(0,0,0,0.95), 0 0 60px rgba(168, 85, 247, 0.45), inset 0 0 35px rgba(192, 132, 252, 0.2);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.4),
+        0 40px 80px rgba(0,0,0,0.9),
+        0 0 60px rgba(168, 85, 247, 0.4),
+        inset 0 0 35px rgba(192, 132, 252, 0.18);
     }
     .pro-glass-card:hover::before { opacity: 1; }
 
@@ -407,33 +435,6 @@
     .featured-pop-card {
       animation: centerPopupPulse 4s ease-in-out infinite;
       z-index: 20;
-    }
-
-    /* GLOBAL PRESENCE — PREMIUM FLAG BADGE ANIMATION */
-    @keyframes flagBadgeGlow {
-      0%, 100% {
-        border-color: rgba(139, 92, 246, 0.35);
-        box-shadow: 0 0 15px rgba(139, 92, 246, 0.15), inset 0 0 10px rgba(96, 165, 250, 0.05);
-      }
-      50% {
-        border-color: rgba(96, 165, 250, 0.85);
-        box-shadow: 0 0 30px rgba(96, 165, 250, 0.5), inset 0 0 18px rgba(139, 92, 246, 0.2);
-      }
-    }
-    .flag-badge {
-      animation: flagBadgeGlow 3.5s ease-in-out infinite;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .flag-badge:hover {
-      transform: translateY(-6px) scale(1.06);
-      border-color: rgba(96, 165, 250, 1) !important;
-      box-shadow: 0 0 40px rgba(96, 165, 250, 0.7), inset 0 0 20px rgba(139, 92, 246, 0.25) !important;
-    }
-    .flag-badge .flag-emoji {
-      transition: transform 0.4s ease;
-    }
-    .flag-badge:hover .flag-emoji {
-      transform: scale(1.2) rotate(-4deg);
     }
 
     /* CONTACT — INSTAGRAM PULSE ICON */
@@ -499,6 +500,14 @@
     }
     button:hover {
       filter: brightness(1.08);
+    }
+    /* Premium glow for gradient CTA buttons — matches the site's violet/blue
+       palette, adds the soft "backlit" glow real high-end product sites use
+       on primary actions. Targets any button using the gradient utility
+       classes, so it reaches every CTA across every section automatically. */
+    button[class*="bg-gradient-to-r"]:hover,
+    button[class*="bg-gradient-to-tr"]:hover {
+      box-shadow: 0 8px 30px rgba(139, 92, 246, 0.55), 0 2px 10px rgba(96, 165, 250, 0.35);
     }
 
     /* Slightly calmer, more premium glow intensity across the gaudiest shadows */
@@ -687,7 +696,6 @@
          Kill the glow pulses on mobile (keep the marquee slide animations only). */
       .elite-nav-box,
       .pro-glass-card,
-      .flag-badge,
       .featured-pop-card,
       .ig-glow-icon,
       .feature-mini-box,
@@ -783,12 +791,129 @@
     /* ── Preloader ── */
     #site-preloader {
       position: fixed; inset: 0; z-index: 100000;
-      background: #08060f;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, #120b24 0%, #08060f 70%);
       display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 22px;
-      transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), visibility 0.8s;
+      flex-direction: column; gap: 28px;
+      /* Cinematic "iris" exit: the whole overlay shrinks away to a point
+         instead of a flat fade — the kind of exit micro-detail luxury sites
+         use instead of the default browser-loader feel. */
+      clip-path: circle(150% at 50% 50%);
+      transition: clip-path 1.1s cubic-bezier(0.76, 0, 0.24, 1);
     }
-    #site-preloader.pre-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    #site-preloader.pre-hidden {
+      clip-path: circle(0% at 50% 50%);
+      pointer-events: none;
+    }
+    /* Faint breathing glow behind everything, so the loader doesn't feel
+       like a flat black modal */
+    #site-preloader::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle 380px at 50% 50%, rgba(124,58,237,0.16), transparent 70%);
+      animation: preloaderGlowBreathe 3.2s ease-in-out infinite;
+    }
+    @keyframes preloaderGlowBreathe {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.08); }
+    }
+    /* Faint drifting circuit/grid — reads as "system booting", almost
+       subliminal, never competes with the content in front of it */
+    #site-preloader::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(139,92,246,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,92,246,0.06) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 20%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 20%, transparent 75%);
+      animation: preloaderGridDrift 18s linear infinite;
+    }
+    @keyframes preloaderGridDrift { to { background-position: 42px 42px, 42px 42px; } }
+    /* HUD corner brackets framing the whole loader — the "targeting frame"
+       detail from sci-fi interfaces, reused here as a premium-tech motif */
+    #preloader-frame { position: relative; display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 56px 64px; }
+    .hud-corner {
+      position: absolute; width: 22px; height: 22px;
+      border-color: rgba(139,92,246,0.55);
+      animation: hudCornerPulse 2.6s ease-in-out infinite;
+    }
+    .hud-corner.tl { top: 0; left: 0; border-top: 1.5px solid; border-left: 1.5px solid; }
+    .hud-corner.tr { top: 0; right: 0; border-top: 1.5px solid; border-right: 1.5px solid; }
+    .hud-corner.bl { bottom: 0; left: 0; border-bottom: 1.5px solid; border-left: 1.5px solid; }
+    .hud-corner.br { bottom: 0; right: 0; border-bottom: 1.5px solid; border-right: 1.5px solid; }
+    @keyframes hudCornerPulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; box-shadow: 0 0 10px rgba(139,92,246,0.6); }
+    }
+    #preloader-ring-wrap {
+      position: relative;
+      width: 108px; height: 108px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    /* Outer rotating dashed scan ring — decorative, independent of real
+       progress, purely there to read as an "active system" indicator like
+       a reactor core / radar sweep */
+    #preloader-scan-ring {
+      position: absolute; inset: -14px;
+      border-radius: 50%;
+      border: 1px dashed rgba(96,165,250,0.35);
+      animation: preloaderScanSpin 7s linear infinite;
+    }
+    #preloader-scan-ring::before {
+      content: '';
+      position: absolute; top: -2px; left: 50%;
+      width: 5px; height: 5px; margin-left: -2.5px;
+      border-radius: 50%;
+      background: #60a5fa;
+      box-shadow: 0 0 8px 2px rgba(96,165,250,0.9);
+    }
+    @keyframes preloaderScanSpin { to { transform: rotate(360deg); } }
+    /* Thin light sweeping vertically through the ring — a "scanning" cue */
+    #preloader-ring-wrap .scan-line {
+      position: absolute; left: 6px; right: 6px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      animation: preloaderScanLine 2.4s ease-in-out infinite;
+    }
+    @keyframes preloaderScanLine {
+      0%, 100% { top: 12%; opacity: 0; }
+      10% { opacity: 1; }
+      50% { top: 88%; opacity: 1; }
+      60% { opacity: 0; }
+    }
+    #preloader-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+    #preloader-ring .ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 1.5; }
+    #preloader-ring .ring-fg {
+      fill: none; stroke: url(#preloader-ring-gradient); stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 339.3;
+      stroke-dashoffset: 339.3;
+      transition: stroke-dashoffset 0.3s ease-out;
+      filter: drop-shadow(0 0 6px rgba(139,92,246,0.7));
+    }
+    #preloader-pct-center {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', 'Courier New', ui-monospace, monospace;
+      font-weight: 600;
+      font-size: 1.4rem;
+      color: #fff;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 12px rgba(139,92,246,0.5);
+    }
+    #preloader-pct-center.tick { animation: preloaderDigitTick 0.15s ease-out; }
+    @keyframes preloaderDigitTick {
+      0% { opacity: 0.4; transform: translateY(-2px); text-shadow: 0 0 18px rgba(96,165,250,0.9); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    #preloader-pct-center::after {
+      content: '%';
+      font-size: 0.8rem;
+      margin-left: 2px;
+      color: rgba(255,255,255,0.5);
+      align-self: flex-start;
+      margin-top: 4px;
+    }
     #preloader-word {
       font-family: 'Playfair Display', serif;
       font-weight: 900;
@@ -797,7 +922,9 @@
       color: #fff;
       text-transform: uppercase;
       display: flex;
+      position: relative;
     }
+    #preloader-word.gold-shimmer-text span { color: transparent; }
     #preloader-word span {
       display: inline-block;
       opacity: 0;
@@ -805,19 +932,50 @@
       animation: preloaderLetterIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
     }
     @keyframes preloaderLetterIn { to { opacity: 1; transform: translateY(0) rotateX(0deg); } }
+    /* One-time RGB-split "glitch" flourish the instant the full wordmark
+       lands and goes shimmer — a quick high-tech flicker, not a loop */
+    #preloader-word.glitch-once { animation: preloaderGlitch 0.4s steps(2, end) 1; }
+    @keyframes preloaderGlitch {
+      0% { text-shadow: 0 0 0 transparent; transform: translateX(0); }
+      20% { text-shadow: -2px 0 #60a5fa, 2px 0 #f472b6; transform: translateX(-1px); }
+      40% { text-shadow: 2px 0 #60a5fa, -2px 0 #f472b6; transform: translateX(1px); }
+      60% { text-shadow: -1px 0 #60a5fa, 1px 0 #f472b6; transform: translateX(-1px); }
+      100% { text-shadow: 0 0 0 transparent; transform: translateX(0); }
+    }
+    /* Cycling status line — the "Verifying… / Curating… / Finalizing…"
+       micro-copy that exclusive/invite-only brands use instead of a bare
+       percentage, so the wait itself reads as part of the premium ritual. */
+    #preloader-status {
+      font-family: 'JetBrains Mono', 'Courier New', ui-monospace, monospace;
+      font-size: 10px; letter-spacing: 0.25em; color: rgba(139,213,202,0.7);
+      font-weight: 600; text-transform: uppercase;
+      height: 14px;
+      position: relative;
+      width: 280px;
+      text-align: center;
+    }
+    #preloader-status span {
+      position: absolute; left: 0; right: 0;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    #preloader-status span.active { opacity: 1; transform: translateY(0); }
+    #preloader-status span.active::after {
+      content: '_';
+      animation: preloaderCursorBlink 1s step-end infinite;
+    }
+    @keyframes preloaderCursorBlink { 50% { opacity: 0; } }
     #preloader-bar-track {
-      width: 200px; height: 2px; border-radius: 2px;
-      background: rgba(255,255,255,0.12); overflow: hidden;
+      width: 200px; height: 1.5px; border-radius: 2px;
+      background: rgba(255,255,255,0.1); overflow: hidden;
     }
     #preloader-bar-fill {
       height: 100%; width: 0%;
-      background: linear-gradient(90deg, #7c3aed, #60a5fa);
+      background: linear-gradient(90deg, #7c3aed, #60a5fa, #f0d9a8);
+      background-size: 250% auto;
       box-shadow: 0 0 12px rgba(96,165,250,0.8);
-      transition: width 0.25s ease-out;
-    }
-    #preloader-pct {
-      font-size: 10px; letter-spacing: 0.3em; color: rgba(255,255,255,0.45);
-      font-weight: 700; text-transform: uppercase;
+      transition: width 0.3s ease-out;
     }
 
     /* ── Custom cursor (desktop, fine pointer only — enabled via JS by adding
@@ -915,10 +1073,37 @@
        Removed from the DOM automatically after load (see script near the
        end of body). Skips entirely for prefers-reduced-motion. -->
   <div id="site-preloader">
-    <div id="preloader-word"></div>
-    <div id="preloader-bar-track"><div id="preloader-bar-fill"></div></div>
-    <div id="preloader-pct">Loading 0%</div>
+    <div id="preloader-frame">
+      <span class="hud-corner tl"></span>
+      <span class="hud-corner tr"></span>
+      <span class="hud-corner bl"></span>
+      <span class="hud-corner br"></span>
+      <div id="preloader-ring-wrap">
+        <div id="preloader-scan-ring"></div>
+        <svg id="preloader-ring" viewBox="0 0 120 120">
+          <defs>
+            <linearGradient id="preloader-ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="55%" stop-color="#60a5fa"/>
+              <stop offset="100%" stop-color="#f0d9a8"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="60" cy="60" r="54"></circle>
+          <circle id="preloader-ring-fg" class="ring-fg" cx="60" cy="60" r="54"></circle>
+        </svg>
+        <div class="scan-line"></div>
+        <div id="preloader-pct-center">0</div>
+      </div>
+      <div id="preloader-word"></div>
+      <div id="preloader-status">
+        <span class="active">Verifying Invitation</span>
+        <span>Curating Collection</span>
+        <span>Finalizing Access</span>
+      </div>
+      <div id="preloader-bar-track"><div id="preloader-bar-fill"></div></div>
+    </div>
   </div>
+
 
   <!-- Custom cursor (desktop only) + ambient cursor glow -->
   <div id="cursor-glow"></div>
@@ -947,10 +1132,13 @@
          a heavy 1080p video decoding full-screen on a phone is the #1 cause of scroll jank.
        If you only have one file, just point both sources at it. -->
   <div id="canvas3d-container">
-    <video id="bg-3d-video" autoplay muted loop playsinline preload="auto" poster="">
-      <source id="bg-3d-video-mobile-src" media="(max-width: 768px)" src="YOUR-MOBILE-BACKGROUND-VIDEO.mp4" type="video/mp4">
-      <source src="YOUR-DESKTOP-BACKGROUND-VIDEO.mp4" type="video/mp4">
-    </video>
+    <!-- FIX: the two <source> tags below were still pointing at placeholder
+         filenames ("YOUR-...-VIDEO.mp4") that don't exist. Every single page
+         load, the browser was firing 2 failed network requests for this video
+         and retrying — pure wasted time on every visit, with nothing to show
+         for it. Removed until a real video file is added. To add your real
+         background video back, put its URL in a <source src="..."> here. -->
+    <video id="bg-3d-video" muted loop playsinline preload="none" poster=""></video>
     <div id="canvas3d-tint"></div>
     <div id="canvas3d-dark"></div>
   </div>
@@ -979,15 +1167,13 @@
               </linearGradient>
             </defs>
           </svg>
+          <!-- FIX: this used to be a full Cloudinary <iframe> video player
+               (its own page + player JS + video stream) just to animate a
+               40x40px logo dot, loaded with loading="eager" so it blocked
+               nothing about it. Swapped for a pure-CSS gradient orb — looks
+               basically identical, costs zero network requests. -->
           <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-violet-600 via-blue-400 to-indigo-200 p-[2px] shadow-[0_0_20px_rgba(139,92,246,0.8)] flex items-center justify-center" style="animation: aiOrbBreathe 4s ease-in-out infinite;">
-            <div class="w-full h-full bg-black rounded-full flex items-center justify-center relative overflow-hidden">
-              <iframe
-                src="https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=video_182d2fda6351_z1lv2l&autoplay=true&muted=true&loop=true&controls=false"
-                style="position:absolute; top:50%; left:50%; width:140%; height:140%; transform:translate(-50%,-50%); border:0; pointer-events:none;"
-                allow="autoplay; fullscreen; encrypted-media"
-                loading="eager"
-                title="Sanctuary emblem video"
-              ></iframe>
+            <div class="w-full h-full rounded-full flex items-center justify-center relative overflow-hidden" style="background: radial-gradient(circle at 35% 30%, #a78bfa, #4c1d95 70%);">
               <!-- AI-active status indicator, blinking continuously -->
               <span style="position:absolute; bottom:1px; right:1px; width:6px; height:6px; border-radius:9999px; background:#34d399; box-shadow:0 0 6px rgba(52,211,153,0.9); animation: aiStatusBlink 1.6s ease-in-out infinite; z-index:2;"></span>
             </div>
@@ -2465,8 +2651,8 @@
       border-radius: 20px;
       background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.025) 100%);
       border: 1px solid rgba(139,92,246,0.28);
-      backdrop-filter: blur(20px) saturate(170%);
-      -webkit-backdrop-filter: blur(20px) saturate(170%);
+      backdrop-filter: blur(14px) saturate(170%);
+      -webkit-backdrop-filter: blur(14px) saturate(170%);
       animation: featureMiniGlow 7s ease-in-out infinite;
       transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), border-color 0.4s ease;
       will-change: box-shadow, transform;
@@ -2760,15 +2946,33 @@
         card.style.willChange = 'transform';
         card.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
 
+        // FIX (pointer "vibration"): this used to flip `card.style.transition`
+        // back and forth on every raw mousemove event — with the mouse firing
+        // dozens of these a second, that forced the browser to recompute
+        // style on every single one, on top of everything else. Now we only
+        // ever write the transform (once per animation frame, via rAF), and
+        // the transition is set a single time on hover-in / hover-out.
+        let pendingX = 0, pendingY = 0, rafScheduled = false, hovering = false;
+        function applyTilt() {
+          rafScheduled = false;
+          if (!hovering) return;
+          card.style.transform = `perspective(900px) rotateX(${(-pendingY * 7).toFixed(2)}deg) rotateY(${(pendingX * 7).toFixed(2)}deg) translateZ(6px)`;
+        }
+
+        card.addEventListener('mouseenter', () => {
+          hovering = true;
+          card.style.transition = 'transform 0.08s linear';
+        });
+
         card.addEventListener('mousemove', (e) => {
           const rect = card.getBoundingClientRect();
-          const nx = ((e.clientX - rect.left) / rect.width) - 0.5;
-          const ny = ((e.clientY - rect.top) / rect.height) - 0.5;
-          card.style.transition = 'transform 0.08s linear';
-          card.style.transform = `perspective(900px) rotateX(${(-ny * 7).toFixed(2)}deg) rotateY(${(nx * 7).toFixed(2)}deg) translateZ(6px)`;
+          pendingX = ((e.clientX - rect.left) / rect.width) - 0.5;
+          pendingY = ((e.clientY - rect.top) / rect.height) - 0.5;
+          if (!rafScheduled) { rafScheduled = true; requestAnimationFrame(applyTilt); }
         });
 
         card.addEventListener('mouseleave', () => {
+          hovering = false;
           card.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
           card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
         });
@@ -3244,8 +3448,26 @@
     const preloader = document.getElementById('site-preloader');
     const wordEl = document.getElementById('preloader-word');
     const barFill = document.getElementById('preloader-bar-fill');
-    const pctEl = document.getElementById('preloader-pct');
+    const ringFg = document.getElementById('preloader-ring-fg');
+    const pctCenter = document.getElementById('preloader-pct-center');
+    const statusSpans = preloader ? preloader.querySelectorAll('#preloader-status span') : [];
+    const RING_CIRCUMFERENCE = 339.3;
     const BRAND = 'THE RED COCKS';
+
+    function setProgress(pct){
+      if (barFill) barFill.style.width = pct.toFixed(0) + '%';
+      if (ringFg) ringFg.style.strokeDashoffset = (RING_CIRCUMFERENCE * (1 - pct / 100)).toFixed(1);
+      if (pctCenter) {
+        pctCenter.textContent = pct.toFixed(0);
+        pctCenter.classList.remove('tick');
+        void pctCenter.offsetWidth; // restart the flicker animation each tick
+        pctCenter.classList.add('tick');
+      }
+      // Swap the status line's active phrase at rough thirds of progress —
+      // gives the wait a sense of stages instead of one static caption.
+      const stage = pct > 66 ? 2 : pct > 30 ? 1 : 0;
+      statusSpans.forEach((s, i) => s.classList.toggle('active', i === stage));
+    }
 
     function revealHeroLetters(){
       const target = document.getElementById('hero-letters-target');
@@ -3271,22 +3493,28 @@
         span.style.animationDelay = (i * 0.04) + 's';
         wordEl.appendChild(span);
       });
+      // Once every letter has landed, switch the wordmark to the site's
+      // signature gold/violet shimmer — ties the loader visually to every
+      // heading on the page instead of feeling like a separate splash screen.
+      setTimeout(() => {
+        wordEl.classList.add('gold-shimmer-text', 'glitch-once');
+        setTimeout(() => wordEl.classList.remove('glitch-once'), 450);
+      }, BRAND.length * 40 + 700);
 
       let pct = 0;
+      setProgress(0);
       const tick = setInterval(() => {
-        pct = Math.min(pct + Math.random() * 18, 96);
-        barFill.style.width = pct.toFixed(0) + '%';
-        pctEl.textContent = 'Loading ' + pct.toFixed(0) + '%';
+        pct = Math.min(pct + Math.random() * 16, 96);
+        setProgress(pct);
       }, 150);
 
       function finishLoad(){
         clearInterval(tick);
-        barFill.style.width = '100%';
-        pctEl.textContent = 'Loading 100%';
+        setProgress(100);
         setTimeout(() => {
           preloader.classList.add('pre-hidden');
           revealHeroLetters();
-          setTimeout(() => preloader.remove(), 900);
+          setTimeout(() => preloader.remove(), 1100);
         }, 250);
       }
       if (document.readyState === 'complete') setTimeout(finishLoad, 900);
@@ -3348,11 +3576,16 @@
     if (canHover && !reduceMotion) {
       document.querySelectorAll('button, .magnetic').forEach((el) => {
         el.classList.add('magnetic');
+        let mdx = 0, mdy = 0, mRaf = false;
+        function applyMagnet() {
+          mRaf = false;
+          el.style.transform = `translate(${mdx.toFixed(1)}px, ${mdy.toFixed(1)}px)`;
+        }
         el.addEventListener('mousemove', (e) => {
           const r = el.getBoundingClientRect();
-          const dx = (e.clientX - (r.left + r.width / 2)) * 0.3;
-          const dy = (e.clientY - (r.top + r.height / 2)) * 0.3;
-          el.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+          mdx = (e.clientX - (r.left + r.width / 2)) * 0.3;
+          mdy = (e.clientY - (r.top + r.height / 2)) * 0.3;
+          if (!mRaf) { mRaf = true; requestAnimationFrame(applyMagnet); }
         });
         el.addEventListener('mouseleave', () => { el.style.transform = ''; });
       });
@@ -3397,8 +3630,7 @@
     /* ---------- 6. STAGGERED SCROLL REVEAL — every section, not just headings ---------- */
     (function(){
       const groupSelectors = [
-        '#home .grid > div',
-        '#global-export .flag-badge'
+        '#home .grid > div'
       ];
       const seenGroups = new Map();
       groupSelectors.forEach((sel) => {
